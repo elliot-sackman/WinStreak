@@ -1,3 +1,11 @@
+# Supabase
+.branches
+.temp
+.env
+
+# VS Code Configs
+.vscode
+
 # Logs
 logs
 *.log
