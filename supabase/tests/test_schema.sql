@@ -25,7 +25,7 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'leagues',
-    ARRAY[ 'league_id' , 'league_name' , 'sport' ],
+    ARRAY[ 'league_id' , 'league_name' , 'sport' , 'league_abbreviation' , 'league_api_id'],
     'Leagues table should have the correct columns.'
 );
 
@@ -33,7 +33,7 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'teams',
-    ARRAY[ 'team_id' , 'league_id' , 'team_sport' , 'team_location' , 'team_abbreviation' , 'team_nickname' ],
+    ARRAY[ 'team_id' , 'league_id' , 'team_sport' , 'team_location' , 'team_abbreviation' , 'team_nickname' , 'team_api_id'],
     'Teams table should have the correct columns.'
 );
 
