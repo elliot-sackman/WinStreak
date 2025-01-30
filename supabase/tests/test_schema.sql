@@ -41,7 +41,7 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'games',
-    ARRAY[ 'game_id' , 'league_id' , 'start_time' , 'home_team_id' , 'home_team_abbreviation' , 'home_team_location' , 'home_team_nickname' , 'home_team_score' , 'home_team_win' , 'away_team_id' , 'away_team_abbreviation' , 'away_team_location' , 'away_team_nickname' , 'away_team_score' , 'away_team_win' , 'status' ],
+    ARRAY[ 'game_id' , 'league_id' , 'start_time' , 'home_team_id' , 'home_team_abbreviation' , 'home_team_location' , 'home_team_nickname' , 'home_team_score' , 'home_team_win' , 'away_team_id' , 'away_team_abbreviation' , 'away_team_location' , 'away_team_nickname' , 'away_team_score' , 'away_team_win' , 'status' , 'game_api_id' ],
     'Games table should have the correct columns.'
 );
 
