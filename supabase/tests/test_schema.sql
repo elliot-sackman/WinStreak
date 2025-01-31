@@ -57,7 +57,7 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'picks',
-    ARRAY[ 'pick_id' , 'contest_id' , 'user_id' , 'pick_type' , 'value' , 'game_id' , 'game_start_time' , 'display_name' , 'contest_name' , 'pick_status' , 'pick_datetime' , 'league_name' , 'league_id' , 'sport' ],
+    ARRAY[ 'pick_id' , 'contest_id' , 'user_id' , 'pick_type' , 'value' , 'game_id' , 'game_start_time' , 'display_name' , 'contest_name' , 'pick_status' , 'pick_datetime' , 'league_name' , 'league_id' , 'sport' , 'home_team_id' , 'home_team_location' , 'home_team_abbreviation' , 'home_team_nickname' , 'home_team_score' , 'home_team_win' , 'away_team_id' , 'away_team_location' , 'away_team_abbreviation' , 'away_team_nickname' , 'away_team_score' , 'away_team_win' ],
     'Picks table should have the correct columns.'
 );
 

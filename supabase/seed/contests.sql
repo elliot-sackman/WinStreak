@@ -6,7 +6,7 @@ VALUES
     -- MLB Contest (Completed, started 7 days ago)
     (3, 'Major League Baseball', 'Baseball', 'wins', 30, 100.00, TRUE, 
      NOW() - INTERVAL '7 days', NULL, TRUE, 
-     'MLB Winners', 'First to 30!', 'ended'),  
+     'MLB Winners', 'First to 30!', 'in_progress'),  
 
     -- NFL Contest (In Progress, started 1 day ago, reentries not allowed)
     (2, 'National Football League', 'Football', 'wins', 10, 100.00, FALSE, 
@@ -17,7 +17,3 @@ VALUES
     (1, 'National Basketball Association', 'Basketball', 'wins', 20, 100.00, TRUE, 
      NOW() + INTERVAL '3 days', NULL, TRUE, 
      'NBA Winners', 'First to 20!', 'scheduled');  
-
-UPDATE public.contests  
-SET contest_winner_user_id = (SELECT id FROM auth.users WHERE email = 'seed_test3@gmail.com')  
-WHERE league_id = 3 AND contest_status = 'ended';
