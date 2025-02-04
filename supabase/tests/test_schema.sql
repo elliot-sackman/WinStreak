@@ -9,7 +9,7 @@ SELECT plan(7);
 -- Tables Exist
 SELECT tables_are(
     'public',
-    ARRAY[ 'profiles' , 'leagues' , 'teams' , 'games' , 'contests' , 'picks' ],
+    ARRAY[ 'profiles' , 'leagues' , 'teams' , 'games' , 'contests' , 'picks' , 'profiles_public' ],
     'Public schema should have the correct tables.'
 );
 
