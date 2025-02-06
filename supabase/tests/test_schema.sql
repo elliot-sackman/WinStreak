@@ -4,12 +4,12 @@ CREATE EXTENSION IF NOT EXISTS pgtap;
 -- Ensure all tables exist and contain correct columns
 BEGIN;
 
-SELECT plan(7);  
+SELECT plan(9);  
 
 -- Tables Exist
 SELECT tables_are(
     'public',
-    ARRAY[ 'profiles' , 'leagues' , 'teams' , 'games' , 'contests' , 'picks' , 'profiles_public' ],
+    ARRAY[ 'profiles' , 'leagues' , 'teams' , 'games' , 'contests' , 'picks' , 'profiles_public' , 'entries'],
     'Public schema should have the correct tables.'
 );
 
@@ -57,8 +57,24 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'picks',
-    ARRAY[ 'pick_id' , 'contest_id' , 'user_id' , 'pick_type' , 'value' , 'game_id' , 'game_start_time' , 'display_name' , 'contest_name' , 'pick_status' , 'pick_datetime' , 'league_name' , 'league_id' , 'sport' , 'home_team_id' , 'home_team_location' , 'home_team_abbreviation' , 'home_team_nickname' , 'home_team_score' , 'home_team_win' , 'away_team_id' , 'away_team_location' , 'away_team_abbreviation' , 'away_team_nickname' , 'away_team_score' , 'away_team_win' ],
+    ARRAY[ 'pick_id' , 'contest_id' , 'user_id' , 'pick_type' , 'value' , 'game_id' , 'game_start_time' , 'display_name' , 'contest_name' , 'pick_status' , 'pick_datetime' , 'league_name' , 'league_id' , 'sport' , 'home_team_id' , 'home_team_location' , 'home_team_abbreviation' , 'home_team_nickname' , 'home_team_score' , 'home_team_win' , 'away_team_id' , 'away_team_location' , 'away_team_abbreviation' , 'away_team_nickname' , 'away_team_score' , 'away_team_win' , 'entry_id' ],
     'Picks table should have the correct columns.'
+);
+
+-- Profiles Public columns exist
+SELECT columns_are(
+    'public',
+    'profiles_public',
+    ARRAY[ 'id' , 'display_name'],
+    'Public profiles table should have the correct columns.'
+);
+
+-- Entreis columns exist
+SELECT columns_are(
+    'public',
+    'entries',
+    ARRAY[ 'entry_id' , 'contest_id' , 'user_id' , 'display_name' , 'entry_number' , 'created_at' , 'is_complete' , 'current_streak' , 'contest_streak_length' ],
+    'Entries table should have the correct columns.'
 );
 
 -- Constraints on tables

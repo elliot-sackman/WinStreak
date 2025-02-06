@@ -9,6 +9,11 @@ WITH user_ids AS (
         'seed_test5@gmail.com'
     )
 ),
+entries_lookup AS (
+    SELECT e.entry_id, e.user_id, e.contest_id
+    FROM public.entries e
+    WHERE e.contest_id IN (1, 2)  -- MLB (1) & NFL (2)
+),
 games_with_picks AS (
     SELECT 
         g.game_id, 
@@ -32,7 +37,7 @@ selected_picks AS (
         g.league_id,
         g.start_time,
         g.game_status,
-        -- Explicitly assign a picked team outside of the main INSERT query
+        -- Explicitly assign a picked team randomly
         CASE WHEN random() > 0.5 THEN g.home_team_id ELSE g.away_team_id END AS picked_team,
         g.home_team_id,
         g.away_team_id,
@@ -40,12 +45,13 @@ selected_picks AS (
         g.away_team_win
     FROM games_with_picks g
 )
-INSERT INTO public.picks (contest_id, user_id, pick_type, value, game_id, pick_status, pick_datetime)
+INSERT INTO public.picks (contest_id, entry_id, user_id, pick_type, value, game_id, pick_status, pick_datetime)
 SELECT 
-    CASE WHEN s.league_id = 3 THEN 1 ELSE 2 END AS contest_id,  -- MLB = 1, NFL = 2
+    e.contest_id,  -- Get contest_id from entries
+    e.entry_id,    -- Assign entry_id from entries
     u.id AS user_id,
     'wins' AS pick_type,
-    s.picked_team AS value,  -- Explicitly use the alias
+    s.picked_team AS value,  -- Use the alias for picked team
     s.game_id,
     -- Determine pick status based on game completion and if the pick was correct
     CASE 
@@ -61,4 +67,6 @@ SELECT
         ELSE NOW()
     END AS pick_datetime
 FROM user_ids u  
-CROSS JOIN selected_picks s;
+CROSS JOIN selected_picks s
+JOIN entries_lookup e ON e.user_id = u.id  
+    AND e.contest_id = CASE WHEN s.league_id = 3 THEN 1 ELSE 2 END;  -- Match entry to contest_id
