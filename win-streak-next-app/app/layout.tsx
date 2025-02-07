@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import Image from "next/image";
 import winStreakLogo from "./win-streak-logo.png";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -54,6 +55,7 @@ export default function RootLayout({
                 </div>
               </nav>
               <div className="flex flex-col gap-20 max-w-5xl p-5">
+                <Toaster />
                 {children}
               </div>
 
