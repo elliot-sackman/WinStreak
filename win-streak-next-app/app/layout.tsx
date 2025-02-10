@@ -48,6 +48,7 @@ export default function RootLayout({
                         alt="Win Streak Logo"
                         width={50}
                         height={50}
+                        quality={25}
                       />
                     </Link>
                   </div>

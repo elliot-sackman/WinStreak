@@ -2,8 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ContestsTable } from "./components/contests-table";
-import { Contest } from "@/lib/types";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Contest, Entry } from "@/lib/types";
 
 export default async function Contests() {
   const supabase = await createClient();
@@ -16,60 +15,54 @@ export default async function Contests() {
     return redirect("/sign-in");
   }
 
-  const contests: Contest[] | null = (await supabase.from("contests").select())
-    .data;
+  const contests: Contest[] =
+    (await supabase.from("contests").select()).data || [];
+
+  const entries: Entry[] = (await supabase.from("entries").select()).data || [];
 
   const contestFilters = [
     {
       filter: "all",
       title: "All",
-      contests: contests || [],
     },
     {
       filter: "active",
       title: "Active",
-      contests:
-        contests?.filter(
-          (contests) => contests.contest_status === "in_progress"
-        ) || [],
     },
     {
       filter: "upcoming",
       title: "Upcoming",
-      contests:
-        contests?.filter(
-          (contests) => contests.contest_status === "scheduled"
-        ) || [],
     },
     {
       filter: "previous",
       title: "Previous",
-      contests:
-        contests?.filter((contests) => contests.contest_status === "ended") ||
-        [],
     },
     {
       filter: "my",
       title: "My",
-      contests: contests || [],
     },
   ];
 
   return (
     <Tabs defaultValue="all" className="max-w-5xl w-full text-center">
       <TabsList>
-        {contestFilters.map((filterObj) => {
+        {contestFilters.map((contestFilterObject) => {
           return (
-            <TabsTrigger value={filterObj.filter}>
-              {filterObj.title}
+            <TabsTrigger value={contestFilterObject.filter}>
+              {contestFilterObject.title}
             </TabsTrigger>
           );
         })}
       </TabsList>
-      {contestFilters.map((filterObj) => {
+      {contestFilters.map((contestFilterObject) => {
         return (
-          <TabsContent value={filterObj.filter}>
-            <ContestsTable filterObj={filterObj}></ContestsTable>
+          <TabsContent value={contestFilterObject.filter}>
+            <ContestsTable
+              contestFilter={contestFilterObject.filter}
+              user={user}
+              contests={contests}
+              entries={entries}
+            ></ContestsTable>
           </TabsContent>
         );
       })}

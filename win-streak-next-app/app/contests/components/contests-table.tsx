@@ -8,83 +8,96 @@ import {
   TableCell,
   TableCaption,
 } from "@/components/ui/table";
-import { Contest } from "@/lib/types";
+import { Contest, Entry } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { ContestDetailsCard } from "@/components/contests-details-card";
+import { User } from "@supabase/supabase-js";
 
 interface ContestTableProps {
-  filterObj: {
-    filter: string;
-    title: string;
-    contests: Contest[] | null;
-  };
+  contestFilter: string;
+  user: User;
+  contests: Contest[];
+  entries: Entry[];
 }
 
-const ContestsTable = function (props: ContestTableProps) {
-  const { filterObj } = props;
+const ContestsTable = function ({
+  contestFilter,
+  user,
+  contests,
+  entries,
+}: ContestTableProps) {
+  var currentUserEntryIds = entries
+    .filter((entry) => entry.is_complete === false)
+    .map((entry) => entry.contest_id);
 
-  const contestTableColumnHeaders = [
-    "Name",
-    //"Sport",
-    //"League",
-    //"Target Stat",
-    "Streak Length",
-    "Contest Prize",
-    //"Reentries Allowed",
-    //"Contest Start",
-    //"Contest End",
-    //"Public",
-    //"Status",
-    //"Contest Winner",
-  ];
+  var filteredContests: Contest[] = [];
 
-  const contestTableValuePropNames: (keyof Contest)[] = [
-    "contest_name",
-    //"sport",
-    //"league_name",
-    //"target_stat",
-    "streak_length",
-    //"contest_prize",
-    //"reentries_allowed",
-    //"contest_start_datetime",
-    //"contest_end_datetime",
-    //"is_public",
-    //"contest_status",
-    //"contest_winner_display_name",
-  ];
+  if (contestFilter === "all") {
+    filteredContests = contests;
+  } else if (contestFilter === "active") {
+    filteredContests = contests.filter(
+      (contest) => contest.contest_status === "in_progress"
+    );
+  } else if (contestFilter === "upcoming") {
+    filteredContests = contests.filter(
+      (contest) => contest.contest_status === "scheduled"
+    );
+  } else if (contestFilter === "previous") {
+    filteredContests = contests.filter(
+      (contest) => contest.contest_status === "ended"
+    );
+  } else {
+    filteredContests = contests.filter((contest) =>
+      currentUserEntryIds.includes(contest.contest_id)
+    );
+  }
 
   return (
-    <>
-      <Table>
+    <div className="overflow-x-auto">
+      <Table className="w-full">
         <TableHeader>
           <TableRow>
-            {contestTableColumnHeaders.map((columnName) => {
-              return <TableHead>{columnName}</TableHead>;
-            })}
+            <TableHead>Name</TableHead>
+            <TableHead>Streak Length</TableHead>
+            <TableHead>Contest Prize</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filterObj.contests?.map((contest) => {
+          {filteredContests.map((contest) => {
             return (
-              <TableRow>
-                {contestTableValuePropNames.map((propName: keyof Contest) => {
-                  return <TableCell>{contest[propName]}</TableCell>;
-                })}
+              <TableRow key={contest.contest_id}>
+                <TableCell>
+                  <ContestDetailsCard
+                    contest={contest}
+                    user={user}
+                    userHasEntered={currentUserEntryIds.includes(
+                      contest.contest_id
+                    )}
+                    triggerElement={
+                      <span className="text-blue-500 cursor-pointer hover:underline">
+                        {contest.contest_name}
+                      </span>
+                    }
+                  />
+                </TableCell>
+                <TableCell>{contest.streak_length}</TableCell>
                 <TableCell>${contest.contest_prize}</TableCell>
                 <TableCell>
-                  {contest.contest_status === "ended" ? (
-                    <Button variant="enter" disabled={true}>
-                      Contest Ended
-                    </Button>
-                  ) : (
-                    <Button variant="enter">Enter</Button>
-                  )}
+                  <ContestDetailsCard
+                    contest={contest}
+                    user={user}
+                    userHasEntered={currentUserEntryIds.includes(
+                      contest.contest_id
+                    )}
+                    triggerElement={<Button variant="enter">View</Button>}
+                  />
                 </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 };
 

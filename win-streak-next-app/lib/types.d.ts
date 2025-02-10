@@ -17,3 +17,14 @@ export type Contest = {
     contest_winner_display_name: string | null;
   };
   
+export type Entry = {
+    entry_id: number;
+    contest_id: number;
+    user_id: string;
+    display_name: string;
+    entry_number: number;
+    created_at: string;
+    is_complete: boolean;
+    current_streak: number;
+    contest_streak_length: number;
+}
