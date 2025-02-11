@@ -63,6 +63,7 @@ const ContestDetailsCard = function ({
           </p>
           <EnterContestButton
             contestId={contest.contest_id}
+            contestNameSlug={contest.contest_name_slug}
             userId={user.id}
             userHasEntered={userHasEntered}
           />

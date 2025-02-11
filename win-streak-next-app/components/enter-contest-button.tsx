@@ -8,12 +8,14 @@ import { toast } from "@/hooks/use-toast";
 
 interface EnterContestButtonProps {
   contestId: number;
+  contestNameSlug: string;
   userId: string;
   userHasEntered: boolean;
 }
 
 const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
   contestId,
+  contestNameSlug,
   userId,
   userHasEntered,
 }) {
@@ -43,11 +45,11 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
     }
 
     // Redirect to contests page after successful entry
-    router.push("/my-account");
+    router.push(`/contests/${contestNameSlug}`);
   };
 
   const handleRedirectOnly = () => {
-    router.push("/my-account");
+    router.push(`/contests/${contestNameSlug}`);
   };
 
   return (

@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ContestsTable } from "./components/contests-table";
@@ -44,28 +45,39 @@ export default async function Contests() {
   ];
 
   return (
-    <Tabs defaultValue="all" className="max-w-5xl w-full text-center">
-      <TabsList>
-        {contestFilters.map((contestFilterObject) => {
-          return (
-            <TabsTrigger value={contestFilterObject.filter}>
-              {contestFilterObject.title}
-            </TabsTrigger>
-          );
-        })}
-      </TabsList>
-      {contestFilters.map((contestFilterObject) => {
-        return (
-          <TabsContent value={contestFilterObject.filter}>
-            <ContestsTable
-              contestFilter={contestFilterObject.filter}
-              user={user}
-              contests={contests}
-              entries={entries}
-            ></ContestsTable>
-          </TabsContent>
-        );
-      })}
-    </Tabs>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Contests</h3>
+        <p className="text-sm text-muted-foreground">
+          View active, past, and upcoming contests.
+        </p>
+      </div>
+      <Separator />
+      <div className="flex-1 mx-auto w-full md:max-w-5xl">
+        <Tabs defaultValue="all" className="max-w-5xl w-full text-center">
+          <TabsList>
+            {contestFilters.map((contestFilterObject) => {
+              return (
+                <TabsTrigger value={contestFilterObject.filter}>
+                  {contestFilterObject.title}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+          {contestFilters.map((contestFilterObject) => {
+            return (
+              <TabsContent value={contestFilterObject.filter}>
+                <ContestsTable
+                  contestFilter={contestFilterObject.filter}
+                  user={user}
+                  contests={contests}
+                  entries={entries}
+                ></ContestsTable>
+              </TabsContent>
+            );
+          })}
+        </Tabs>
+      </div>
+    </div>
   );
 }
