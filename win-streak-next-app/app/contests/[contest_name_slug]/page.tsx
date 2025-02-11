@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
 import { Contest, Entry } from "@/lib/types";
 import { EnterContestButton } from "@/components/enter-contest-button";
+import { PickSlider } from "@/components/pick-slider";
 
 interface ContestPageProps {
   params: { contest_name_slug: string };
@@ -48,7 +49,12 @@ export default async function ContestPage({ params }: ContestPageProps) {
       <p>Prize: ${contest.contest_prize}</p>
       <div className="text-center">
         {activeEntry ? (
-          "PICK UI"
+          <PickSlider
+            gameId={1}
+            homeTeam={"Boston"}
+            awayTeam={"LA"}
+            //onPickChange={() => {}}
+          />
         ) : (
           <EnterContestButton
             contestId={contest.contest_id}

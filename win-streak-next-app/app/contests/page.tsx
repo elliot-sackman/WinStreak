@@ -47,15 +47,15 @@ export default async function Contests() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Contests</h3>
+        <h3 className="text-lg font-medium w-full">Contests</h3>
         <p className="text-sm text-muted-foreground">
           View active, past, and upcoming contests.
         </p>
       </div>
       <Separator />
       <div className="flex-1 mx-auto w-full md:max-w-5xl">
-        <Tabs defaultValue="all" className="max-w-5xl w-full text-center">
-          <TabsList>
+        <Tabs defaultValue="all" className="w-full text-center">
+          <TabsList className="w-full">
             {contestFilters.map((contestFilterObject) => {
               return (
                 <TabsTrigger value={contestFilterObject.filter}>
