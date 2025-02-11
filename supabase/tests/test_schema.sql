@@ -49,7 +49,7 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'contests',
-    ARRAY[ 'contest_id' , 'league_id' , 'league_name' , 'sport' , 'target_stat' , 'streak_length' , 'contest_prize' , 'reentries_allowed' , 'contest_start_datetime' , 'contest_end_datetime' , 'is_public' , 'contest_name' , 'contest_description' , 'contest_status' , 'contest_winner_user_id' , 'contest_winner_display_name' ],
+    ARRAY[ 'contest_id' , 'league_id' , 'league_name' , 'sport' , 'target_stat' , 'streak_length' , 'contest_prize' , 'reentries_allowed' , 'contest_start_datetime' , 'contest_end_datetime' , 'is_public' , 'contest_name' , 'contest_description' , 'contest_status' , 'contest_winner_user_id' , 'contest_winner_display_name' , 'contest_name_slug' ],
     'Contests table should have the correct columns.'
 );
 
