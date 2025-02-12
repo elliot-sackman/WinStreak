@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
 import { GameDate } from "@/components/game-date";
 import { Game, Entry, Pick } from "@/lib/types";
 
@@ -23,11 +23,7 @@ interface PickMakerProps {
   existingPicks: existingPicksObject;
 }
 
-const PickMaker = async function ({
-  games,
-  entry,
-  existingPicks,
-}: PickMakerProps) {
+const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
   // Any new picks will be made and submitted using this object
   const [newPicks, setNewPicks] = useState<newPicksObject>({});
 
@@ -38,7 +34,6 @@ const PickMaker = async function ({
   const [picksToDelete, setPicksToDelete] = useState<number[]>([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const supabase = await createClient();
 
   const handlePickChange = (gameId: number, teamId: number | null) => {
     let localNewPicks = { ...newPicks };
@@ -98,6 +93,8 @@ const PickMaker = async function ({
 
     const deletePicks = picksToDelete;
 
+    const supabase = createClient();
+
     // Handling in one Postgres function so that entire submit is rolled back if there's an error (say a user tries to modify a pick for a game that's already started)
     const { data, error } = await supabase.rpc("handle_picks", {
       insert_data: insertPicks,
@@ -108,6 +105,8 @@ const PickMaker = async function ({
     // TODO: Toast message on successful/unsuccessful submit w summary of changes?
     console.log(data);
     console.log(error);
+
+    setIsSubmitting(false);
   };
 
   const createNewPickObject = (gameId: number, teamId: number) => {
@@ -135,7 +134,11 @@ const PickMaker = async function ({
     };
   };
 
-  return <div>Pick Maker</div>;
+  return (
+    <div className="animate-accordion-down">
+      <Button onClick={handleSubmitPicks}>TEST</Button>Pick Maker
+    </div>
+  );
 };
 
 export { PickMaker };
