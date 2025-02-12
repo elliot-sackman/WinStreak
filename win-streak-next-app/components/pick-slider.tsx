@@ -1,7 +1,5 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
 const PickSlider = ({
@@ -13,51 +11,68 @@ const PickSlider = ({
   gameId: number;
   homeTeam: string;
   awayTeam: string;
-  //onPickChange: (gameId: string, team: string) => void
+  //onPickChange: (gameId: string, team: string) => void;
 }) => {
-  const [pick, setPick] = useState<string>("none");
+  const [pick, setPick] = useState<"home" | "away" | null>(null);
+  const [gradient, setGradient] = useState<string>(
+    "bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400"
+  ); // Default gradient - setup default to be whatever is in the db if it exists - also colors to team colors - also instead of team name, team logo
+  const [homeTeamAnimation, setHomeTeamAnimation] =
+    useState<string>("animation-none");
+  const [awayTeamAnimation, setAwayTeamAnimation] =
+    useState<string>("animation-none");
+  // For animations, don't pulse until user selects - imported picks from db shouldn't pulse
 
-  const handlePick = (direction: string) => {
+  const handlePick = (direction: "home" | "away" | null) => {
     setPick(direction);
-    //onPickChange(gameId, direction)
+    //onPickChange(gameId, direction);
+  };
+
+  const handleSliderClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const sliderWidth = e.currentTarget.offsetWidth;
+    const clickPosition =
+      e.clientX - e.currentTarget.getBoundingClientRect().left;
+
+    // Calculate the click position as a percentage of the width
+    const clickPercentage = (clickPosition / sliderWidth) * 100;
+
+    if (clickPercentage < 33) {
+      setGradient("bg-gradient-to-r from-green-600 via-gray-400 to-gray-400");
+      setHomeTeamAnimation("animate-pulse");
+      setAwayTeamAnimation("animate-none");
+      handlePick("away");
+    } else if (clickPercentage > 66) {
+      setGradient("bg-gradient-to-r from-gray-400 via-gray-400 to-yellow-400");
+      setHomeTeamAnimation("animate-none");
+      setAwayTeamAnimation("animate-pulse");
+      handlePick("home");
+    } else {
+      setGradient("bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400");
+      setHomeTeamAnimation("animate-none");
+      setAwayTeamAnimation("animate-none");
+      handlePick(null);
+    }
   };
 
   return (
-    <div className="space-y-2 py-2">
-      <Tabs value={pick || "none"} onValueChange={handlePick}>
-        <TabsList className="max-w-5xl w-full text-center">
-          {/* Home Team Tab */}
-          <TabsTrigger
-            value="home"
-            className="flex-1 py-1 text-center font-semibold  data-[state=active]:bg-green-600/70 data-[state=active]:text-white data-[state=active]:shadow"
-          >
-            {homeTeam}
-          </TabsTrigger>
-
-          {/* No Pick Tab */}
-          <TabsTrigger value="none" className="w-1/4 py-1 text-center">
-            No Pick
-          </TabsTrigger>
-
-          {/* Away Team Tab */}
-          <TabsTrigger
-            value="away"
-            className="flex-1 py-1 font-semibold data-[state=active]:bg-green-600/70 data-[state=active]:text-white data-[state=active]:shadow"
-          >
-            {awayTeam}
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Home Team Content */}
-        <TabsContent value="home">Your Pick: {homeTeam}</TabsContent>
-
-        {/* No Pick Content */}
-        <TabsContent value="none">No Pick Made</TabsContent>
-
-        {/* Away Team Content */}
-        <TabsContent value="away">Your Pick: {awayTeam}</TabsContent>
-      </Tabs>
-      <Separator />
+    <div
+      className={`flex items-center justify-center space-x-4 w-full rounded-sm stroke-black ${gradient}`}
+      onClick={handleSliderClick}
+    >
+      <div className="relative w-full h-12 cursor-pointer">
+        {/* Home Team Label */}
+        <div
+          className={`absolute left-0 top-0 bottom-0 flex items-center justify-center w-1/2 text-sm font-semibold text-primary-foreground z-10 ${homeTeamAnimation}`}
+        >
+          {homeTeam}
+        </div>
+        {/* Away Team Label */}
+        <div
+          className={`absolute right-0 top-0 bottom-0 flex items-center justify-center w-1/2 text-sm font-semibold text-primary-foreground z-10 ${awayTeamAnimation}`}
+        >
+          {awayTeam}
+        </div>
+      </div>
     </div>
   );
 };

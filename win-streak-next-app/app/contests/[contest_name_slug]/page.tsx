@@ -49,12 +49,7 @@ export default async function ContestPage({ params }: ContestPageProps) {
       <p>Prize: ${contest.contest_prize}</p>
       <div className="text-center">
         {activeEntry ? (
-          <PickSlider
-            gameId={1}
-            homeTeam={"Boston"}
-            awayTeam={"LA"}
-            //onPickChange={() => {}}
-          />
+          <PickSlider gameId={1} homeTeam="Boston" awayTeam="Los Angeles" />
         ) : (
           <EnterContestButton
             contestId={contest.contest_id}
