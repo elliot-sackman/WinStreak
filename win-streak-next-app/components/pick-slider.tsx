@@ -56,21 +56,27 @@ const PickSlider = ({
 
   return (
     <div
-      className={`flex items-center justify-center space-x-4 w-full rounded-sm stroke-black ${gradient}`}
+      className={`flex items-center justify-center space-x-4 min-w-[350px] rounded-sm stroke-black ${gradient}`}
       onClick={handleSliderClick}
     >
       <div className="relative w-full h-12 cursor-pointer">
         {/* Home Team Label */}
         <div
-          className={`absolute left-0 top-0 bottom-0 flex items-center justify-center w-1/2 text-sm font-semibold text-primary-foreground z-10 ${homeTeamAnimation}`}
+          className={`absolute left-4 top-0 bottom-0 flex items-center justify-start w-1/2 text-sm font-semibold text-primary-foreground z-10 ${homeTeamAnimation}`}
         >
-          {homeTeam}
+          {"homeTeam"}
+        </div>
+        {/* Game Start Details */}
+        <div
+          className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-primary-foreground z-10`}
+        >
+          {"7:00 PM EST"}
         </div>
         {/* Away Team Label */}
         <div
-          className={`absolute right-0 top-0 bottom-0 flex items-center justify-center w-1/2 text-sm font-semibold text-primary-foreground z-10 ${awayTeamAnimation}`}
+          className={`absolute right-4 top-0 bottom-0 flex items-center justify-end w-1/2 text-sm font-semibold text-primary-foreground z-10 ${awayTeamAnimation}`}
         >
-          {awayTeam}
+          {"awayTeam"}
         </div>
       </div>
     </div>

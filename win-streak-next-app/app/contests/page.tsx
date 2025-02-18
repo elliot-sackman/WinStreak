@@ -58,7 +58,10 @@ export default async function Contests() {
           <TabsList className="w-full">
             {contestFilters.map((contestFilterObject) => {
               return (
-                <TabsTrigger value={contestFilterObject.filter}>
+                <TabsTrigger
+                  value={contestFilterObject.filter}
+                  key={contestFilterObject.filter}
+                >
                   {contestFilterObject.title}
                 </TabsTrigger>
               );
