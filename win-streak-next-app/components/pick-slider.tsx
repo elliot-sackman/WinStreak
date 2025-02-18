@@ -1,18 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Game } from "@/lib/types";
 
-const PickSlider = ({
-  gameId,
-  homeTeam,
-  awayTeam,
-  //onPickChange,
-}: {
-  gameId: number;
-  homeTeam: string;
-  awayTeam: string;
-  //onPickChange: (gameId: string, team: string) => void;
-}) => {
+const PickSlider = ({ game }: { game: Game }) => {
   const [pick, setPick] = useState<"home" | "away" | null>(null);
   const [gradient, setGradient] = useState<string>(
     "bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400"
@@ -56,7 +47,7 @@ const PickSlider = ({
 
   return (
     <div
-      className={`flex items-center justify-center space-x-4 min-w-[350px] rounded-sm stroke-black ${gradient}`}
+      className={`flex items-center justify-center space-x-4 min-w-[350px] rounded-sm ${gradient}`}
       onClick={handleSliderClick}
     >
       <div className="relative w-full h-12 cursor-pointer">
@@ -64,19 +55,19 @@ const PickSlider = ({
         <div
           className={`absolute left-4 top-0 bottom-0 flex items-center justify-start w-1/2 text-sm font-semibold text-primary-foreground z-10 ${homeTeamAnimation}`}
         >
-          {"homeTeam"}
+          {game.home_team_nickname}
         </div>
         {/* Game Start Details */}
         <div
           className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-primary-foreground z-10`}
         >
-          {"7:00 PM EST"}
+          {new Date(game.start_time).toLocaleTimeString()}
         </div>
         {/* Away Team Label */}
         <div
           className={`absolute right-4 top-0 bottom-0 flex items-center justify-end w-1/2 text-sm font-semibold text-primary-foreground z-10 ${awayTeamAnimation}`}
         >
-          {"awayTeam"}
+          {game.away_team_nickname}
         </div>
       </div>
     </div>

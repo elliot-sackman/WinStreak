@@ -5,6 +5,7 @@ import { Contest, Entry, Game } from "@/lib/types";
 import { EnterContestButton } from "@/components/enter-contest-button";
 import { PickMaker } from "@/components/pick-maker";
 import { PickSlider } from "@/components/pick-slider";
+import { Separator } from "@/components/ui/separator";
 
 interface ContestPageProps {
   params: { contest_name_slug: string };
@@ -62,10 +63,10 @@ export default async function ContestPage({ params }: ContestPageProps) {
       <p>Streak Length: {contest.streak_length}</p>
       <p>Prize: ${contest.contest_prize}</p>
       <div className="text-center">
+        <Separator className="my-4" />
         {activeEntry ? (
           <>
             <PickMaker games={games} entry={activeEntry} existingPicks={{}} />
-            <PickSlider gameId={1} homeTeam="Boston" awayTeam="Los Angeles" />
           </>
         ) : (
           <EnterContestButton

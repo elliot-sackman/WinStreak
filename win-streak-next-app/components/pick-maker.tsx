@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
-import { GameDate } from "@/components/game-date";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import { PickSlider } from "./pick-slider";
 import { Game, Entry, Pick } from "@/lib/types";
 
 type existingPicksObject = {
@@ -22,6 +28,10 @@ interface PickMakerProps {
   entry: Entry;
   existingPicks: existingPicksObject;
 }
+
+const leagueDaysInAdvanceMapping = {
+  MLB: 2,
+};
 
 const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
   // Any new picks will be made and submitted using this object
@@ -134,10 +144,56 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
     };
   };
 
+  const getGamesByDate = () => {
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    const gamesByDate: { [gameDate: string]: Game[] } = {};
+
+    games.forEach((game: Game) => {
+      let gameDate = new Date(game.start_time).toLocaleDateString(
+        undefined,
+        options
+      );
+      if (!(gameDate in gamesByDate)) {
+        gamesByDate[gameDate] = [];
+      }
+
+      gamesByDate[gameDate].push(game);
+    });
+    return gamesByDate;
+  };
+
+  const gamesByDate = getGamesByDate();
+
   return (
-    <div className="animate-accordion-down">
-      <Button onClick={handleSubmitPicks}>TEST</Button>Pick Maker
-    </div>
+    <>
+      <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 rounded-sm bg-gray-600 text-primary-foreground">
+        MLB Schedule
+      </h2>
+
+      <Accordion type="single" collapsible className="w-full">
+        {Object.keys(gamesByDate).map((dateString) => {
+          return (
+            <AccordionItem value={dateString} key={dateString}>
+              <AccordionTrigger>{dateString}</AccordionTrigger>
+              <AccordionContent>
+                {gamesByDate[dateString].map((game: Game) => {
+                  return (
+                    <div className="my-2">
+                      <PickSlider game={game} />
+                    </div>
+                  );
+                })}
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
+    </>
   );
 };
 
