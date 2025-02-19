@@ -4,24 +4,18 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
+  Dialog,
+  DialogTrigger,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { PickSlider } from "./pick-slider";
-import { Game, Entry, Pick } from "@/lib/types";
-
-type existingPicksObject = {
-  [gameId: number]: {
-    teamId: number;
-    pickId: number;
-  };
-};
-
-type newPicksObject = {
-  [gameId: number]: number;
-};
+import { Game, Entry, existingPicksObject, newPicksObject } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 interface PickMakerProps {
   games: Game[];
@@ -43,7 +37,9 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
   // Picks that the user wants to delete
   const [picksToDelete, setPicksToDelete] = useState<number[]>([]);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+
+  const router = useRouter();
 
   const handlePickChange = (gameId: number, teamId: number | null) => {
     let localNewPicks = { ...newPicks };
@@ -70,10 +66,12 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
         }
       } else {
         // If the teamID is being set to null, it means we're deleting the pick
-        localPicksToDelete.push(pickId);
+        localPicksToDelete.indexOf(pickId) === -1
+          ? localPicksToDelete.push(pickId)
+          : null;
         delete localModifiedPicks[gameId];
       }
-    } else if (!(gameId in existingPicks)) {
+    } else {
       if (teamId) {
         // If the teamId isn't null, update the pick in the newPicks object
         localNewPicks[gameId] = teamId;
@@ -83,15 +81,27 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
       }
     }
 
+    Object.keys(localNewPicks).length === 0 &&
+    Object.keys(localModifiedPicks).length === 0 &&
+    localPicksToDelete.length === 0
+      ? setSubmitButtonDisabled(true)
+      : setSubmitButtonDisabled(false);
+
     // Now, we set all of the state variables
     setNewPicks(localNewPicks);
     setModifiedPicks(localModifiedPicks);
     setPicksToDelete(localPicksToDelete);
   };
 
-  const handleSubmitPicks = async () => {
-    setIsSubmitting(true);
+  /*
+  useEffect(() => {
+    console.log(newPicks);
+    console.log(modifiedPicks);
+    console.log(picksToDelete);
+  }, [newPicks, modifiedPicks, picksToDelete]);
+  */
 
+  const handleConfirmSubmit = async () => {
     const insertPicks = Object.keys(newPicks).map((gameId) => {
       return createNewPickObject(parseInt(gameId), newPicks[parseInt(gameId)]);
     });
@@ -116,12 +126,14 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
     console.log(data);
     console.log(error);
 
-    setIsSubmitting(false);
+    setNewPicks({});
+    setModifiedPicks({});
+    setPicksToDelete([]);
+    setSubmitButtonDisabled(true);
+    router.refresh();
   };
 
   const createNewPickObject = (gameId: number, teamId: number) => {
-    const currentTimestamp = new Date().toISOString();
-
     return {
       contest_id: entry.contest_id,
       entry_id: entry.entry_id,
@@ -130,17 +142,13 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
       value: teamId,
       game_id: gameId,
       pick_status: "pending",
-      pick_datetime: currentTimestamp,
     };
   };
 
   const createModifiedPickObject = (pickId: number, teamId: number) => {
-    const currentTimestamp = new Date().toISOString();
-
     return {
       pick_id: pickId,
       value: teamId,
-      pick_datetime: currentTimestamp,
     };
   };
 
@@ -169,30 +177,163 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
 
   const gamesByDate = getGamesByDate();
 
+  const getGameDetailsObjectForConfirmationSummary = () => {
+    const gameDetailsObject: { [gameId: number]: Game } = {};
+
+    games.forEach((game: Game) => {
+      gameDetailsObject[game.game_id] = game;
+    });
+
+    return gameDetailsObject;
+  };
+
+  const gameDetailsObject = getGameDetailsObjectForConfirmationSummary();
+
+  const getPicksByPickId = () => {
+    const picksByPickId: {
+      [pickId: number]: { gameId: number; teamId: number };
+    } = {};
+
+    Object.keys(existingPicks).forEach((gameId: string) => {
+      const { pickId, teamId } = existingPicks[parseInt(gameId)];
+
+      picksByPickId[pickId] = { gameId: parseInt(gameId), teamId };
+    });
+
+    return picksByPickId;
+  };
+
+  const picksByPickId = getPicksByPickId();
+
   return (
     <>
-      <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 rounded-sm bg-gray-600 text-primary-foreground">
+      <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 rounded-sm bg-gray-600 text-white">
         MLB Schedule
       </h2>
+      {Object.keys(gamesByDate).map((dateString) => {
+        return (
+          <div key={dateString} className="my-2">
+            <h2>{dateString}</h2>
+            {gamesByDate[dateString].map((game: Game) => {
+              return (
+                <PickSlider
+                  game={game}
+                  key={game.game_id}
+                  existingPick={existingPicks[game.game_id]?.teamId}
+                  handlePickChange={handlePickChange}
+                />
+              );
+            })}
+          </div>
+        );
+      })}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            className="w-full"
+            variant="enter"
+            disabled={submitButtonDisabled}
+          >
+            Submit Picks
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Your Picks</DialogTitle>
+            <DialogDescription>
+              View pick changes summary below.
+            </DialogDescription>
+          </DialogHeader>
 
-      <Accordion type="single" collapsible className="w-full">
-        {Object.keys(gamesByDate).map((dateString) => {
-          return (
-            <AccordionItem value={dateString} key={dateString}>
-              <AccordionTrigger>{dateString}</AccordionTrigger>
-              <AccordionContent>
-                {gamesByDate[dateString].map((game: Game) => {
-                  return (
-                    <div className="my-2">
-                      <PickSlider game={game} />
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
+          {Object.keys(newPicks).length > 0 && (
+            <div>
+              <h2 className="font-semibold">New Picks:</h2>
+              {Object.keys(newPicks).map((gameId: string) => {
+                const game = gameDetailsObject[parseInt(gameId)];
+                const pickedTeamId = newPicks[parseInt(gameId)];
+                const pickedTeamName =
+                  game.home_team_id === pickedTeamId
+                    ? game.home_team_nickname
+                    : game.away_team_nickname;
+                return (
+                  <div key={gameId}>
+                    {game.away_team_nickname +
+                      " vs. " +
+                      game.home_team_nickname +
+                      ": " +
+                      pickedTeamName}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {Object.keys(modifiedPicks).length > 0 && (
+            <div>
+              <h2 className="font-semibold">Modified Picks:</h2>
+              {Object.keys(modifiedPicks).map((gameId: string) => {
+                const { home_team_id, home_team_nickname, away_team_nickname } =
+                  gameDetailsObject[parseInt(gameId)];
+                const pickedTeamId = newPicks[parseInt(gameId)];
+                const pickedTeamName =
+                  home_team_id === pickedTeamId
+                    ? home_team_nickname
+                    : away_team_nickname;
+                return (
+                  <div key={gameId}>
+                    {away_team_nickname +
+                      " vs. " +
+                      home_team_nickname +
+                      ": " +
+                      pickedTeamName}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {picksToDelete.length > 0 && (
+            <div>
+              <h2 className="font-semibold">Deleted Picks:</h2>
+              {picksToDelete.map((pickId: number) => {
+                const { gameId, teamId } = picksByPickId[pickId];
+                const { home_team_id, away_team_nickname, home_team_nickname } =
+                  gameDetailsObject[gameId];
+
+                const pickedTeamName =
+                  home_team_id === teamId
+                    ? home_team_nickname
+                    : away_team_nickname;
+
+                return (
+                  <div key={"pick" + pickId}>
+                    {away_team_nickname +
+                      " vs. " +
+                      home_team_nickname +
+                      ": " +
+                      pickedTeamName}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <DialogFooter>
+            <DialogClose>
+              <Button
+                variant="enter"
+                type="submit"
+                className="w-full"
+                onClick={handleConfirmSubmit}
+              >
+                Confirm
+              </Button>
+              <Button variant="outline" type="submit" className="w-full">
+                Cancel
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

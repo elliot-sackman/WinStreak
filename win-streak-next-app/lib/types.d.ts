@@ -79,3 +79,12 @@ export type Pick = {
   away_team_win: boolean | null;
   entry_id: number;
 }
+export type existingPicksObject = {
+  [gameId: number]: {
+    teamId: number;
+    pickId: number;
+  };
+};
+export type newPicksObject = {
+  [gameId: number]: number;
+};

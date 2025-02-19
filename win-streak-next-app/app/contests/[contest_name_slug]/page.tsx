@@ -1,10 +1,16 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
-import { Contest, Entry, Game } from "@/lib/types";
+import {
+  Contest,
+  Entry,
+  Game,
+  Pick,
+  existingPicksObject,
+  newPicksObject,
+} from "@/lib/types";
 import { EnterContestButton } from "@/components/enter-contest-button";
 import { PickMaker } from "@/components/pick-maker";
-import { PickSlider } from "@/components/pick-slider";
 import { Separator } from "@/components/ui/separator";
 
 interface ContestPageProps {
@@ -53,6 +59,20 @@ export default async function ContestPage({ params }: ContestPageProps) {
 
   const games: Game[] = rawGames as Game[];
 
+  const { data: existingPicks, error: picksError } = await supabase
+    .from("picks")
+    .select("*")
+    .eq("entry_id", activeEntry?.entry_id);
+
+  const existingPicksObject: existingPicksObject = {};
+
+  existingPicks?.forEach((pick: Pick) => {
+    existingPicksObject[pick.game_id] = {
+      teamId: pick.value,
+      pickId: pick.pick_id,
+    };
+  });
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold w-2000">{contest.contest_name}</h1>
@@ -66,7 +86,11 @@ export default async function ContestPage({ params }: ContestPageProps) {
         <Separator className="my-4" />
         {activeEntry ? (
           <>
-            <PickMaker games={games} entry={activeEntry} existingPicks={{}} />
+            <PickMaker
+              games={games}
+              entry={activeEntry}
+              existingPicks={existingPicksObject || {}}
+            />
           </>
         ) : (
           <EnterContestButton
