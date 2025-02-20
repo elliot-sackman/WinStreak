@@ -1,14 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
-import {
-  Contest,
-  Entry,
-  Game,
-  Pick,
-  existingPicksObject,
-  newPicksObject,
-} from "@/lib/types";
+import { Contest, Entry, Game, Pick, existingPicksObject } from "@/lib/types";
 import { EnterContestButton } from "@/components/enter-contest-button";
 import { PickMaker } from "@/components/pick-maker";
 import { Separator } from "@/components/ui/separator";
@@ -16,6 +9,14 @@ import { Separator } from "@/components/ui/separator";
 interface ContestPageProps {
   params: { contest_name_slug: string };
 }
+
+const maximumDaysInAdvanceByLeagueMapping: {
+  [leagueAbbreviation: string]: number;
+} = {
+  MLB: 2,
+  NFL: 6,
+  NBA: 3,
+};
 
 export default async function ContestPage({ params }: ContestPageProps) {
   const supabase = await createClient();
@@ -46,6 +47,8 @@ export default async function ContestPage({ params }: ContestPageProps) {
     .eq("is_complete", false) // Ensure the entry is still active
     .single<Entry>(); // Expecting at most one active entry
 
+  const numDays: number =
+    maximumDaysInAdvanceByLeagueMapping[contest.league_abbreviation];
   const { data: rawGames, error: gamesError } =
     (await supabase
       .from("games")
@@ -54,7 +57,7 @@ export default async function ContestPage({ params }: ContestPageProps) {
       .gte("start_time", new Date().toISOString())
       .lt(
         "start_time",
-        new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString()
+        new Date(Date.now() + numDays * 24 * 60 * 60 * 1000).toISOString()
       )) || [];
 
   const games: Game[] = rawGames as Game[];

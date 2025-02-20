@@ -23,10 +23,6 @@ interface PickMakerProps {
   existingPicks: existingPicksObject;
 }
 
-const leagueDaysInAdvanceMapping = {
-  MLB: 2,
-};
-
 const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
   // Any new picks will be made and submitted using this object
   const [newPicks, setNewPicks] = useState<newPicksObject>({});
@@ -321,13 +317,12 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
             <DialogClose>
               <Button
                 variant="enter"
-                type="submit"
                 className="w-full"
                 onClick={handleConfirmSubmit}
               >
                 Confirm
               </Button>
-              <Button variant="outline" type="submit" className="w-full">
+              <Button variant="outline" className="w-full">
                 Cancel
               </Button>
             </DialogClose>

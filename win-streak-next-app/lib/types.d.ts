@@ -16,6 +16,7 @@ export type Contest = {
   contest_winner_user_id: string | null;
   contest_winner_display_name: string | null;
   contest_name_slug: string;
+  league_abbreviation: string;
   };
   
 export type Entry = {
