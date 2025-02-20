@@ -5,6 +5,8 @@ import { Contest, Entry, Game, Pick, existingPicksObject } from "@/lib/types";
 import { EnterContestButton } from "@/components/enter-contest-button";
 import { PickMaker } from "@/components/pick-maker";
 import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
+import ButtonContestNav from "../components/button-contest-nav";
 
 interface ContestPageProps {
   params: { contest_name_slug: string };
@@ -77,33 +79,33 @@ export default async function ContestPage({ params }: ContestPageProps) {
   });
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold w-2000">{contest.contest_name}</h1>
-      <p className="text-muted-foreground">
-        {contest.sport} - {contest.league_name}
-      </p>
-      <p>Target Stat: {contest.target_stat}</p>
-      <p>Streak Length: {contest.streak_length}</p>
-      <p>Prize: ${contest.contest_prize}</p>
-      <div className="text-center">
-        <Separator className="my-4" />
-        {activeEntry ? (
-          <>
-            <PickMaker
-              games={games}
-              entry={activeEntry}
-              existingPicks={existingPicksObject || {}}
-            />
-          </>
-        ) : (
-          <EnterContestButton
-            contestId={contest.contest_id}
-            contestNameSlug={contest_name_slug}
-            userId={user.id}
-            userHasEntered={false}
+    <div className="container mx-auto p-6 text-center place-items-center">
+      <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
+      <h2 className="text-gray-400">{contest.contest_description}</h2>
+
+      <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full">
+        <div>Prize: ${contest.contest_prize}</div>
+      </Card>
+
+      <ButtonContestNav />
+
+      <Separator className="my-4" />
+      {activeEntry ? (
+        <>
+          <PickMaker
+            games={games}
+            entry={activeEntry}
+            existingPicks={existingPicksObject || {}}
           />
-        )}
-      </div>
+        </>
+      ) : (
+        <EnterContestButton
+          contestId={contest.contest_id}
+          contestNameSlug={contest_name_slug}
+          userId={user.id}
+          userHasEntered={false}
+        />
+      )}
     </div>
   );
 }

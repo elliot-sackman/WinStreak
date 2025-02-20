@@ -100,12 +100,12 @@ const PickSlider = ({
 
   // TODO: Multiple accordions open at once, don't reset picks when accordion opens and closes
   return (
-    <Card className={`my-2 ${gradient} text-white`}>
+    <Card className={`my-2 ${gradient}`}>
       <div
         className={`flex items-center justify-center space-x-4 min-w-[350px] rounded-sm`}
         onClick={handleSliderClick}
       >
-        <div className="relative w-full h-12 cursor-pointer">
+        <div className="relative w-full h-16 cursor-pointer">
           {/* Away Team Label */}
           <div
             className={`absolute left-4 top-0 bottom-0 flex items-center justify-start w-1/2 text-sm font-semibold text-white z-10 ${awayTeamAnimation}`}

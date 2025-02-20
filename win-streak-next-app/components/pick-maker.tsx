@@ -16,6 +16,7 @@ import {
 import { PickSlider } from "./pick-slider";
 import { Game, Entry, existingPicksObject, newPicksObject } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
 
 interface PickMakerProps {
   games: Game[];
@@ -24,16 +25,16 @@ interface PickMakerProps {
 }
 
 const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
-  // Any new picks will be made and submitted using this object
+  // State variables for conditional rendering of content
+  const [submitButtonDisabled, setSubmitButtonDisabled] = useState<
+    boolean | undefined
+  >(true);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+
+  // State variables for handling of making picks
   const [newPicks, setNewPicks] = useState<newPicksObject>({});
-
-  // Any picks that existed on load will be modified here using this object
   const [modifiedPicks, setModifiedPicks] = useState<existingPicksObject>({});
-
-  // Picks that the user wants to delete
   const [picksToDelete, setPicksToDelete] = useState<number[]>([]);
-
-  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
   const router = useRouter();
 
@@ -126,6 +127,7 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
     setModifiedPicks({});
     setPicksToDelete([]);
     setSubmitButtonDisabled(true);
+    setShowDialog(false);
     router.refresh();
   };
 
@@ -202,10 +204,13 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
   const picksByPickId = getPicksByPickId();
 
   return (
-    <>
-      <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 rounded-sm bg-gray-600 text-white">
-        MLB Schedule
-      </h2>
+    <div className="w-full">
+      <Card className="bg-gradient-to-r from-green-600 via-gray-600 to-green-600">
+        <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 text-xl rounded-sm bg-gray-600 text-white bg-gradient-to-r from-green-600 via-gray-600 to-green-600">
+          Upcoming Games
+        </h2>
+      </Card>
+
       {Object.keys(gamesByDate).map((dateString) => {
         return (
           <div key={dateString} className="my-2">
@@ -223,16 +228,17 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
           </div>
         );
       })}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            className="w-full"
-            variant="enter"
-            disabled={submitButtonDisabled}
-          >
-            Submit Picks
-          </Button>
-        </DialogTrigger>
+      <Button
+        className="w-full h-12 text-xl my-6"
+        variant="enter"
+        disabled={submitButtonDisabled}
+        onClick={() => {
+          setShowDialog(true);
+        }}
+      >
+        Submit Picks
+      </Button>
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirm Your Picks</DialogTitle>
@@ -314,22 +320,26 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
             </div>
           )}
           <DialogFooter>
-            <DialogClose>
-              <Button
-                variant="enter"
-                className="w-full"
-                onClick={handleConfirmSubmit}
-              >
-                Confirm
-              </Button>
-              <Button variant="outline" className="w-full">
-                Cancel
-              </Button>
-            </DialogClose>
+            <Button
+              variant="outline"
+              className="w-full my-1"
+              onClick={() => {
+                setShowDialog(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="enter"
+              className="w-full my-1"
+              onClick={handleConfirmSubmit}
+            >
+              Confirm
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
