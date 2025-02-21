@@ -10,8 +10,8 @@ import ButtonContestNav from "../components/button-contest-nav";
 import Leaderboard from "../components/leaderboard";
 
 interface ContestPageProps {
-  params: { contest_name_slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: Promise<{ contest_name_slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const maximumDaysInAdvanceByLeagueMapping: {
@@ -22,16 +22,14 @@ const maximumDaysInAdvanceByLeagueMapping: {
   NBA: 3,
 };
 
-export default async function ContestPage({
-  params,
-  searchParams,
-}: ContestPageProps) {
+export default async function ContestPage(props: ContestPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const supabase = await createClient();
   const { contest_name_slug } = params;
 
   // Updates the current view based on which nav button is selected
-  const urlParams = searchParams || { view: "home" };
-  const view = urlParams.view || "home";
+  const view = searchParams?.view || { view: "home" };
 
   const {
     data: { user },
