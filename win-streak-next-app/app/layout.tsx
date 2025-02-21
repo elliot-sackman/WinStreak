@@ -6,7 +6,10 @@ import Image from "next/image";
 import winStreakLogo from "./win-streak-logo.png";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
+import MainMenu from "@/components/main-menu";
 import "./globals.css";
+import { Main } from "next/document";
+import { createClient } from "@/utils/supabase/server";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -23,11 +26,16 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
@@ -52,7 +60,8 @@ export default function RootLayout({
                       />
                     </Link>
                   </div>
-                  <HeaderAuth />
+
+                  <MainMenu user={user} />
                 </div>
               </nav>
               <div className="flex flex-col gap-5 max-w-5xl p-5">

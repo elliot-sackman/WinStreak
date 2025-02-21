@@ -27,10 +27,11 @@ export default async function ContestPage({
   searchParams,
 }: ContestPageProps) {
   const supabase = await createClient();
-  const { contest_name_slug } = await params;
+  const { contest_name_slug } = params;
 
   // Updates the current view based on which nav button is selected
-  const view = searchParams?.view || "home";
+  const urlParams = searchParams || { view: "home" };
+  const view = urlParams.view || "home";
 
   const {
     data: { user },

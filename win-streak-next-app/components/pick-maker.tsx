@@ -112,8 +112,6 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
     });
 
     // TODO: Toast message on successful/unsuccessful submit w summary of changes?
-    console.log(data);
-    console.log(error);
 
     setNewPicks({});
     setModifiedPicks({});
