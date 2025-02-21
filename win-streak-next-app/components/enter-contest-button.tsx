@@ -10,14 +10,12 @@ interface EnterContestButtonProps {
   contestId: number;
   contestNameSlug: string;
   userId: string;
-  userHasEntered: boolean;
 }
 
 const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
   contestId,
   contestNameSlug,
   userId,
-  userHasEntered,
 }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -48,21 +46,14 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
     router.push(`/contests/${contestNameSlug}`);
   };
 
-  const handleRedirectOnly = () => {
-    router.push(`/contests/${contestNameSlug}`);
-  };
-
   return (
     <Button
+      className="w-full my-1"
       variant="enter"
-      onClick={userHasEntered ? handleRedirectOnly : handleEnterContest}
+      onClick={handleEnterContest}
       disabled={loading}
     >
-      {userHasEntered
-        ? "View Contest Details"
-        : loading
-          ? "Entering..."
-          : "Enter Contest"}
+      {loading ? "Entering..." : "Enter Contest"}
     </Button>
   );
 };

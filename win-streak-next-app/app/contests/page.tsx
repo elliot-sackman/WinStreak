@@ -19,7 +19,9 @@ export default async function Contests() {
   const contests: Contest[] =
     (await supabase.from("contests").select()).data || [];
 
-  const entries: Entry[] = (await supabase.from("entries").select()).data || [];
+  const entries: Entry[] =
+    (await supabase.from("entries").select("*").eq("user_id", user.id)).data ||
+    [];
 
   const contestFilters = [
     {
@@ -43,7 +45,7 @@ export default async function Contests() {
       title: "My",
     },
   ];
-
+  // Switch from using tabs to using buttons nav like contest details page.
   return (
     <div className="space-y-6">
       <div>

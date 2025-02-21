@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Contest } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
-import { EnterContestButton } from "./enter-contest-button";
+import { EnterContestButton } from "@/components/enter-contest-button";
+import { ViewContestDetailsButton } from "@/components/view-contest-details-button";
+import { View } from "lucide-react";
 
 interface ContestDetailsCardProps {
   contest: Contest;
@@ -61,11 +63,15 @@ const ContestDetailsCard = function ({
           <p>
             <strong>Status:</strong> {contest.contest_status}
           </p>
-          <EnterContestButton
-            contestId={contest.contest_id}
+          {!userHasEntered && (
+            <EnterContestButton
+              contestId={contest.contest_id}
+              contestNameSlug={contest.contest_name_slug}
+              userId={user.id}
+            />
+          )}
+          <ViewContestDetailsButton
             contestNameSlug={contest.contest_name_slug}
-            userId={user.id}
-            userHasEntered={userHasEntered}
           />
         </div>
       </DialogContent>

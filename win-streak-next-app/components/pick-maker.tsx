@@ -90,14 +90,6 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
     setPicksToDelete(localPicksToDelete);
   };
 
-  /*
-  useEffect(() => {
-    console.log(newPicks);
-    console.log(modifiedPicks);
-    console.log(picksToDelete);
-  }, [newPicks, modifiedPicks, picksToDelete]);
-  */
-
   const handleConfirmSubmit = async () => {
     const insertPicks = Object.keys(newPicks).map((gameId) => {
       return createNewPickObject(parseInt(gameId), newPicks[parseInt(gameId)]);

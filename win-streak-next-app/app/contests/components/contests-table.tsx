@@ -54,12 +54,13 @@ const ContestsTable = function ({
 
   return (
     <div className="overflow-x-auto">
-      <Table className="w-full">
+      <Table className="max-w-[390px] min-w-[390px] overflow-x-scroll scrollbar-hide whitespace-nowrap">
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Streak Length</TableHead>
-            <TableHead>Contest Prize</TableHead>
+            <TableHead>Target Streak</TableHead>
+            <TableHead>Cash Prize</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

@@ -7,9 +7,11 @@ import { PickMaker } from "@/components/pick-maker";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import ButtonContestNav from "../components/button-contest-nav";
+import Leaderboard from "../components/leaderboard";
 
 interface ContestPageProps {
   params: { contest_name_slug: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 const maximumDaysInAdvanceByLeagueMapping: {
@@ -20,9 +22,15 @@ const maximumDaysInAdvanceByLeagueMapping: {
   NBA: 3,
 };
 
-export default async function ContestPage({ params }: ContestPageProps) {
+export default async function ContestPage({
+  params,
+  searchParams,
+}: ContestPageProps) {
   const supabase = await createClient();
   const { contest_name_slug } = await params;
+
+  // Updates the current view based on which nav button is selected
+  const view = searchParams?.view || "home";
 
   const {
     data: { user },
@@ -45,6 +53,7 @@ export default async function ContestPage({ params }: ContestPageProps) {
   const { data: activeEntry, error: entryError } = await supabase
     .from("entries")
     .select("*")
+    .eq("user_id", user.id)
     .eq("contest_id", contest.contest_id) // Match the current contest ID
     .eq("is_complete", false) // Ensure the entry is still active
     .single<Entry>(); // Expecting at most one active entry
@@ -79,31 +88,80 @@ export default async function ContestPage({ params }: ContestPageProps) {
   });
 
   return (
-    <div className="container mx-auto p-6 text-center place-items-center">
+    <div className="container mx-auto p-6 text-center place-items-center min-w-[350px]">
       <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
-      <h2 className="text-gray-400">{contest.contest_description}</h2>
 
       <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full">
         <div>Prize: ${contest.contest_prize}</div>
       </Card>
 
-      <ButtonContestNav />
+      <ButtonContestNav activeEntry={activeEntry} />
 
-      <Separator className="my-4" />
-      {activeEntry ? (
-        <>
-          <PickMaker
-            games={games}
-            entry={activeEntry}
-            existingPicks={existingPicksObject || {}}
+      {!activeEntry && (
+        <div className="w-full">
+          <EnterContestButton
+            contestId={contest.contest_id}
+            contestNameSlug={contest_name_slug}
+            userId={user.id}
           />
-        </>
-      ) : (
-        <EnterContestButton
-          contestId={contest.contest_id}
-          contestNameSlug={contest_name_slug}
-          userId={user.id}
-          userHasEntered={false}
+        </div>
+      )}
+      <Separator className="my-4" />
+
+      {/* Contest Details View: Home */}
+      {view === "home" && (
+        <div className="w-full">
+          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+            Contest Overview
+          </div>
+          <p className="my-6">{contest.contest_description}</p>
+          <Leaderboard numEntries={10} supabase={supabase} contest={contest} />
+        </div>
+      )}
+
+      {/* Contest Details View: Rules */}
+      {view === "rules" && (
+        <div className="w-full max-w-[350px]">
+          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+            Rules
+          </div>
+          <p className="my-6 text-left">
+            <strong>General:</strong> Pick {contest.league_abbreviation} teams
+            to win their games. If a team loses you're eliminated!
+          </p>
+          <p className="my-6 text-left">
+            <strong>Race To:</strong> {contest.streak_length} wins.
+          </p>
+          <p className="my-6 text-left">
+            <strong>Prize:</strong> ${contest.contest_prize}.
+          </p>
+          <p className="my-6 text-left">
+            <strong>Reentries Allowed:</strong>{" "}
+            {contest.reentries_allowed ? "Yes" : "No"}.
+          </p>
+          <p className="my-6 text-left">
+            <strong>Contest Length:</strong>{" "}
+            {contest.contest_end_datetime
+              ? "Ends on: " +
+                new Date(contest.contest_end_datetime).toLocaleString()
+              : "Until someone wins."}
+          </p>
+        </div>
+      )}
+
+      {/* Contest Details View: Leaderboard */}
+      {view === "leaderboard" && (
+        <div className="w-full">
+          <Leaderboard supabase={supabase} contest={contest} />
+        </div>
+      )}
+
+      {/* Contest Details View: Games */}
+      {view === "games" && activeEntry && (
+        <PickMaker
+          games={games}
+          entry={activeEntry}
+          existingPicks={existingPicksObject || {}}
         />
       )}
     </div>
