@@ -218,16 +218,20 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
           </div>
         );
       })}
-      <Button
-        className="w-full h-12 text-xl my-6"
-        variant="enter"
-        disabled={submitButtonDisabled}
-        onClick={() => {
-          setShowDialog(true);
-        }}
-      >
-        Submit Picks
-      </Button>
+      {!submitButtonDisabled && (
+        <div className="w-full sticky bottom-0 z-10 bg-white">
+          <Button
+            className="w-full h-12 text-xl my-6"
+            variant="enter"
+            onClick={() => {
+              setShowDialog(true);
+            }}
+          >
+            Submit Picks
+          </Button>
+        </div>
+      )}
+
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>

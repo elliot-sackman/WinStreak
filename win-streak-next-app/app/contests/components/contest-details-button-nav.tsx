@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Entry } from "@/lib/types";
 
-interface ButtonContestNavProps {
+interface ContestDetailsButtonNav {
   activeEntry: Entry | null | undefined;
 }
 
-export default function ButtonContestNav({
+export default function ContestDetailsButtonNav({
   activeEntry,
-}: ButtonContestNavProps) {
+}: ContestDetailsButtonNav) {
   const [currentView, setCurrentView] = useState<string>("home");
   const pathname = usePathname();
   const searchParams = useSearchParams();

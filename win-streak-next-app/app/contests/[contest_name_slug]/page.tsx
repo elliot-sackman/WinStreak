@@ -6,7 +6,7 @@ import { EnterContestButton } from "@/components/enter-contest-button";
 import { PickMaker } from "@/components/pick-maker";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
-import ButtonContestNav from "../components/button-contest-nav";
+import ContestDetailsButtonNav from "../components/contest-details-button-nav";
 import Leaderboard from "../components/leaderboard";
 
 interface ContestPageProps {
@@ -29,7 +29,7 @@ export default async function ContestPage(props: ContestPageProps) {
   const { contest_name_slug } = params;
 
   // Updates the current view based on which nav button is selected
-  const view = searchParams?.view || { view: "home" };
+  const view = searchParams?.view || "home";
 
   const {
     data: { user },
@@ -94,17 +94,8 @@ export default async function ContestPage(props: ContestPageProps) {
         <div>Prize: ${contest.contest_prize}</div>
       </Card>
 
-      <ButtonContestNav activeEntry={activeEntry} />
+      <ContestDetailsButtonNav activeEntry={activeEntry} />
 
-      {!activeEntry && (
-        <div className="w-full">
-          <EnterContestButton
-            contestId={contest.contest_id}
-            contestNameSlug={contest_name_slug}
-            userId={user.id}
-          />
-        </div>
-      )}
       <Separator className="my-4" />
 
       {/* Contest Details View: Home */}
@@ -162,6 +153,16 @@ export default async function ContestPage(props: ContestPageProps) {
           entry={activeEntry}
           existingPicks={existingPicksObject || {}}
         />
+      )}
+
+      {!activeEntry && (
+        <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
+          <EnterContestButton
+            contestId={contest.contest_id}
+            contestNameSlug={contest_name_slug}
+            userId={user.id}
+          />
+        </div>
       )}
     </div>
   );

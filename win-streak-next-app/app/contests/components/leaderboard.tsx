@@ -31,7 +31,7 @@ export default async function Leaderboard({
       </div>
       {topEntries?.map((entry: Entry, index: number) => {
         return (
-          <div className="my-2 text-left">
+          <div className="my-2 text-left" key={index}>
             {index + ". " + entry.display_name + " " + entry.current_streak}
           </div>
         );

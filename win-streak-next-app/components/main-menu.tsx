@@ -76,7 +76,9 @@ export default function MainMenu({ user }: { user: User | null }) {
           </div>
           {user ? (
             <div className="my-2" onClick={signOutAction}>
-              <SheetClose asChild>Logout</SheetClose>
+              <SheetClose asChild>
+                <Link href={"/sign-in"}>Logout</Link>
+              </SheetClose>
             </div>
           ) : (
             <>
