@@ -70,6 +70,14 @@ const PickSlider = ({
   };
 
   const handleSliderClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const currentDatetime = new Date();
+    const gameStart = new Date(game.start_time);
+
+    // Can't make updates to games that have already started
+    if (gameStart < currentDatetime) {
+      return;
+    }
+
     const sliderWidth = e.currentTarget.offsetWidth;
     const clickPosition =
       e.clientX - e.currentTarget.getBoundingClientRect().left;
@@ -98,7 +106,6 @@ const PickSlider = ({
     }
   };
 
-  // TODO: Multiple accordions open at once, don't reset picks when accordion opens and closes
   return (
     <Card className={`my-2 ${gradient}`}>
       <div

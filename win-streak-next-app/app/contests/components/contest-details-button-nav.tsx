@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Entry } from "@/lib/types";
 
-interface ContestDetailsButtonNav {
+interface ContestDetailsButtonNavProps {
   activeEntry: Entry | null | undefined;
 }
 
 export default function ContestDetailsButtonNav({
   activeEntry,
-}: ContestDetailsButtonNav) {
+}: ContestDetailsButtonNavProps) {
   const [currentView, setCurrentView] = useState<string>("home");
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -57,12 +57,12 @@ export default function ContestDetailsButtonNav({
       </Link>
       {activeEntry && (
         <>
-          <Link href={createUrl("games")}>
+          <Link href={createUrl("make-picks")}>
             <Button
-              variant={currentView === "games" ? "default" : "outline"}
+              variant={currentView === "make-picks" ? "default" : "outline"}
               className="mx-1"
             >
-              Games
+              Make Picks
             </Button>
           </Link>
           <Link href={createUrl("my-picks")}>

@@ -1,11 +1,16 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ContestsTable } from "./components/contests-table";
 import { Contest, Entry } from "@/lib/types";
+import ContestsButtonNav from "./components/contests-button-nav";
 
-export default async function Contests() {
+interface ContestsPageProps {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Contests(props: ContestsPageProps) {
+  const searchParams = await props.searchParams;
   const supabase = await createClient();
 
   const {
@@ -15,6 +20,9 @@ export default async function Contests() {
   if (!user) {
     return redirect("/sign-in");
   }
+
+  // Updates the current view based on which nav button is selected
+  const view = searchParams?.view || "all";
 
   const contests: Contest[] =
     (await supabase.from("contests").select()).data || [];
@@ -55,33 +63,21 @@ export default async function Contests() {
         </p>
       </div>
       <Separator />
+      <ContestsButtonNav contestFilters={contestFilters} />
       <div className="flex-1 mx-auto w-full md:max-w-5xl">
-        <Tabs defaultValue="all" className="w-full text-center">
-          <TabsList className="w-full">
-            {contestFilters.map((contestFilterObject) => {
-              return (
-                <TabsTrigger
-                  value={contestFilterObject.filter}
-                  key={contestFilterObject.filter}
-                >
-                  {contestFilterObject.title}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-          {contestFilters.map((contestFilterObject) => {
-            return (
-              <TabsContent value={contestFilterObject.filter}>
-                <ContestsTable
-                  contestFilter={contestFilterObject.filter}
-                  user={user}
-                  contests={contests}
-                  entries={entries}
-                ></ContestsTable>
-              </TabsContent>
-            );
-          })}
-        </Tabs>
+        {contestFilters.map((contestFilterObj) => {
+          return (
+            contestFilterObj.filter === view && (
+              <ContestsTable
+                contestFilter={contestFilterObj.filter}
+                user={user}
+                contests={contests}
+                entries={entries}
+                key={contestFilterObj.filter}
+              ></ContestsTable>
+            )
+          );
+        })}
       </div>
     </div>
   );

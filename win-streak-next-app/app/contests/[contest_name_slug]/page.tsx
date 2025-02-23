@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import ContestDetailsButtonNav from "../components/contest-details-button-nav";
 import Leaderboard from "../components/leaderboard";
+import MyPicksDisplay from "@/components/my-picks-display";
 
 interface ContestPageProps {
   params: Promise<{ contest_name_slug: string }>;
@@ -100,7 +101,14 @@ export default async function ContestPage(props: ContestPageProps) {
 
       {/* Contest Details View: Home */}
       {view === "home" && (
-        <div className="w-full">
+        <div className="w-full flex flex-col h-full items-center justify-center">
+          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+            Current Streak
+          </div>
+          <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
+            {activeEntry?.current_streak}
+          </div>
+
           <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
             Contest Overview
           </div>
@@ -146,13 +154,27 @@ export default async function ContestPage(props: ContestPageProps) {
         </div>
       )}
 
-      {/* Contest Details View: Games */}
-      {view === "games" && activeEntry && (
+      {/* Contest Details View: Make Picks */}
+      {view === "make-picks" && activeEntry && (
         <PickMaker
           games={games}
           entry={activeEntry}
           existingPicks={existingPicksObject || {}}
         />
+      )}
+
+      {/* Contest Details View: My Picks */}
+      {view === "my-picks" && activeEntry && (
+        <div className="w-full flex flex-col h-full items-center justify-center">
+          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+            Current Streak
+          </div>
+          <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
+            {activeEntry?.current_streak}
+          </div>
+
+          <MyPicksDisplay picks={existingPicks || []} />
+        </div>
       )}
 
       {!activeEntry && (
