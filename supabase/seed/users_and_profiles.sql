@@ -7,11 +7,6 @@ VALUES
     ('b1d9d7f9-0ddb-4a62-a8dd-9d50fef1ecd4', '00000000-0000-0000-0000-000000000000', 'seed_test4@gmail.com', '$2a$10$fWHdz1zlzPfXVbxuHmX4fODOxCPoSvWCDi9Jg6liQPUjZjxI6u9wu', '{"sub":"b1d9d7f9-0ddb-4a62-a8dd-9d50fef1ecd4","email_verified":true, "first_name":"seed", "last_name": "four", "username":"seed four"}', '{"provider": "email","providers": ["email"]}', NOW(), NOW(), NOW(), 'authenticated', 'authenticated'),
     ('cadff429-22e7-426f-8f22-d2caa285fb81', '00000000-0000-0000-0000-000000000000', 'seed_test5@gmail.com', '$2a$10$fWHdz1zlzPfXVbxuHmX4fODOxCPoSvWCDi9Jg6liQPUjZjxI6u9wu', '{"sub":"cadff429-22e7-426f-8f22-d2caa285fb81","email_verified":true, "first_name":"seed", "last_name": "five", "username":"seed five"}', '{"provider": "email","providers": ["email"]}', NOW(), NOW(), NOW(), 'authenticated', 'authenticated');
 
-INSERT INTO auth.identities
-    (id, provider_id, user_id, identity_data, provider, created_at, updated_at)
-VALUES
-    (gen_random_uuid(), '5f2c9b3f-35e2-4354-923c-df6a1f188f79', '5f2c9b3f-35e2-4354-923c-df6a1f188f79', '{"sub": "5f2c9b3f-35e2-4354-923c-df6a1f188f79", "email": "seed_test1@gmail.com", "email_verified": true, "phone_verified": false}', 'email', NOW(), NOW());
-
 UPDATE public.profiles
 SET 
     birthday = CASE email

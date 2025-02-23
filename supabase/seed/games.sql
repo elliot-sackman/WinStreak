@@ -1,46 +1,60 @@
+-- Insert 40 MLB games ranging from 2 days ago to tomorrow
+
 INSERT INTO public.games 
     (league_id, start_time, home_team_id, away_team_id, home_team_score, away_team_score, home_team_win, away_team_win, status)  
 VALUES  
-    -- Games that have already happened (populated scores and winners)
-    (1, NOW() - INTERVAL '3 days', 1, 2, 110, 98, TRUE, FALSE, 'completed'),  -- Celtics beat Knicks  
-    (2, NOW() - INTERVAL '1 day', 4, 5, 21, 28, FALSE, TRUE, 'completed'),  -- Rams beat Patriots  
-    (3, NOW() - INTERVAL '2 days', 63, 64, 4, 6, FALSE, TRUE, 'completed'), -- Yankees beat Red Sox  
+    -- MLB Games occurring 2 days ago at 7:30 PM ET (12:30 AM UTC next day)
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '00:30', 63, 64, 2, 1, TRUE, FALSE, 'completed'), --1
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '00:30', 65, 66, 1, 3, FALSE, TRUE, 'completed'), --2 
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '00:30', 67, 68, 5, 2, TRUE, FALSE, 'completed'), --3 
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '00:30', 69, 70, 3, 2, TRUE, FALSE, 'completed'), --4 
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '00:30', 71, 72, 7, 5, TRUE, FALSE, 'completed'), --5 
 
-    -- A game happening right now (scores still NULL)
-    (1, NOW() - INTERVAL '5 minutes', 3, 1, NULL, NULL, NULL, NULL, 'in_progress'), -- Lakers vs. Celtics  
+    -- MLB Games occurring 2 days ago at 10:00 PM ET (3:00 AM UTC next day)
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '03:00', 73, 74, 2, 6, FALSE, TRUE, 'completed'), --6
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '03:00', 75, 76, 3, 9, FALSE, TRUE, 'completed'), --7
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '03:00', 77, 78, 1, 0, TRUE, FALSE, 'completed'), --8
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '03:00', 79, 80, 2, 1, TRUE, FALSE, 'completed'), --9
+    (1, DATE(NOW()) - INTERVAL '1 day' + TIME '03:00', 81, 82, 3, 7, FALSE, TRUE, 'completed'), --10
 
-    -- A game slightly in the future (still scheduled)
-    (2, NOW() + INTERVAL '30 minutes', 6, 4, NULL, NULL, NULL, NULL, 'scheduled'),  -- Chiefs vs. Patriots  
+    -- MLB Games occurring yesterday at 7:30 PM ET (12:30 AM UTC next day)
+    (1, DATE(NOW()) + TIME '00:30', 83, 84, 3, 4, FALSE, TRUE, 'completed'), --11
+    (1, DATE(NOW()) + TIME '00:30', 85, 86, 5, 7, FALSE, TRUE, 'completed'), --12
+    (1, DATE(NOW()) + TIME '00:30', 87, 88, 8, 1, TRUE, FALSE, 'completed'), --13
+    (1, DATE(NOW()) + TIME '00:30', 89, 90, 5, 3, TRUE, FALSE, 'completed'), --14
+    (1, DATE(NOW()) + TIME '00:30', 91, 92, 2, 6, FALSE, TRUE, 'completed'), --15
 
-    -- Future games (status scheduled, scores NULL)
-    (1, NOW() + INTERVAL '3 days', 2, 3, NULL, NULL, NULL, NULL, 'scheduled'),  -- Knicks vs. Lakers  
-    (2, NOW() + INTERVAL '4 days', 5, 6, NULL, NULL, NULL, NULL, 'scheduled'),    -- Rams vs. Chiefs  
-    (3, NOW() + INTERVAL '5 days', 90, 63, NULL, NULL, NULL, NULL, 'scheduled'),  -- Mets vs. Red Sox  
+    -- MLB Games occurring yesterday at 10:00 PM ET (3:00 AM UTC next day)
+    (1, DATE(NOW()) + TIME '03:00', 63, 92, 10, 2, TRUE, FALSE, 'completed'), --16
+    (1, DATE(NOW()) + TIME '03:00', 64, 91, 3, 1, TRUE, FALSE, 'completed'), --17
+    (1, DATE(NOW()) + TIME '03:00', 65, 90, 4, 6, FALSE, TRUE, 'completed'), --18
+    (1, DATE(NOW()) + TIME '03:00', 66, 89, 5, 9, FALSE, TRUE, 'completed'), --19
+    (1, DATE(NOW()) + TIME '03:00', 67, 88, 2, 3, FALSE, TRUE, 'completed'), --20
 
-    -- MLB Games occurring Today at 7:00 PM ET (11:00 PM UTC)
-    (3, DATE(NOW()) + TIME '23:00', 63, 64, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + TIME '23:00', 65, 66, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + TIME '23:00', 67, 68, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + TIME '23:00', 69, 70, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + TIME '23:00', 71, 72, NULL, NULL, NULL, NULL, 'scheduled'),
+    -- MLB Games occurring Today at 7:30 PM ET (12:30 AM UTC next day)
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '00:30', 68, 87, NULL, NULL, NULL, NULL, 'scheduled'), --21
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '00:30', 69, 86, NULL, NULL, NULL, NULL, 'scheduled'), --22
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '00:30', 70, 85, NULL, NULL, NULL, NULL, 'scheduled'), --23
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '00:30', 71, 84, NULL, NULL, NULL, NULL, 'scheduled'), --24
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '00:30', 72, 83, NULL, NULL, NULL, NULL, 'scheduled'), --25
 
-    -- MLB Games occurring Today at 10:00 PM ET (2:00 AM UTC next day)
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '02:00', 73, 74, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '02:00', 75, 76, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '02:00', 77, 78, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '02:00', 79, 80, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '02:00', 81, 82, NULL, NULL, NULL, NULL, 'scheduled'),
+    -- MLB Games occurring Today at 10:00 PM ET (3:00 AM UTC next day)
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '03:00', 73, 82, NULL, NULL, NULL, NULL, 'scheduled'), --26
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '03:00', 74, 81, NULL, NULL, NULL, NULL, 'scheduled'), --27
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '03:00', 75, 80, NULL, NULL, NULL, NULL, 'scheduled'), --28
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '03:00', 76, 79, NULL, NULL, NULL, NULL, 'scheduled'), --29
+    (1, DATE(NOW()) + INTERVAL '1 day' + TIME '03:00', 77, 63, NULL, NULL, NULL, NULL, 'scheduled'), --30
 
-    -- MLB Games occurring Tomorrow at 7:00 PM ET (11:00 PM UTC)
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '23:00', 83, 84, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '23:00', 85, 86, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '23:00', 87, 88, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '23:00', 89, 90, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '1 day' + TIME '23:00', 63, 65, NULL, NULL, NULL, NULL, 'scheduled'),
+    -- MLB Games occurring Tomorrow at 7:30 PM ET (12:30 AM UTC next day)
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '00:30', 78, 64, NULL, NULL, NULL, NULL, 'scheduled'), --31
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '00:30', 79, 65, NULL, NULL, NULL, NULL, 'scheduled'), --32
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '00:30', 80, 66, NULL, NULL, NULL, NULL, 'scheduled'), --33
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '00:30', 81, 67, NULL, NULL, NULL, NULL, 'scheduled'), --34
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '00:30', 82, 68, NULL, NULL, NULL, NULL, 'scheduled'), --35
 
-    -- MLB Games occurring the Day After Tomorrow at 10:00 PM ET (2:00 AM UTC next day)
-    (3, DATE(NOW()) + INTERVAL '2 days' + TIME '02:00', 66, 67, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '2 days' + TIME '02:00', 68, 69, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '2 days' + TIME '02:00', 70, 71, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '2 days' + TIME '02:00', 72, 73, NULL, NULL, NULL, NULL, 'scheduled'),
-    (3, DATE(NOW()) + INTERVAL '2 days' + TIME '02:00', 74, 75, NULL, NULL, NULL, NULL, 'scheduled');
+    -- MLB Games occurring Tomorrow at 10:00 PM ET (2:00 AM UTC next day)
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '03:00', 83, 69, NULL, NULL, NULL, NULL, 'scheduled'), --36
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '03:00', 84, 70, NULL, NULL, NULL, NULL, 'scheduled'), --37
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '03:00', 85, 71, NULL, NULL, NULL, NULL, 'scheduled'), --38
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '03:00', 86, 72, NULL, NULL, NULL, NULL, 'scheduled'), --39
+    (1, DATE(NOW()) + INTERVAL '2 days' + TIME '03:00', 87, 73, NULL, NULL, NULL, NULL, 'scheduled'); --40
