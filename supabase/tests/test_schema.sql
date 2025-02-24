@@ -4,12 +4,12 @@ CREATE EXTENSION IF NOT EXISTS pgtap;
 -- Ensure all tables exist and contain correct columns
 BEGIN;
 
-SELECT plan(9);  
+SELECT plan(10);  
 
 -- Tables Exist
 SELECT tables_are(
     'public',
-    ARRAY[ 'profiles' , 'leagues' , 'teams' , 'games' , 'contests' , 'picks' , 'profiles_public' , 'entries'],
+    ARRAY[ 'profiles' , 'leagues' , 'teams' , 'games' , 'contests' , 'picks' , 'profiles_public' , 'entries', 'sponsors'],
     'Public schema should have the correct tables.'
 );
 
@@ -49,7 +49,7 @@ SELECT columns_are(
 SELECT columns_are(
     'public',
     'contests',
-    ARRAY[ 'contest_id' , 'league_id' , 'league_name' , 'sport' , 'target_stat' , 'streak_length' , 'contest_prize' , 'reentries_allowed' , 'contest_start_datetime' , 'contest_end_datetime' , 'is_public' , 'contest_name' , 'contest_description' , 'contest_status' , 'contest_winner_user_id' , 'contest_winner_display_name' , 'contest_name_slug' ],
+    ARRAY[ 'contest_id' , 'league_id' , 'league_name' , 'sport' , 'target_stat' , 'streak_length' , 'contest_prize' , 'reentries_allowed' , 'contest_start_datetime' , 'contest_end_datetime' , 'is_public' , 'contest_name' , 'contest_description' , 'contest_status' , 'contest_winner_user_id' , 'contest_winner_display_name' , 'contest_name_slug' , 'league_abbreviation' , 'sponsor_id' , 'sponsor_name' , 'sponsor_promo' , 'sponsor_site_url' , 'sponsor_logo_url'],
     'Contests table should have the correct columns.'
 );
 
@@ -69,12 +69,20 @@ SELECT columns_are(
     'Public profiles table should have the correct columns.'
 );
 
--- Entreis columns exist
+-- Entries columns exist
 SELECT columns_are(
     'public',
     'entries',
     ARRAY[ 'entry_id' , 'contest_id' , 'user_id' , 'display_name' , 'entry_number' , 'created_at' , 'is_complete' , 'current_streak' , 'contest_streak_length' ],
     'Entries table should have the correct columns.'
+);
+
+-- Sponsors columns exist
+SELECT columns_are(
+    'public',
+    'sponsors',
+    ARRAY[ 'sponsor_id' , 'sponsor_name' , 'sponsor_promo' , 'sponsor_site_url' , 'sponsor_logo_url' ],
+    'sponsors table should have the correct columns.'
 );
 
 -- Constraints on tables
