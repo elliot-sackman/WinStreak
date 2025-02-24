@@ -17,7 +17,12 @@ export type Contest = {
   contest_winner_display_name: string | null;
   contest_name_slug: string;
   league_abbreviation: string;
-  };
+  sponsor_id: number | null;
+  sponsor_name: string | null;
+  sponsor_promo: string | null;
+  sponsor_site_url: string | null;
+  sponsor_logo_url: string | null;
+};
   
 export type Entry = {
   entry_id: number;

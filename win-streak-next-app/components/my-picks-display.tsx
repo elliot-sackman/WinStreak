@@ -91,7 +91,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
           </Card>
           {Object.keys(pendingPicksByDate).map((gameDate: string) => {
             return (
-              <div>
+              <div key={"pending" + gameDate}>
                 <h2 key={"pending" + gameDate}>{gameDate}</h2>
                 {pendingPicksByDate[gameDate].map((pick: Pick) => {
                   return displayPick(pick);
@@ -111,7 +111,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
           </Card>
           {Object.keys(completedPicksByGameDate).map((gameDate: string) => {
             return (
-              <div>
+              <div key={"completed" + gameDate}>
                 <h2 key={"completed" + gameDate}>{gameDate}</h2>
                 {completedPicksByGameDate[gameDate].map((pick: Pick) => {
                   return displayPick(pick);

@@ -5,16 +5,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { Contest } from "@/lib/types";
 
 interface EnterContestButtonProps {
-  contestId: number;
-  contestNameSlug: string;
+  contest: Contest;
   userId: string;
 }
 
 const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
-  contestId,
-  contestNameSlug,
+  contest,
   userId,
 }) {
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,7 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
     const { error } = await supabase.from("entries").insert([
       {
         user_id: userId,
-        contest_id: contestId,
+        contest_id: contest.contest_id,
       },
     ]);
 
@@ -36,14 +35,21 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
       setLoading(false);
       return;
     } else {
+      var description = "You have successfully entered the contest!";
+
+      if (contest.sponsor_id && contest.sponsor_promo) {
+        description =
+          description +
+          `\nBy entering this contest, you've earned a special offer from ${contest.sponsor_name}.\n${contest.sponsor_promo}`;
+      }
       toast({
         title: "Success!",
-        description: "You have successfully entered the contest.",
+        description,
       });
     }
 
     // Redirect to contests page after successful entry
-    router.push(`/contests/${contestNameSlug}`);
+    router.push(`/contests/${contest.contest_name_slug}`);
   };
 
   return (

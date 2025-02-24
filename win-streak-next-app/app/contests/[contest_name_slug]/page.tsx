@@ -6,6 +6,8 @@ import { EnterContestButton } from "@/components/enter-contest-button";
 import { PickMaker } from "@/components/pick-maker";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
+import Link from "next/link";
+import Image from "next/image";
 import ContestDetailsButtonNav from "../components/contest-details-button-nav";
 import Leaderboard from "../components/leaderboard";
 import MyPicksDisplay from "@/components/my-picks-display";
@@ -90,15 +92,20 @@ export default async function ContestPage(props: ContestPageProps) {
   return (
     <div className="container mx-auto p-6 text-center place-items-center min-w-[350px]">
       <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
-
+      Sponsored By:
+      <Link href={contest.sponsor_site_url!}>
+        <Image
+          src={contest.sponsor_logo_url!}
+          alt="Sponsor Logo"
+          width={200}
+          height={100}
+        />
+      </Link>
       <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full">
         <div>Prize: ${contest.contest_prize}</div>
       </Card>
-
       <ContestDetailsButtonNav activeEntry={activeEntry} />
-
       <Separator className="my-4" />
-
       {/* Contest Details View: Home */}
       {view === "home" && (
         <div className="w-full flex flex-col h-full items-center justify-center">
@@ -116,7 +123,6 @@ export default async function ContestPage(props: ContestPageProps) {
           <Leaderboard numEntries={10} supabase={supabase} contest={contest} />
         </div>
       )}
-
       {/* Contest Details View: Rules */}
       {view === "rules" && (
         <div className="w-full max-w-[350px]">
@@ -146,14 +152,12 @@ export default async function ContestPage(props: ContestPageProps) {
           </p>
         </div>
       )}
-
       {/* Contest Details View: Leaderboard */}
       {view === "leaderboard" && (
         <div className="w-full">
           <Leaderboard supabase={supabase} contest={contest} />
         </div>
       )}
-
       {/* Contest Details View: Make Picks */}
       {view === "make-picks" && activeEntry && (
         <PickMaker
@@ -162,7 +166,6 @@ export default async function ContestPage(props: ContestPageProps) {
           existingPicks={existingPicksObject || {}}
         />
       )}
-
       {/* Contest Details View: My Picks */}
       {view === "my-picks" && activeEntry && (
         <div className="w-full flex flex-col h-full items-center justify-center">
@@ -176,14 +179,9 @@ export default async function ContestPage(props: ContestPageProps) {
           <MyPicksDisplay picks={existingPicks || []} />
         </div>
       )}
-
       {!activeEntry && (
         <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
-          <EnterContestButton
-            contestId={contest.contest_id}
-            contestNameSlug={contest_name_slug}
-            userId={user.id}
-          />
+          <EnterContestButton contest={contest} userId={user.id} />
         </div>
       )}
     </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +14,6 @@ import { Contest } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { EnterContestButton } from "@/components/enter-contest-button";
 import { ViewContestDetailsButton } from "@/components/view-contest-details-button";
-import { View } from "lucide-react";
 
 interface ContestDetailsCardProps {
   contest: Contest;
@@ -31,11 +32,21 @@ const ContestDetailsCard = function ({
     <Dialog>
       <DialogTrigger asChild>{triggerElement}</DialogTrigger>
       <DialogContent className="max-w-lg">
-        <DialogHeader>
+        <DialogHeader className="text-center items-center justify-center">
           <DialogTitle>{contest.contest_name}</DialogTitle>
-          <DialogDescription>
-            View contest details and information.
-          </DialogDescription>
+          {contest.sponsor_id && (
+            <DialogDescription className="text-center">
+              Sponsored By:
+              <Link href={contest.sponsor_site_url!}>
+                <Image
+                  src={contest.sponsor_logo_url!}
+                  alt="Sponsor Logo"
+                  width={200}
+                  height={100}
+                />
+              </Link>
+            </DialogDescription>
+          )}
         </DialogHeader>
         <div className="space-y-4">
           <p>
@@ -64,11 +75,7 @@ const ContestDetailsCard = function ({
             <strong>Status:</strong> {contest.contest_status}
           </p>
           {!userHasEntered && (
-            <EnterContestButton
-              contestId={contest.contest_id}
-              contestNameSlug={contest.contest_name_slug}
-              userId={user.id}
-            />
+            <EnterContestButton contest={contest} userId={user.id} />
           )}
           <ViewContestDetailsButton
             contestNameSlug={contest.contest_name_slug}
