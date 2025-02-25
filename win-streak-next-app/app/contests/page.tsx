@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ContestsTable } from "./components/contests-table";
 import { Contest, Entry } from "@/lib/types";
-import ContestsButtonNav from "./components/contests-button-nav";
+import ButtonNav from "@/components/button-nav";
 
 interface ContestsPageProps {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -63,7 +63,7 @@ export default async function Contests(props: ContestsPageProps) {
         </p>
       </div>
       <Separator />
-      <ContestsButtonNav contestFilters={contestFilters} />
+      <ButtonNav filters={contestFilters} />
       <div className="flex-1 mx-auto w-full md:max-w-5xl">
         {contestFilters.map((contestFilterObj) => {
           return (

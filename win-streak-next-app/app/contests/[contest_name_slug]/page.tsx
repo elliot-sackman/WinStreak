@@ -8,9 +8,10 @@ import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
-import ContestDetailsButtonNav from "../components/contest-details-button-nav";
+import ButtonNav from "@/components/button-nav";
 import Leaderboard from "../components/leaderboard";
 import MyPicksDisplay from "@/components/my-picks-display";
+import { Button } from "@/components/ui/button";
 
 interface ContestPageProps {
   params: Promise<{ contest_name_slug: string }>;
@@ -89,6 +90,29 @@ export default async function ContestPage(props: ContestPageProps) {
     };
   });
 
+  const contestDetailsFilters = [
+    {
+      filter: "home",
+      title: "Home",
+    },
+    {
+      filter: "rules",
+      title: "Rules",
+    },
+    {
+      filter: "leaderboard",
+      title: "Leaderboard",
+    },
+    {
+      filter: "make-picks",
+      title: "Make Picks",
+    },
+    {
+      filter: "my-picks",
+      title: "My Picks",
+    },
+  ];
+
   return (
     <div className="container mx-auto p-6 text-center place-items-center min-w-[350px]">
       <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
@@ -104,7 +128,7 @@ export default async function ContestPage(props: ContestPageProps) {
       <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full">
         <div>Prize: ${contest.contest_prize}</div>
       </Card>
-      <ContestDetailsButtonNav activeEntry={activeEntry} />
+      <ButtonNav filters={contestDetailsFilters} />
       <Separator className="my-4" />
       {/* Contest Details View: Home */}
       {view === "home" && (
