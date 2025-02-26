@@ -172,7 +172,7 @@ export default function ContestDetailsPageView({
           default:
             return null;
         }
-      }, [currentView])}
+      }, [currentView, existingPicks])}
 
       {!activeEntry && (
         <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">

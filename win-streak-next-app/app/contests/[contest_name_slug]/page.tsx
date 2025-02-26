@@ -76,10 +76,12 @@ export default async function ContestPage(props: ContestPageProps) {
 
   const games: Game[] = rawGames as Game[];
 
-  const { data: existingPicks, error: picksError } = await supabase
+  const { data: rawExistingPicks, error: picksError } = await supabase
     .from("picks")
     .select("*")
     .eq("entry_id", activeEntry?.entry_id);
+
+  const existingPicks = rawExistingPicks as Pick[];
 
   return (
     <div className="container mx-auto p-6 text-center place-items-center min-w-[350px]">
@@ -93,6 +95,7 @@ export default async function ContestPage(props: ContestPageProps) {
               alt="Sponsor Logo"
               width={200}
               height={100}
+              style={{ width: "auto" }}
             />
           </Link>
         </div>
