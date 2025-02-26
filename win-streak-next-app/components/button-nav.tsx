@@ -6,22 +6,19 @@ import { Button } from "@/components/ui/button";
 
 export default function ButtonNav({
   filters,
+  currentView,
+  setCurrentView,
 }: {
   filters: { [key: string]: string }[];
+  currentView: string;
+  setCurrentView: Function;
 }) {
-  const [currentView, setCurrentView] = useState<string>(filters![0].filter);
-  const searchParams = useSearchParams();
   const router = useRouter();
-
-  useEffect(() => {
-    const currView = searchParams.get("view") || "all";
-    setCurrentView(currView);
-  });
 
   const updateView = (view: string) => {
     setCurrentView(view);
-    router.push(`?view=${view}`, { scroll: false });
   };
+
   return (
     <div className="h-12 my-2 overflow-x-auto whitespace-nowrap max-w-[350px] min-w-[350px] scrollbar-hide">
       {filters.map((filterObj) => {
