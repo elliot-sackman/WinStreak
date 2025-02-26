@@ -2,6 +2,13 @@
 
 import { Pick } from "@/lib/types";
 import { Card } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
 
 interface MyPicksDisplayProps {
   picks: Pick[];
@@ -81,14 +88,17 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
   const completedPicksByGameDate = getPicksByGameDate(completedPicks);
 
   return (
-    <div className="w-full">
-      {pendingPicks.length > 0 && (
-        <div key="pendingPicks">
-          <Card className="my-4">
-            <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 text-xl rounded-sm bg-orange-500 text-white">
-              Pending Picks
-            </h2>
-          </Card>
+    <Accordion type="multiple" className="w-full">
+      <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+        My Picks
+      </div>
+      <AccordionItem value="pending">
+        <AccordionTrigger className="relative flex items-center justify-end min-w-[350px] h-8 text-xl rounded-sm my-4">
+          <span className="absolute left-1/2 transform -translate-x-1/2">
+            Pending Picks
+          </span>
+        </AccordionTrigger>
+        <AccordionContent>
           {Object.keys(pendingPicksByDate).map((gameDate: string) => {
             return (
               <div key={"pending" + gameDate}>
@@ -99,16 +109,15 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
               </div>
             );
           })}
-        </div>
-      )}
-
-      {completedPicks.length > 0 && (
-        <div key="completedPicks">
-          <Card className="my-4">
-            <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 text-xl rounded-sm bg-green-600 text-white">
-              Correct Picks
-            </h2>
-          </Card>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="completed">
+        <AccordionTrigger className="relative flex items-center justify-end space-x-4 min-w-[350px] h-8 text-xl rounded-sm my-4">
+          <span className="absolute left-1/2 transform -translate-x-1/2">
+            Correct Picks
+          </span>
+        </AccordionTrigger>
+        <AccordionContent>
           {Object.keys(completedPicksByGameDate).map((gameDate: string) => {
             return (
               <div key={"completed" + gameDate}>
@@ -119,8 +128,8 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
               </div>
             );
           })}
-        </div>
-      )}
-    </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

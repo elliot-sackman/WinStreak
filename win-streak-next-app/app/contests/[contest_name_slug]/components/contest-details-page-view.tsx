@@ -67,20 +67,32 @@ export default function ContestDetailsPageView({
       <Separator className="my-4" />
       {/* Contest Details View: Home */}
       {currentView === "home" && (
-        <div className="w-full flex flex-col h-full items-center justify-center">
-          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
-            Current Streak
-          </div>
-          <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
-            {activeEntry?.current_streak}
-          </div>
+        <>
+          <div className="w-full flex flex-col h-full items-center">
+            {activeEntry && (
+              <>
+                <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+                  Current Streak
+                </div>
+                <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
+                  {activeEntry?.current_streak}
+                </div>
+              </>
+            )}
 
-          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
-            Contest Overview
+            <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+              Contest Overview
+            </div>
+            <p className="my-6">{contest.contest_description}</p>
           </div>
-          <p className="my-6">{contest.contest_description}</p>
-          <Leaderboard numEntries={10} entries={leaderboardEntries} />
-        </div>
+          <div className="items-left">
+            <Leaderboard
+              numEntries={10}
+              entries={leaderboardEntries}
+              userId={user.id}
+            />
+          </div>
+        </>
       )}
       {/* Contest Details View: Rules */}
       {currentView === "rules" && (
@@ -114,28 +126,40 @@ export default function ContestDetailsPageView({
       {/* Contest Details View: Leaderboard */}
       {currentView === "leaderboard" && (
         <div className="w-full">
-          <Leaderboard entries={leaderboardEntries} />
+          <Leaderboard entries={leaderboardEntries} userId={user.id} />
         </div>
       )}
       {/* Contest Details View: Make Picks */}
-      {currentView === "make-picks" && activeEntry && (
-        <PickMaker
-          games={games}
-          entry={activeEntry}
-          existingPicks={existingPicksObject || {}}
-        />
+      {currentView === "make-picks" && (
+        <div>
+          {activeEntry ? (
+            <PickMaker
+              games={games}
+              entry={activeEntry}
+              existingPicks={existingPicksObject || {}}
+            />
+          ) : (
+            <div className="my-6">Enter the contest to start making picks!</div>
+          )}
+        </div>
       )}
       {/* Contest Details View: My Picks */}
-      {currentView === "my-picks" && activeEntry && (
+      {currentView === "my-picks" && (
         <div className="w-full flex flex-col h-full items-center justify-center">
-          <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
-            Current Streak
-          </div>
-          <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
-            {activeEntry?.current_streak}
-          </div>
+          {activeEntry ? (
+            <>
+              <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+                Current Streak
+              </div>
+              <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
+                {activeEntry?.current_streak}
+              </div>
 
-          <MyPicksDisplay picks={existingPicks || []} />
+              <MyPicksDisplay picks={existingPicks || []} />
+            </>
+          ) : (
+            <div className="my-6">Enter the contest and make some picks!</div>
+          )}
         </div>
       )}
       {!activeEntry && (

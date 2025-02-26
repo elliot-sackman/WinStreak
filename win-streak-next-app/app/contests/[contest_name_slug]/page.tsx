@@ -84,15 +84,20 @@ export default async function ContestPage(props: ContestPageProps) {
   return (
     <div className="container mx-auto p-6 text-center place-items-center min-w-[350px]">
       <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
-      Sponsored By:
-      <Link href={contest.sponsor_site_url!}>
-        <Image
-          src={contest.sponsor_logo_url!}
-          alt="Sponsor Logo"
-          width={200}
-          height={100}
-        />
-      </Link>
+      {contest.sponsor_id && (
+        <div>
+          Sponsored By:
+          <Link href={contest.sponsor_site_url!}>
+            <Image
+              src={contest.sponsor_logo_url!}
+              alt="Sponsor Logo"
+              width={200}
+              height={100}
+            />
+          </Link>
+        </div>
+      )}
+
       <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full">
         <div>Prize: ${contest.contest_prize}</div>
       </Card>
