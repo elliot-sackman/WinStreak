@@ -54,6 +54,10 @@ export type Game = {
   away_team_win: boolean | null;
   status: string;
   game_api_id: number | null;
+  home_team_primary_hex_color: string | null;
+  home_team_secondary_hex_color: string | null;
+  away_team_primary_hex_color: string | null;
+  away_team_secondary_hex_color: string | null;
 }
 
 export type Pick = {
@@ -84,6 +88,10 @@ export type Pick = {
   away_team_score: number | null;
   away_team_win: boolean | null;
   entry_id: number;
+  home_team_primary_hex_color: string | null;
+  home_team_secondary_hex_color: string | null;
+  away_team_primary_hex_color: string | null;
+  away_team_secondary_hex_color: string | null;
 }
 export type existingPicksObject = {
   [gameId: number]: {

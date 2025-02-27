@@ -193,8 +193,8 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
 
   return (
     <div className="w-full">
-      <Card className="bg-gradient-to-r from-green-600 via-gray-600 to-green-600">
-        <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 text-xl rounded-sm bg-gray-600 text-white bg-gradient-to-r from-green-600 via-gray-600 to-green-600">
+      <Card className="bg-neutral-500">
+        <h2 className="flex items-center justify-center space-x-4 min-w-[350px] h-12 text-xl rounded-sm text-white">
           Upcoming Games
         </h2>
       </Card>

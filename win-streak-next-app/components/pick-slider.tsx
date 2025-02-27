@@ -15,7 +15,7 @@ const PickSlider = ({
 }) => {
   const [pick, setPick] = useState<number | null>(existingPick);
   const [gradient, setGradient] = useState<string>(
-    "bg-gradient-to-r from-gray-600 via-gray-600 to-gray-600"
+    "linear-gradient(to right, #737373, #737373)"
   ); // Default gradient - setup default to be whatever is in the db if it exists - also colors to team colors - also instead of team name, team logo
   const [homeTeamAnimation, setHomeTeamAnimation] =
     useState<string>("animate-none");
@@ -34,7 +34,9 @@ const PickSlider = ({
     // Handle conditional styling
     if (teamId === game.home_team_id) {
       // Set home gradient
-      setGradient("bg-gradient-to-r from-gray-600 via-gray-600 to-green-600");
+      setGradient(
+        `linear-gradient(to right, #737373, #737373, ${game.home_team_primary_hex_color || "green"})`
+      );
 
       // If there was no existing pick OR the new pick is a new value, we animate and outline
       teamId === existingPick
@@ -42,7 +44,9 @@ const PickSlider = ({
         : handleCardAnimationChange("home");
     } else if (teamId === game.away_team_id) {
       // Set away team gradient
-      setGradient("bg-gradient-to-r from-green-600 via-gray-600 to-gray-600");
+      setGradient(
+        `linear-gradient(to right, ${game.away_team_primary_hex_color || "green"}, #737373, #737373)`
+      );
 
       // If there was no existing pick OR the new pick is a new value, we animate and outline
       teamId === existingPick
@@ -50,7 +54,7 @@ const PickSlider = ({
         : handleCardAnimationChange("away");
     } else {
       // Remove gradient for null pick
-      setGradient("bg-gray-600");
+      setGradient("linear-gradient(to right, #737373, #737373)");
 
       handleCardAnimationChange("none");
     }
@@ -107,7 +111,7 @@ const PickSlider = ({
   };
 
   return (
-    <Card className={`my-2 ${gradient}`}>
+    <Card className="my-2" style={{ backgroundImage: gradient }}>
       <div
         className={`flex items-center justify-center space-x-4 min-w-[350px] rounded-sm`}
         onClick={handleSliderClick}
@@ -123,7 +127,9 @@ const PickSlider = ({
           <div
             className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-white z-10`}
           >
-            {new Date(game.start_time).toLocaleTimeString()}
+            {new Date(game.start_time).toLocaleTimeString([], {
+              timeStyle: "short",
+            })}
           </div>
           {/* Home Team Label */}
           <div

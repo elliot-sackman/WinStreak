@@ -16,7 +16,7 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   return (
     <>
-      <div className="border border-input bg-gray-600 text-white rounded-sm w-full h-12 content-center">
+      <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
         Leaderboard
       </div>
       {entries.length > 0 ? (
