@@ -42,9 +42,9 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
 
   const displayPick = (pick: Pick) => {
     if (pick.home_team_id === pick.value) {
-      var gradient = `linear-gradient(to right, #737373, #737373, ${pick.home_team_primary_hex_color}`;
+      var gradient = `linear-gradient(to right, #737373, #737373, ${pick.home_team_primary_hex_color || "green"}`;
     } else {
-      gradient = `linear-gradient(to right, ${pick.away_team_primary_hex_color}, #737373, #737373`;
+      gradient = `linear-gradient(to right, ${pick.away_team_primary_hex_color || "green"}, #737373, #737373`;
     }
 
     return (
