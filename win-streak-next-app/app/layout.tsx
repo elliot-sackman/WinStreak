@@ -1,4 +1,3 @@
-import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
@@ -8,7 +7,6 @@ import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
 import MainMenu from "@/components/main-menu";
 import "./globals.css";
-import { Main } from "next/document";
 import { createClient } from "@/utils/supabase/server";
 
 const defaultUrl = process.env.VERCEL_URL
