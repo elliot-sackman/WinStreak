@@ -10,6 +10,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Card } from "./ui/card";
 import { Contest } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { EnterContestButton } from "@/components/enter-contest-button";
@@ -31,7 +32,7 @@ const ContestDetailsCard = function ({
   return (
     <Dialog>
       <DialogTrigger asChild>{triggerElement}</DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-sm rounded-lg">
         <DialogHeader className="text-center items-center justify-center">
           <DialogTitle>{contest.contest_name}</DialogTitle>
           {contest.sponsor_id && (
@@ -47,36 +48,47 @@ const ContestDetailsCard = function ({
               </Link>
             </DialogDescription>
           )}
+          <Card className="bg-green-600 text-white text-xl text-center font-semibold h-20 content-center my-2 w-3/4">
+            <div>Prize: ${contest.contest_prize}</div>
+          </Card>
         </DialogHeader>
         <div className="space-y-4">
           <p>
             <strong>Sport:</strong> {contest.sport}
           </p>
           <p>
-            <strong>League:</strong> {contest.league_name}
+            <strong>League:</strong> {contest.league_abbreviation}
           </p>
           <p>
-            <strong>Streak Length:</strong> {contest.streak_length}
-          </p>
-          <p>
-            <strong>Prize:</strong> ${contest.contest_prize}
+            <strong>Winning Streak:</strong> {contest.streak_length} Correct
+            Picks
           </p>
           <p>
             <strong>Start Date:</strong>{" "}
             {new Date(contest.contest_start_datetime).toLocaleString()}
           </p>
-          {contest.contest_end_datetime && (
-            <p>
-              <strong>End Date:</strong>{" "}
-              {new Date(contest.contest_end_datetime).toLocaleString()}
-            </p>
-          )}
           <p>
-            <strong>Status:</strong> {contest.contest_status}
+            <strong>End Date:</strong>{" "}
+            {contest.contest_end_datetime
+              ? new Date(contest.contest_end_datetime).toLocaleDateString()
+              : "Until someone wins."}
           </p>
-          {!userHasEntered && (
-            <EnterContestButton contest={contest} userId={user.id} />
-          )}
+          <p>
+            <strong>Status:</strong>{" "}
+            {contest.contest_status === "in_progress"
+              ? "In Progress"
+              : contest.contest_status === "scheduled"
+                ? "Not Started"
+                : "Ended"}
+          </p>
+          <p>
+            <strong>Reentries Allowed:</strong>{" "}
+            {contest.reentries_allowed ? "Yes" : "No"}
+          </p>
+          {!userHasEntered &&
+            new Date() > new Date(contest.contest_start_datetime) && (
+              <EnterContestButton contest={contest} userId={user.id} />
+            )}
           <ViewContestDetailsButton
             contestNameSlug={contest.contest_name_slug}
           />
