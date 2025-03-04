@@ -3,6 +3,7 @@ import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/date-picker";
 import Link from "next/link";
 
 export default async function Signup(props: {
@@ -31,15 +32,21 @@ export default async function Signup(props: {
           <Label htmlFor="email">Email</Label>
           <Input name="email" placeholder="you@example.com" required />
           <Label htmlFor="display name">Display Name</Label>
-          <Input name="display name" placeholder="winner123" required />
+          <Input name="display name" placeholder="username" required />
           <Label htmlFor="password">Password</Label>
           <Input
             type="password"
             name="password"
-            placeholder="Your password"
-            minLength={6}
+            placeholder="password"
+            minLength={8}
             required
           />
+          <Label htmlFor="first">First Name</Label>
+          <Input type="name" name="first" placeholder="First" required />
+          <Label htmlFor="last">Last Name</Label>
+          <Input type="name" name="last" placeholder="Last" required />
+          <Label htmlFor="birthday">Birthday</Label>
+          <Input type="date" name="birthday" required />
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>
