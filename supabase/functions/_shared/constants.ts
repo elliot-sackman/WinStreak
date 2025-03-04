@@ -45,10 +45,10 @@ const ACTIVE_LEAGUES: { [key: string]: string[] } = {
 };
 
 const LEAGUE_INFO_MAP: {
-  [key: string]: { [key: string]: string | number };
+  [key: string]: { leagueApiId: number; season: string; daysInAdvance: number };
 } = {
-  "NBA": { leagueId: 12, season: "2024-2025" },
-  "MLB": { leagueId: 1, season: "2025" },
+  "NBA": { leagueApiId: 12, season: "2024-2025", daysInAdvance: 5 },
+  "MLB": { leagueApiId: 1, season: "2025", daysInAdvance: 4 },
 };
 
 export { ACTIVE_LEAGUES, API_BASE_URLS, GAME_STATUS_MAP, LEAGUE_INFO_MAP };
