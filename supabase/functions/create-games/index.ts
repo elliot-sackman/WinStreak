@@ -8,6 +8,10 @@ import {
   GAME_STATUS_MAP,
   LEAGUE_INFO_MAP,
 } from "../_shared/constants.ts";
+import {
+  ApiSportsGamesResponse,
+  WinStreakInsertGameObject,
+} from "../_shared/types.d.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -29,7 +33,7 @@ const getSportToLeagueApiIdToLeagueIdMap = async (supabase: SupabaseClient) => {
       `Error fetching leagues: ${error}`,
     );
   }
-  const sportToLeagueIdToLeagueApiIdMap: {
+  const sportToLeagueApiIdToLeagueIdMap: {
     [key: string]: { [key: number]: number };
   } = {};
 
@@ -40,14 +44,30 @@ const getSportToLeagueApiIdToLeagueIdMap = async (supabase: SupabaseClient) => {
       sport,
     } = league;
 
-    if (!(sport in sportToLeagueIdToLeagueApiIdMap)) {
-      sportToLeagueIdToLeagueApiIdMap[sport.lower()] = {};
+    if (!(sport in sportToLeagueApiIdToLeagueIdMap)) {
+      sportToLeagueApiIdToLeagueIdMap[sport.toLowerCase()] = {};
     }
 
-    sportToLeagueIdToLeagueApiIdMap[sport.lower()][league_api_id] = league_id;
+    sportToLeagueApiIdToLeagueIdMap[sport.toLowerCase()][league_api_id] =
+      league_id;
   });
 
-  return sportToLeagueIdToLeagueApiIdMap;
+  return sportToLeagueApiIdToLeagueIdMap;
+};
+
+const getActiveLeagueIds = (sportToLeagueApiIdToLeagueIdMap: {
+  [key: string]: { [key: number]: number };
+}) => {
+  const activeLeagueIds: number[] = [];
+  Object.keys(ACTIVE_LEAGUES).forEach((sport: string) => {
+    const activeLeagueAbbreviations = ACTIVE_LEAGUES[sport];
+    activeLeagueAbbreviations.forEach((leagueAbbreviation: string) => {
+      const leagueApiId = LEAGUE_INFO_MAP[leagueAbbreviation].leagueApiId;
+      activeLeagueIds.push(sportToLeagueApiIdToLeagueIdMap[sport][leagueApiId]);
+    });
+  });
+
+  return activeLeagueIds;
 };
 
 const getLeagueIdToTeamApiIdToTeamIdMap = async (
@@ -60,7 +80,7 @@ const getLeagueIdToTeamApiIdToTeamIdMap = async (
 
   if (error) {
     console.error(
-      `Error fetching teams for league IDs ${activeLeagueIds}: ${error}`,
+      `Error fetching teams for league IDs ${activeLeagueIds}: ${error.message}`,
     );
   }
 
@@ -80,6 +100,8 @@ const getLeagueIdToTeamApiIdToTeamIdMap = async (
 
     leagueIdToTeamApiIdToTeamIdMap[league_id][team_api_id] = team_id;
   });
+
+  return leagueIdToTeamApiIdToTeamIdMap;
 };
 
 const getLeagueToExistingGameApiIdToGameIdMap = async (
@@ -94,13 +116,13 @@ const getLeagueToExistingGameApiIdToGameIdMap = async (
       activeLeagueIds,
     )
     .gte(
-      "game_start_time",
+      "start_time",
       todayDateString,
     );
 
   if (error) {
     console.error(
-      `Error fetching games for league IDs ${activeLeagueIds}: ${error}`,
+      `Error fetching games for league IDs ${activeLeagueIds}: ${error.message}`,
     );
   }
 
@@ -109,16 +131,16 @@ const getLeagueToExistingGameApiIdToGameIdMap = async (
     [key: number]: { [key: number]: number };
   } = {};
 
+  activeLeagueIds.forEach((leagueId) =>
+    leagueToExistingGameApiIdToGameIdMap[leagueId] = {}
+  );
+
   games?.forEach((game) => {
     const {
       league_id,
       game_api_id,
       game_id,
     } = game;
-
-    if (!(league_id in leagueToExistingGameApiIdToGameIdMap)) {
-      leagueToExistingGameApiIdToGameIdMap[league_id] = {};
-    }
 
     leagueToExistingGameApiIdToGameIdMap[league_id][game_api_id] = game_id;
   });
@@ -151,6 +173,10 @@ Deno.serve(async (_req: Request) => {
     return new Response("no environment vars", { status: 500 });
   }
 
+  if (!supabase) {
+    return new Response("Supabase client not initialized", { status: 500 });
+  }
+
   const headers = new Headers({
     "x-apisports-key": API_SPORTS_API_KEY,
     "Accept": "application/json",
@@ -163,12 +189,12 @@ Deno.serve(async (_req: Request) => {
   for (const sport of Object.keys(ACTIVE_LEAGUES)) {
     const apiUrl = API_BASE_URLS[sport];
     // Iterate through the currently active leagues (as far as we're concerned)
-    for (const league of ACTIVE_LEAGUES[sport]) {
+    for (const leagueAbbreviation of ACTIVE_LEAGUES[sport]) {
       const {
         leagueApiId,
         season,
         daysInAdvance,
-      } = LEAGUE_INFO_MAP[league];
+      } = LEAGUE_INFO_MAP[leagueAbbreviation];
 
       const requestUrls = buildRequestUrls(
         apiUrl,
@@ -188,10 +214,10 @@ Deno.serve(async (_req: Request) => {
             throw new Error(`API Error: ${response.statusText}`);
           }
 
-          const data = await response.json();
-          results.push({ league, data });
+          const data: ApiSportsGamesResponse = await response.json();
+          results.push({ sport, data });
         } catch (error) {
-          errors.push(`Failed for league ${league}: ${error}`);
+          errors.push(`Failed for league ${leagueAbbreviation}: ${error}`);
         }
       }
     }
@@ -202,20 +228,82 @@ Deno.serve(async (_req: Request) => {
     return new Response(JSON.stringify({ errors }), { status: 500 });
   }
 
-  const gameIds = [];
-  const rawGames = [];
+  const sportToLeagueApiIdToLeagueIdMap =
+    await getSportToLeagueApiIdToLeagueIdMap(supabase);
+  const activeLeagueIds = getActiveLeagueIds(sportToLeagueApiIdToLeagueIdMap);
+  const leagueIdToTeamApiIdToTeamIdMap =
+    await getLeagueIdToTeamApiIdToTeamIdMap(activeLeagueIds, supabase);
+  const leagueToExistingGameApiIdToGameIdMap =
+    await getLeagueToExistingGameApiIdToGameIdMap(activeLeagueIds, supabase);
+
+  const gamesToAdd: WinStreakInsertGameObject[] = [];
+  const gameIdsToDelete: number[] = [];
 
   for (const result of results) {
     const {
-      league,
+      sport,
       data,
     } = result;
 
     for (const game of data.response) {
+      const {
+        id: apiGameId,
+        date,
+        status,
+        league,
+        teams,
+      } = game;
+
+      const {
+        scheduled,
+        for_deletion,
+      } = GAME_STATUS_MAP[sport];
+
+      const leagueApiId = league.id;
+      const supabaseLeagueId =
+        sportToLeagueApiIdToLeagueIdMap[sport][leagueApiId];
+
+      // If the game is scheduled, we check if it already exists in the db before adding
+      if (scheduled.includes(status.short)) {
+        if (
+          !leagueToExistingGameApiIdToGameIdMap[supabaseLeagueId][apiGameId]
+        ) {
+          gamesToAdd.push({
+            league_id: supabaseLeagueId,
+            start_time: date,
+            home_team_id:
+              leagueIdToTeamApiIdToTeamIdMap[supabaseLeagueId][teams.home.id],
+            away_team_id:
+              leagueIdToTeamApiIdToTeamIdMap[supabaseLeagueId][teams.away.id],
+            status: "scheduled",
+            game_api_id: apiGameId,
+          });
+        }
+      } else if (for_deletion.includes(status.short)) {
+        // If the game is postponed, canceled, etc, we need to delete this game and all related picks
+        const existingGameId =
+          leagueToExistingGameApiIdToGameIdMap[supabaseLeagueId][apiGameId];
+
+        if (existingGameId) {
+          gameIdsToDelete.push(existingGameId);
+        }
+      }
     }
   }
 
-  return new Response(JSON.stringify(results), {
+  if (gamesToAdd.length > 0) {
+    const { error } = await supabase.from("games").insert(gamesToAdd);
+
+    if (error) {
+      console.error("Error inserting games:", error.message);
+    } else {
+      console.log(`Inserted ${gamesToAdd.length} new games`);
+    }
+  } else {
+    console.log("No new games to insert.");
+  }
+
+  return new Response(JSON.stringify(gamesToAdd), {
     headers: { "Content-Type": "application/json" },
     status: 200,
   });
