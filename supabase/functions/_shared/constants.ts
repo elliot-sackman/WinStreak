@@ -44,6 +44,7 @@ const ACTIVE_LEAGUES: { [key: string]: string[] } = {
   "basketball": ["NBA"],
 };
 
+// Eventually add this to database?
 const LEAGUE_INFO_MAP: {
   [key: string]: { leagueApiId: number; season: string; daysInAdvance: number };
 } = {
