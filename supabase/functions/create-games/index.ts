@@ -12,7 +12,6 @@ import {
   ApiSportsGamesResponse,
   WinStreakInsertGameObject,
 } from "../_shared/types.d.ts";
-import { games } from "../_shared/games.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
