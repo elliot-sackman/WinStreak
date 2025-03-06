@@ -12,6 +12,7 @@ import {
   ApiSportsGamesResponse,
   WinStreakInsertGameObject,
 } from "../_shared/types.d.ts";
+import { games } from "../_shared/games.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -303,8 +304,38 @@ Deno.serve(async (_req: Request) => {
     console.log("No new games to insert.");
   }
 
-  return new Response(JSON.stringify(gamesToAdd), {
-    headers: { "Content-Type": "application/json" },
-    status: 200,
-  });
+  if (gameIdsToDelete.length > 0) {
+    // Step 1: Delete picks for the games
+    const { error: picksError } = await supabase
+      .from("picks")
+      .delete()
+      .in("game_id", gameIdsToDelete);
+
+    if (picksError) {
+      console.error("Error deleting picks:", picksError.message);
+    } else {
+      console.log(`Deleted picks for ${gameIdsToDelete.length} games`);
+      // Step 2: Delete the games themselves
+      const { error: gamesError } = await supabase
+        .from("games")
+        .delete()
+        .in("game_id", gameIdsToDelete);
+
+      if (gamesError) {
+        console.error("Error deleting games:", gamesError.message);
+      } else {
+        console.log(`Deleted ${gameIdsToDelete.length} games`);
+      }
+    }
+  } else {
+    console.log("No games to delete.");
+  }
+
+  return new Response(
+    JSON.stringify({ addedGames: gamesToAdd, deletedGames: gameIdsToDelete }),
+    {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    },
+  );
 });
