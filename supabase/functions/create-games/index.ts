@@ -173,8 +173,8 @@ Deno.serve(async (_req: Request) => {
     supabase,
   );
 
-  insertNewGamesToSupabase(gamesToAdd, supabase);
-  deletePostponedAndCanceledGamesFromSupabase(gameIdsToDelete, supabase);
+  await insertNewGamesToSupabase(gamesToAdd, supabase);
+  await deletePostponedAndCanceledGamesFromSupabase(gameIdsToDelete, supabase);
 
   return new Response(
     JSON.stringify({ addedGames: gamesToAdd, deletedGames: gameIdsToDelete }),

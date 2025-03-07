@@ -70,11 +70,9 @@ export type WinStreakInsertGameObject = {
   game_api_id: number;
 };
 
-export type WinStreakUpdateCompletedGameObject = {
+export type WinStreakUpdateGameObject = {
   game_id: number;
   home_team_score: number;
-  home_team_win: boolean;
   away_team_score: number;
-  away_team_win: boolean;
-  status: "completed";
+  status: "completed" | "in_progress";
 };
