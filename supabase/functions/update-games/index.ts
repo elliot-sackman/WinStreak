@@ -88,8 +88,8 @@ const parseGameResults = async (results: {
         // The update to 'completed' and determination of the winner will be left to the update-picks-and-entries function
         updateGames.push({
           game_id: existingGameId,
-          home_team_score: scores.home.total,
-          away_team_score: scores.away.total,
+          home_team_score: scores.home.total || 0,
+          away_team_score: scores.away.total || 0,
           status: "in_progress",
         });
       }
@@ -99,7 +99,7 @@ const parseGameResults = async (results: {
   return { updateGames, completedGameIds };
 };
 
-const upsertGames = async (
+const updateGamesInSupabase = async (
   updateGames: WinStreakUpdateGameObject[],
   supabase: SupabaseClient,
 ) => {
@@ -131,9 +131,8 @@ const sendCompletedGameIdsToBackgroundFunction = async (
   supabase: SupabaseClient,
 ) => {
   if (completedGameIds.length > 0) {
-    /*
     const { data, error } = await supabase.functions.invoke(
-      "update-picks-and-entries",
+      "update-picks-and-entries-for-completed-games",
       {
         body: { completedGameIds },
       },
@@ -145,8 +144,8 @@ const sendCompletedGameIdsToBackgroundFunction = async (
       console.log(
         `Completed games ${completedGameIds} sent to update-picks-and-entries.`,
       );
+      console.log(data);
     }
-      */
   } else {
     console.log("No completed games to send to update-picks-and-entries");
   }
@@ -180,7 +179,7 @@ Deno.serve(async (_req: Request) => {
     supabase,
   );
 
-  await upsertGames(updateGames, supabase);
+  await updateGamesInSupabase(updateGames, supabase);
   await sendCompletedGameIdsToBackgroundFunction(completedGameIds, supabase);
 
   return new Response(JSON.stringify({ updateGames, completedGameIds }), {

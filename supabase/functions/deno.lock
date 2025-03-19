@@ -1,20 +1,25 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@supabase/functions-js@^2.4.4": "2.4.4",
     "jsr:@supabase/supabase-js@^2.49.1": "2.49.1",
     "npm:@supabase/auth-js@2.68.0": "2.68.0",
     "npm:@supabase/functions-js@2.4.4": "2.4.4",
     "npm:@supabase/node-fetch@2.6.15": "2.6.15",
     "npm:@supabase/postgrest-js@1.19.2": "1.19.2",
     "npm:@supabase/realtime-js@2.11.2": "2.11.2",
-    "npm:@supabase/storage-js@2.7.1": "2.7.1"
+    "npm:@supabase/storage-js@2.7.1": "2.7.1",
+    "npm:edge-runtime@^4.0.1": "4.0.1"
   },
   "jsr": {
+    "@supabase/functions-js@2.4.4": {
+      "integrity": "38456509a6e22fb116b118464cbb36357256f9048d3580632b63af91f63769f7"
+    },
     "@supabase/supabase-js@2.49.1": {
       "integrity": "45dff81927b876287024ff8b43de8741bfe5ddf1fbaf152dd863a367bfcbd380",
       "dependencies": [
         "npm:@supabase/auth-js",
-        "npm:@supabase/functions-js",
+        "npm:@supabase/functions-js@2.4.4",
         "npm:@supabase/node-fetch",
         "npm:@supabase/postgrest-js",
         "npm:@supabase/realtime-js",
@@ -23,6 +28,21 @@
     }
   },
   "npm": {
+    "@edge-runtime/format@4.0.0": {
+      "integrity": "sha512-dON4E/O3u0TvksmgS3E+3kniWerMji54mRA/uviHlbn7CiP7eYZVu2sgk/lXMaIvXAu+Jx+bV8KhE3+oQO5N5Q=="
+    },
+    "@edge-runtime/ponyfill@4.0.0": {
+      "integrity": "sha512-JZdDyYUqweSbhMgSxxL8QuquNuanVw+gMK8RfFq1LHMQHxzXPVvAf9aw6M7MSuyhnCBtFhqtSTr682rf8U5eyA=="
+    },
+    "@edge-runtime/primitives@6.0.0": {
+      "integrity": "sha512-FqoxaBT+prPBHBwE1WXS1ocnu/VLTQyZ6NMUBAdbP7N2hsFTTxMC/jMu2D/8GAlMQfxeuppcPuCUk/HO3fpIvA=="
+    },
+    "@edge-runtime/vm@5.0.0": {
+      "integrity": "sha512-NKBGBSIKUG584qrS1tyxVpX/AKJKQw5HgjYEnPLC0QsTw79JrGn+qUr8CXFb955Iy7GUdiiUv1rJ6JBGvaKb6w==",
+      "dependencies": [
+        "@edge-runtime/primitives"
+      ]
+    },
     "@supabase/auth-js@2.68.0": {
       "integrity": "sha512-odG7nb7aOmZPUXk6SwL2JchSsn36Ppx11i2yWMIc/meUO2B2HK9YwZHPK06utD9Ql9ke7JKDbwGin/8prHKxxQ==",
       "dependencies": [
@@ -77,6 +97,12 @@
         "@types/node"
       ]
     },
+    "async-listen@3.0.1": {
+      "integrity": "sha512-cWMaNwUJnf37C/S5TfCkk/15MwbPRwVYALA2jtjkbHjCmAPiDXyNJy2q3p1KAZzDLHAWyarUWSujUoHR4pEgrA=="
+    },
+    "convert-hrtime@3.0.0": {
+      "integrity": "sha512-7V+KqSvMiHp8yWDuwfww06XleMWVVB9b9tURBx+G7UTADuo5hYPuowKloz4OzOqbPezxgo+fdQ1522WzPG4OeA=="
+    },
     "tr46@0.0.3": {
       "integrity": "sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw=="
     },
@@ -104,7 +130,9 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@supabase/supabase-js@^2.49.1"
+      "jsr:@supabase/functions-js@^2.4.4",
+      "jsr:@supabase/supabase-js@^2.49.1",
+      "npm:edge-runtime@^4.0.1"
     ]
   }
 }

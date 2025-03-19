@@ -72,7 +72,22 @@ export type WinStreakInsertGameObject = {
 
 export type WinStreakUpdateGameObject = {
   game_id: number;
-  home_team_score: number;
-  away_team_score: number;
+  home_team_score?: number;
+  home_team_win?: boolean;
+  away_team_score?: number;
+  away_team_win?: boolean;
   status: "completed" | "in_progress";
+};
+
+export type WinStreakUpdatePickObject = {
+  pick_id: number;
+  home_team_win: boolean;
+  away_team_win: boolean;
+  pick_status: "correct" | "incorrect";
+};
+
+export type WinStreakUpdateEntryObject = {
+  entry_id: number;
+  current_streak: number;
+  is_complete: boolean;
 };
