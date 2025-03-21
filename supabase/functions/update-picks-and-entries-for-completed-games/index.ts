@@ -94,9 +94,10 @@ const retrievePicksAndBuildEntryToPicksMap = async (
       awayTeamWin: boolean;
     };
   },
+  currentTimestamp: string,
   supabase: SupabaseClient,
 ) => {
-  const { data: pendingPicks, error } = await supabase.from("picks")
+  const { data: pendingPicks } = await supabase.from("picks")
     .select("pick_id,entry_id,game_id,value")
     .in("game_id", completedGameIds)
     .eq("pick_status", "pending")
@@ -135,6 +136,7 @@ const retrievePicksAndBuildEntryToPicksMap = async (
       home_team_win: homeTeamWin,
       away_team_win: awayTeamWin,
       pick_status: value === winningTeamId ? "correct" : "incorrect",
+      pick_resolution_datetime: currentTimestamp,
     });
   }
 
@@ -143,6 +145,7 @@ const retrievePicksAndBuildEntryToPicksMap = async (
 
 const retrieveEntriesAndUpdateStreaks = async (
   entryIdToEntryAndPicksMap: entryIdToEntryAndPicksMapType,
+  currentTimestamp: string,
   supabase: SupabaseClient,
 ) => {
   // This function pulls in any active entries if they exist
@@ -169,14 +172,16 @@ const retrieveEntriesAndUpdateStreaks = async (
       // We assume the entry is active to start and create a variable to track the streak as it grows
       let isComplete = false;
       let currentStreak = current_streak;
+      let first_incorrect_pick_id: number | null = null;
 
       const picks = entryIdToEntryAndPicksMap[entry_id].picks;
       for (const pick of picks) {
         // If the current pick is correct and there have been no incorrect picks in the entry, increment the streak
         if (pick.pick_status === "correct" && !isComplete) {
           currentStreak = currentStreak + 1;
-        } else if (pick.pick_status === "incorrect") {
+        } else if (pick.pick_status === "incorrect" && !isComplete) {
           // If the pick is incorrect, we change the status to complete as the entry is a loser.
+          first_incorrect_pick_id = pick.pick_id;
           isComplete = true;
         }
       }
@@ -187,6 +192,14 @@ const retrieveEntriesAndUpdateStreaks = async (
         current_streak: currentStreak,
         is_complete: isComplete,
       };
+
+      if (isComplete) {
+        entryIdToEntryAndPicksMap[entry_id].entry = {
+          ...entryIdToEntryAndPicksMap[entry_id].entry,
+          first_incorrect_pick_id,
+          entry_completion_datetime: currentTimestamp,
+        };
+      }
     }
   }
 };
@@ -222,15 +235,19 @@ const processCompletedGames = async (
   const { gameIdToWinningTeamIdMap, updateGames } =
     await retrieveCompletedGamesAndParseWinners(completedGameIds, supabase);
 
+  const currentTimestamp = new Date().toISOString();
+
   const { entryIdToEntryAndPicksMap } =
     await retrievePicksAndBuildEntryToPicksMap(
       completedGameIds,
       gameIdToWinningTeamIdMap,
+      currentTimestamp,
       supabase,
     );
 
   await retrieveEntriesAndUpdateStreaks(
     entryIdToEntryAndPicksMap,
+    currentTimestamp,
     supabase,
   );
 
@@ -246,8 +263,6 @@ const processCompletedGames = async (
 
   console.log({
     updateGames,
-    gameIdToWinningTeamIdMap,
-    entryIdToEntryAndPicksMap,
     updatePicks,
     updateEntries,
     error,
