@@ -98,7 +98,9 @@ const retrievePicksAndBuildEntryToPicksMap = async (
   supabase: SupabaseClient,
 ) => {
   const { data: pendingPicks } = await supabase.from("picks")
-    .select("pick_id,entry_id,game_id,value")
+    .select(
+      "pick_id,entry_id,game_id,value,home_team_id,home_team_location,home_team_nickname,away_team_id,away_team_location,away_team_nickname",
+    )
     .in("game_id", completedGameIds)
     .eq("pick_status", "pending")
     .order("game_start_time", { ascending: true })
@@ -117,6 +119,12 @@ const retrievePicksAndBuildEntryToPicksMap = async (
       entry_id,
       game_id,
       value,
+      home_team_id,
+      home_team_location,
+      home_team_nickname,
+      away_team_id,
+      away_team_location,
+      away_team_nickname,
     } = pick;
 
     const {
@@ -137,6 +145,12 @@ const retrievePicksAndBuildEntryToPicksMap = async (
       away_team_win: awayTeamWin,
       pick_status: value === winningTeamId ? "correct" : "incorrect",
       pick_resolution_datetime: currentTimestamp,
+      home_team_id,
+      home_team_location,
+      home_team_nickname,
+      away_team_id,
+      away_team_location,
+      away_team_nickname,
     });
   }
 
@@ -173,6 +187,8 @@ const retrieveEntriesAndUpdateStreaks = async (
       let isComplete = false;
       let currentStreak = current_streak;
       let first_incorrect_pick_id: number | null = null;
+      let first_incorrect_pick_team_id: number | null = null;
+      let first_incorrect_pick_losing_team_full_name: string | null = null;
 
       const picks = entryIdToEntryAndPicksMap[entry_id].picks;
       for (const pick of picks) {
@@ -182,6 +198,12 @@ const retrieveEntriesAndUpdateStreaks = async (
         } else if (pick.pick_status === "incorrect" && !isComplete) {
           // If the pick is incorrect, we change the status to complete as the entry is a loser.
           first_incorrect_pick_id = pick.pick_id;
+          first_incorrect_pick_team_id = pick.home_team_win
+            ? pick.away_team_id
+            : pick.home_team_id;
+          first_incorrect_pick_losing_team_full_name = pick.home_team_win
+            ? pick.away_team_location + " " + pick.away_team_nickname
+            : pick.home_team_location + " " + pick.away_team_nickname;
           isComplete = true;
         }
       }
@@ -197,6 +219,8 @@ const retrieveEntriesAndUpdateStreaks = async (
         entryIdToEntryAndPicksMap[entry_id].entry = {
           ...entryIdToEntryAndPicksMap[entry_id].entry,
           first_incorrect_pick_id,
+          first_incorrect_pick_team_id,
+          first_incorrect_pick_losing_team_full_name,
           entry_completion_datetime: currentTimestamp,
         };
       }

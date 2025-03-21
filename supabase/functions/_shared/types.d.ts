@@ -85,6 +85,12 @@ export type WinStreakUpdatePickObject = {
   away_team_win: boolean;
   pick_status: "correct" | "incorrect";
   pick_resolution_datetime: string;
+  home_team_id: number;
+  home_team_location: string;
+  home_team_nickname: string;
+  away_team_id: number;
+  away_team_location: string;
+  away_team_nickname: string;
 };
 
 export type WinStreakUpdateEntryObject = {
@@ -93,4 +99,6 @@ export type WinStreakUpdateEntryObject = {
   is_complete: boolean;
   entry_completion_datetime?: string;
   first_incorrect_pick_id?: number | null;
+  first_incorrect_pick_team_id?: number | null;
+  first_incorrect_pick_losing_team_full_name?: string | null;
 };
