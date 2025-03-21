@@ -12,7 +12,7 @@ export type Contest = {
   is_public: boolean;
   contest_name: string;
   contest_description: string | null;
-  contest_status: string; 
+  contest_status: string;
   contest_winner_user_id: string | null;
   contest_winner_display_name: string | null;
   contest_name_slug: string;
@@ -23,7 +23,7 @@ export type Contest = {
   sponsor_site_url: string | null;
   sponsor_logo_url: string | null;
 };
-  
+
 export type Entry = {
   entry_id: number;
   contest_id: number;
@@ -34,7 +34,11 @@ export type Entry = {
   is_complete: boolean;
   current_streak: number;
   contest_streak_length: number;
-}
+  first_incorrect_pick_id: number | null;
+  first_incorrect_pick_team_id: number | null;
+  first_incorrect_pick_losing_team_full_name: string | null;
+  entry_completion_datetime: string | null;
+};
 
 export type Game = {
   game_id: number;
@@ -58,7 +62,7 @@ export type Game = {
   home_team_secondary_hex_color: string | null;
   away_team_primary_hex_color: string | null;
   away_team_secondary_hex_color: string | null;
-}
+};
 
 export type Pick = {
   pick_id: number;
@@ -92,7 +96,7 @@ export type Pick = {
   home_team_secondary_hex_color: string | null;
   away_team_primary_hex_color: string | null;
   away_team_secondary_hex_color: string | null;
-}
+};
 export type existingPicksObject = {
   [gameId: number]: {
     teamId: number;

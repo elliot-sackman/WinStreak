@@ -44,22 +44,29 @@ export default async function ContestPage(props: ContestPageProps) {
     return notFound(); // Show 404 if contest doesn't exist
   }
 
-  const { data: activeEntry, error: entryError } = await supabase
+  const { data: rawUserEntries, error: entryError } = await supabase
     .from("entries")
     .select("*")
     .eq("user_id", user.id)
-    .eq("contest_id", contest.contest_id) // Match the current contest ID
-    .eq("is_complete", false) // Ensure the entry is still active
-    .single<Entry>(); // Expecting at most one active entry
+    .eq("contest_id", contest.contest_id)
+    .order("entry_number", { ascending: false }); // Match the current contest ID
 
-  const { data: rawEntries, error } = await supabase
+  const allUserEntries = rawUserEntries as Entry[];
+
+  const activeEntry = allUserEntries.filter(
+    (entry) => entry.is_complete === false
+  )
+    ? allUserEntries.filter((entry) => entry.is_complete === false)[0]
+    : null;
+
+  const { data: rawLeaderboardEntries, error } = await supabase
     .from("entries")
     .select("*")
     .eq("contest_id", contest.contest_id)
     .eq("is_complete", contest.contest_status === "ended")
     .order("current_streak", { ascending: false });
 
-  const leaderboardEntries = rawEntries as Entry[];
+  const leaderboardEntries = rawLeaderboardEntries as Entry[];
 
   const numDays: number =
     maximumDaysInAdvanceByLeagueMapping[contest.league_abbreviation];
@@ -107,6 +114,7 @@ export default async function ContestPage(props: ContestPageProps) {
       <ContestDetailsPageView
         contest={contest}
         activeEntry={activeEntry}
+        allUserEntries={allUserEntries}
         leaderboardEntries={leaderboardEntries}
         games={games}
         existingPicks={existingPicks || []}

@@ -10,10 +10,13 @@ import MyPicksDisplay from "@/components/my-picks-display";
 import { Contest, Entry, Game, Pick, existingPicksObject } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { useMemo } from "react";
+import streakTombstone from "@/app/static-images/streak-tombstone.png";
+import Image from "next/image";
 
 export default function ContestDetailsPageView({
   contest,
   activeEntry,
+  allUserEntries,
   leaderboardEntries,
   games,
   existingPicks,
@@ -21,12 +24,16 @@ export default function ContestDetailsPageView({
 }: {
   contest: Contest;
   activeEntry: Entry | null;
+  allUserEntries: Entry[];
   leaderboardEntries: Entry[];
   games: Game[];
   existingPicks: Pick[] | [];
   user: User;
 }) {
   const [currentView, setCurrentView] = useState<string>("home");
+
+  const lastUnsuccessfulEntry =
+    allUserEntries.length > 0 && !activeEntry ? allUserEntries[0] : null;
 
   const contestDetailsFilters = [
     {
@@ -72,15 +79,40 @@ export default function ContestDetailsPageView({
             return (
               <>
                 <div className="w-full flex flex-col h-full items-center max-w-[350px]">
-                  {activeEntry && (
+                  {activeEntry ? (
                     <>
                       <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
                         Current Streak
                       </div>
                       <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
-                        {activeEntry?.current_streak}
+                        {activeEntry.current_streak}
                       </div>
                     </>
+                  ) : (
+                    lastUnsuccessfulEntry && (
+                      <>
+                        <div className="relative mt-2 mb-4 flex items-center justify-center">
+                          {/* Tombstone Image */}
+                          <Image
+                            src={streakTombstone}
+                            alt="streak tombstone"
+                            className="w-[250px]"
+                          />
+                          {/* Overlayed Text */}
+                          <p className="absolute text-center text-black text-lg font-bold drop-shadow-md max-w-[125px] mb-10">
+                            RIP <br></br>Here Lies Your Streak of{" "}
+                            {lastUnsuccessfulEntry.current_streak} Games.
+                          </p>
+                        </div>
+                        <div className="my-2">
+                          Looks like your streak was tragically ended by the{" "}
+                          {
+                            lastUnsuccessfulEntry.first_incorrect_pick_losing_team_full_name
+                          }
+                          . Re-enter now to start a new streak!
+                        </div>
+                      </>
+                    )
                   )}
 
                   <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">

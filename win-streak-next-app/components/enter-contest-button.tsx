@@ -22,11 +22,13 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
 
   const handleEnterContest = async () => {
     setLoading(true);
+    const currentTimestamp = new Date().toISOString();
 
     const { error } = await supabase.from("entries").insert([
       {
         user_id: userId,
         contest_id: contest.contest_id,
+        created_at: currentTimestamp,
       },
     ]);
 
