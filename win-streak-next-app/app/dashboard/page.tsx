@@ -18,8 +18,13 @@ export default async function Dashboard() {
     (await supabase.from("contests").select()).data || [];
 
   const entries: Entry[] =
-    (await supabase.from("entries").select("*").eq("user_id", user.id)).data ||
-    [];
+    (
+      await supabase
+        .from("entries")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("is_complete", false)
+    ).data || [];
 
   // Switch from using tabs to using buttons nav like contest details page.
   return (
