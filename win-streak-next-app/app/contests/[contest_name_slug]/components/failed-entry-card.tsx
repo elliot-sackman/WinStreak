@@ -29,16 +29,15 @@ export default function FailedEntryCard({
           <p className="absolute text-center text-black text-lg font-bold drop-shadow-md max-w-[125px] mb-10">
             RIP <br></br>Here Lies Your Streak of {entry.current_streak} Games.
           </p>
-          <br />
-          Your streak was tragically ended{" "}
-          {entry.entry_completion_datetime
-            ? "as of" +
-              new Date(entry.entry_completion_datetime).toLocaleDateString()
-            : ""}{" "}
-          {entry.first_incorrect_pick_losing_team_full_name
-            ? "by " + entry.first_incorrect_pick_losing_team_full_name + "."
-            : "."}
         </div>
+        Your streak was tragically ended{" "}
+        {entry.entry_completion_datetime
+          ? "on " +
+            new Date(entry.entry_completion_datetime).toLocaleDateString()
+          : ""}{" "}
+        {entry.first_incorrect_pick_losing_team_full_name
+          ? "by the " + entry.first_incorrect_pick_losing_team_full_name + "."
+          : "."}
       </CardContent>
     </Card>
   );
