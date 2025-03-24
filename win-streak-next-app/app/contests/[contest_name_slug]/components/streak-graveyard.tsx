@@ -22,7 +22,9 @@ export default function StreakGraveyard({
 }: StreakGraveyardProps) {
   return (
     <div>
-      Your Active Contests
+      <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+        Your Failed Streaks
+      </div>
       <Carousel className="w-full max-w-xs">
         <CarouselContent>
           {previousEntries.map((entry) => {
