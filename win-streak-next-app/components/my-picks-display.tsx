@@ -72,8 +72,12 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
               {new Date(pick.game_start_time).toLocaleTimeString([], {
                 timeStyle: "short",
               })}
-              {pick.pick_status === "correct" && (
-                <div>{pick.away_team_score + " - " + pick.home_team_score}</div>
+              {new Date() > new Date(pick.game_start_time) && (
+                <div>
+                  {pick.away_team_score ||
+                    0 + " - " + pick.home_team_score ||
+                    0}
+                </div>
               )}
             </div>
             {/* Home Team Label */}

@@ -15,6 +15,7 @@ import { PickSlider } from "./pick-slider";
 import { Game, Entry, existingPicksObject, newPicksObject } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 
 interface PickMakerProps {
   games: Game[];
@@ -100,6 +101,20 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
 
     const deletePicks = picksToDelete;
 
+    if (
+      Object.keys(existingPicks).length +
+        insertPicks.length -
+        deletePicks.length >
+      entry.contest_streak_length
+    ) {
+      toast({
+        title: "Error.",
+        description: "You cannot submit more picks than the target streak.",
+      });
+
+      return;
+    }
+
     const supabase = createClient();
 
     // Handling in one Postgres function so that entire submit is rolled back if there's an error (say a user tries to modify a pick for a game that's already started)
@@ -109,7 +124,21 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
       delete_data: deletePicks,
     });
 
-    // TODO: Toast message on successful/unsuccessful submit w summary of changes?
+    // Display toast message with results
+    if (error) {
+      toast({
+        title: "Error!",
+        description: `Your picks have not been submitted due to error: ${error}`,
+      });
+
+      // Don't update the state variables if there was an error with the transaction.
+      return;
+    } else {
+      toast({
+        title: "Success!",
+        description: "Your picks are in.",
+      });
+    }
 
     setNewPicks({});
     setModifiedPicks({});
