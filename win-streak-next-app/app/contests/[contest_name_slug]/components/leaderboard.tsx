@@ -32,7 +32,7 @@ export default function Leaderboard({
             >
               <div className="text-3xl w-10">{index + 1 + "."}</div>
               <div className="text-3xl flex-1">{entry.display_name}</div>
-              <Card className="text-3xl flex rounded-full bg-gray-200 w-12 h-12 items-center justify-center">
+              <Card className="text-3xl flex rounded-full bg-gray-200 w-12 h-12 items-center justify-center text-black">
                 {entry.current_streak}
               </Card>
             </div>

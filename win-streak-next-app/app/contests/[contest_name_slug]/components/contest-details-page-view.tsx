@@ -12,6 +12,7 @@ import { User } from "@supabase/supabase-js";
 import { useMemo } from "react";
 import streakTombstone from "@/app/static-images/streak-tombstone.png";
 import Image from "next/image";
+import StreakGraveyard from "./streak-graveyard";
 
 export default function ContestDetailsPageView({
   contest,
@@ -32,30 +33,25 @@ export default function ContestDetailsPageView({
 }) {
   const [currentView, setCurrentView] = useState<string>("home");
 
-  const lastUnsuccessfulEntry =
+  const lastUnsuccessfulEntry: Entry | null =
     allUserEntries.length > 0 && !activeEntry ? allUserEntries[0] : null;
 
+  const failedEntries: Entry[] =
+    allUserEntries.length > 0
+      ? allUserEntries.filter(
+          (entry) =>
+            entry.is_complete === true &&
+            entry.current_streak < entry.contest_streak_length
+        )
+      : [];
+
   const contestDetailsFilters = [
-    {
-      filter: "home",
-      title: "Home",
-    },
-    {
-      filter: "rules",
-      title: "Rules",
-    },
-    {
-      filter: "leaderboard",
-      title: "Leaderboard",
-    },
-    {
-      filter: "make-picks",
-      title: "Make Picks",
-    },
-    {
-      filter: "my-picks",
-      title: "My Picks",
-    },
+    { filter: "home", title: "Home" },
+    { filter: "rules", title: "Rules" },
+    { filter: "leaderboard", title: "Leaderboard" },
+    { filter: "make-picks", title: "Make Picks" },
+    { filter: "my-picks", title: "My Picks" },
+    { filter: "past-entries", title: "🪦 Streak Graveyard 🪦" },
   ];
   const existingPicksObject: existingPicksObject = {};
 
@@ -200,6 +196,19 @@ export default function ContestDetailsPageView({
                   </div>
                 )}
               </div>
+            );
+          case "past-entries":
+            return (
+              <>
+                {failedEntries.length > 0 ? (
+                  <StreakGraveyard
+                    previousEntries={failedEntries}
+                    contest={contest}
+                  />
+                ) : (
+                  <div>No streaks lie here.</div>
+                )}
+              </>
             );
           default:
             return null;

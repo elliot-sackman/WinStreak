@@ -246,7 +246,7 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
         );
       })}
       {!submitButtonDisabled && (
-        <div className="w-full sticky bottom-0 z-10 bg-white">
+        <div className="w-full sticky bottom-0 z-10 bg-primary-foreground">
           <Button
             className="w-full h-12 text-xl my-6"
             variant="enter"
