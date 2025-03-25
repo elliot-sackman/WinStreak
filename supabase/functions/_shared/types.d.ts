@@ -99,6 +99,6 @@ export type WinStreakUpdateEntryObject = {
   is_complete: boolean;
   entry_completion_datetime?: string;
   first_incorrect_pick_id?: number | null;
-  first_incorrect_pick_team_id?: number | null;
+  first_incorrect_pick_losing_team_id?: number | null;
   first_incorrect_pick_losing_team_full_name?: string | null;
 };

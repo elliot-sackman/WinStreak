@@ -187,7 +187,7 @@ const retrieveEntriesAndUpdateStreaks = async (
       let isComplete = false;
       let currentStreak = current_streak;
       let first_incorrect_pick_id: number | null = null;
-      let first_incorrect_pick_team_id: number | null = null;
+      let first_incorrect_pick_losing_team_id: number | null = null;
       let first_incorrect_pick_losing_team_full_name: string | null = null;
 
       const picks = entryIdToEntryAndPicksMap[entry_id].picks;
@@ -198,7 +198,7 @@ const retrieveEntriesAndUpdateStreaks = async (
         } else if (pick.pick_status === "incorrect" && !isComplete) {
           // If the pick is incorrect, we change the status to complete as the entry is a loser.
           first_incorrect_pick_id = pick.pick_id;
-          first_incorrect_pick_team_id = pick.home_team_win
+          first_incorrect_pick_losing_team_id = pick.home_team_win
             ? pick.away_team_id
             : pick.home_team_id;
           first_incorrect_pick_losing_team_full_name = pick.home_team_win
@@ -219,7 +219,7 @@ const retrieveEntriesAndUpdateStreaks = async (
         entryIdToEntryAndPicksMap[entry_id].entry = {
           ...entryIdToEntryAndPicksMap[entry_id].entry,
           first_incorrect_pick_id,
-          first_incorrect_pick_team_id,
+          first_incorrect_pick_losing_team_id,
           first_incorrect_pick_losing_team_full_name,
           entry_completion_datetime: currentTimestamp,
         };
