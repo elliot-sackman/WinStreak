@@ -72,11 +72,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
                 timeStyle: "short",
               })}
               {new Date() > new Date(pick.game_start_time) && (
-                <div>
-                  {pick.away_team_score ||
-                    0 + " - " + pick.home_team_score ||
-                    0}
-                </div>
+                <div>{pick.away_team_score + " - " + pick.home_team_score}</div>
               )}
             </div>
             {/* Home Team Label */}
