@@ -16,7 +16,7 @@ interface ContestPageProps {
 const maximumDaysInAdvanceByLeagueMapping: {
   [leagueAbbreviation: string]: number;
 } = {
-  MLB: 2,
+  MLB: 3,
   NFL: 6,
   NBA: 3,
 };
@@ -86,7 +86,8 @@ export default async function ContestPage(props: ContestPageProps) {
   const { data: rawExistingPicks, error: picksError } = await supabase
     .from("picks")
     .select("*")
-    .eq("entry_id", activeEntry?.entry_id);
+    .eq("entry_id", activeEntry?.entry_id)
+    .order("game_start_time", { ascending: true });
 
   const existingPicks = rawExistingPicks as Pick[];
 
