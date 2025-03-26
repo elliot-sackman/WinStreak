@@ -22,7 +22,7 @@ export default function ButtonNav({
   };
 
   return (
-    <div className="h-12 my-2 overflow-x-auto whitespace-nowrap max-w-[350px] min-w-[350px] scrollbar-hide">
+    <div className="h-12 my-2 overflow-x-auto whitespace-nowrap w-full max-w-sm scrollbar-hide">
       {filters.map((filterObj) => {
         return (
           <Button

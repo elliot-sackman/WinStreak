@@ -52,7 +52,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
         className="my-2"
         style={{ backgroundImage: gradient }}
       >
-        <div className="flex items-center justify-center space-x-4 min-w-[350px] rounded-sm">
+        <div className="flex items-center justify-center space-x-4 w-full max-w-sm rounded-sm">
           <div className="relative w-full h-16 cursor-pointer">
             {/* Away Team Label */}
             <div
@@ -99,7 +99,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
       </div>
       {pendingPicks.length > 0 && (
         <AccordionItem value="pending">
-          <AccordionTrigger className="relative flex items-center justify-end min-w-[350px] h-8 text-xl rounded-sm my-4">
+          <AccordionTrigger className="relative flex items-center justify-end w-full max-w-sm h-8 text-xl rounded-sm my-4">
             <span className="absolute left-1/2 transform -translate-x-1/2">
               Pending Picks
             </span>

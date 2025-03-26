@@ -92,11 +92,11 @@ export default async function ContestPage(props: ContestPageProps) {
   const existingPicks = rawExistingPicks as Pick[];
 
   return (
-    <div className="container mx-auto p-6 text-center place-items-center min-w-[350px]">
+    <div className="container mx-auto p-6 text-center place-items-center">
       <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
       {contest.sponsor_id && (
-        <div>
-          Sponsored By:
+        <div className="flex flex-col items-center my-4">
+          <span className="text-neutral-500 mb-2">Sponsored By:</span>
           <Link href={contest.sponsor_site_url!}>
             <Image
               src={contest.sponsor_logo_url!}
@@ -109,8 +109,8 @@ export default async function ContestPage(props: ContestPageProps) {
         </div>
       )}
 
-      <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full">
-        <div>Prize: ${contest.contest_prize}</div>
+      <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full max-w-sm">
+        Prize: ${contest.contest_prize}
       </Card>
       <ContestDetailsPageView
         contest={contest}

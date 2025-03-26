@@ -113,7 +113,7 @@ const PickSlider = ({
   return (
     <Card className="my-2" style={{ backgroundImage: gradient }}>
       <div
-        className={`flex items-center justify-center space-x-4 min-w-[350px] rounded-sm`}
+        className={`flex items-center justify-center space-x-4 w-full max-w-sm rounded-sm`}
         onClick={handleSliderClick}
       >
         <div className="relative w-full h-16 cursor-pointer">

@@ -62,7 +62,7 @@ export default function ContestDetailsPageView({
     };
   });
   return (
-    <div>
+    <div className="w-full max-w-sm">
       <ButtonNav
         filters={contestDetailsFilters}
         currentView={currentView}
@@ -162,7 +162,7 @@ export default function ContestDetailsPageView({
             );
           case "make-picks":
             return (
-              <div>
+              <div className="w-full max-w-sm">
                 {activeEntry ? (
                   <PickMaker
                     games={games}
