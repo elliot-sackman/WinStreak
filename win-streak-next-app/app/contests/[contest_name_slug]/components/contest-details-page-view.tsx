@@ -215,11 +215,12 @@ export default function ContestDetailsPageView({
         }
       }, [currentView, existingPicks])}
 
-      {!activeEntry && (
-        <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
-          <EnterContestButton contest={contest} userId={user.id} />
-        </div>
-      )}
+      {!activeEntry &&
+        new Date() > new Date(contest.contest_start_datetime) && (
+          <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
+            <EnterContestButton contest={contest} userId={user.id} />
+          </div>
+        )}
     </div>
   );
 }

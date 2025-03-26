@@ -36,7 +36,13 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
-      <body className="bg-background text-foreground">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </head>
+      <body className="bg-background text-foreground overflow-x-hidden">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -62,7 +68,7 @@ export default async function RootLayout({
                   <MainMenu user={user} />
                 </div>
               </nav>
-              <div className="flex flex-col gap-5 max-w-5xl p-5">
+              <div className="flex flex-col gap-5 container mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
                 <Toaster />
                 {children}
               </div>

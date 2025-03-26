@@ -3,6 +3,7 @@ import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import BirthdayInput from "@/components/birthday-input";
 import Link from "next/link";
 
 export default async function Signup(props: {
@@ -45,7 +46,7 @@ export default async function Signup(props: {
           <Label htmlFor="last">Last Name</Label>
           <Input type="name" name="last" placeholder="Last" required />
           <Label htmlFor="birthday">Birthday</Label>
-          <Input type="date" name="birthday" required />
+          <BirthdayInput />
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>

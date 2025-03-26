@@ -23,6 +23,10 @@ export default function ContestsPageView({
       title: "All",
     },
     {
+      filter: "my",
+      title: "My Entries",
+    },
+    {
       filter: "active",
       title: "Active",
     },
@@ -34,20 +38,16 @@ export default function ContestsPageView({
       filter: "previous",
       title: "Previous",
     },
-    {
-      filter: "my",
-      title: "My",
-    },
   ];
 
   return (
-    <div>
+    <div className="max-w-[350px]">
       <ButtonNav
         filters={contestFilters}
         currentView={currentView}
         setCurrentView={setCurrentView}
       />
-      <div className="flex-1 mx-auto w-full md:max-w-5xl">
+      <div className="flex-1 mx-auto w-full">
         {contestFilters.map((contestFilterObj) => {
           return (
             contestFilterObj.filter === currentView && (
