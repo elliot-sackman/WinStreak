@@ -41,7 +41,7 @@ export default function ContestsPageView({
   ];
 
   return (
-    <div className="max-w-[350px]">
+    <div className="max-w-sm">
       <ButtonNav
         filters={contestFilters}
         currentView={currentView}

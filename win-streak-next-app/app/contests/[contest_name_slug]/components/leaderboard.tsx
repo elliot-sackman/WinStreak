@@ -16,7 +16,7 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   return (
     <>
-      <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+      <div className="border border-input bg-neutral-500 text-white rounded-xl w-full max-w-sm h-12 content-center">
         Leaderboard
       </div>
       {entries.length > 0 ? (
@@ -27,12 +27,14 @@ export default function Leaderboard({
 
           return (
             <div
-              className={`my-2 flex text-left gap-x-4 items-center p-2 rounded-sm ${userId === entry.user_id ? "bg-green-500" : ""}`}
+              className={`my-2 flex text-left gap-x-4 items-center p-2 rounded-xl w-full max-w-sm ${userId === entry.user_id ? "bg-green-500" : ""}`}
               key={index}
             >
-              <div className="text-3xl w-10">{index + 1 + "."}</div>
-              <div className="text-3xl flex-1">{entry.display_name}</div>
-              <Card className="text-3xl flex rounded-full bg-gray-200 w-12 h-12 items-center justify-center text-black">
+              <div className="text-2xl sm:text-3xl w-10">{index + 1 + "."}</div>
+              <div className="text-2xl sm:text-3xl flex-1">
+                {entry.display_name}
+              </div>
+              <Card className="text-2xl sm:text-3xl flex rounded-full bg-gray-200 w-12 h-12 items-center justify-center text-black">
                 {entry.current_streak}
               </Card>
             </div>

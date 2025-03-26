@@ -28,7 +28,7 @@ export default function ButtonNav({
           <Button
             key={filterObj.filter}
             variant={currentView === filterObj.filter ? "default" : "outline"}
-            className="mx-1"
+            className="mx-1 rounded-xl"
             onClick={() => {
               updateView(filterObj.filter);
             }}

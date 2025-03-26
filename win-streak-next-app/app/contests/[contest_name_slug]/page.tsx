@@ -79,7 +79,8 @@ export default async function ContestPage(props: ContestPageProps) {
       .lt(
         "start_time",
         new Date(Date.now() + numDays * 24 * 60 * 60 * 1000).toISOString()
-      )) || [];
+      )
+      .order("start_time", { ascending: true })) || [];
 
   const games: Game[] = rawGames as Game[];
 

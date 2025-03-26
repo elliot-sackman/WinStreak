@@ -30,7 +30,7 @@ export default function DashboardView({
     <div className="flex flex-col justify-center items-center">
       Your Active Contests
       {entries.length > 0 ? (
-        <Carousel className="w-3/4 max-w-sm">
+        <Carousel className="w-full max-w-sm">
           <CarouselContent>
             {contests.map((contest: Contest) => {
               if (contest.contest_id in contestEntries) {
@@ -55,7 +55,7 @@ export default function DashboardView({
       <Separator className="my-6" />
       Live Contests
       <Carousel
-        className="w-3/4 max-w-sm"
+        className="w-full max-w-sm"
         plugins={[Autoplay({ delay: 6000 })]}
       >
         <CarouselContent>

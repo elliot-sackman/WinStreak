@@ -21,17 +21,18 @@ export default async function Contests() {
     (await supabase.from("entries").select("*").eq("user_id", user.id)).data ||
     [];
 
-  // Switch from using tabs to using buttons nav like contest details page.
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium w-full">Contests</h3>
-        <p className="text-sm text-muted-foreground">
-          View active, past, and upcoming contests.
-        </p>
+    <div className="flex justify-center items-center">
+      <div className="space-y-6 w-full max-w-xs sm:max-w-sm">
+        <div className="flex flex-col">
+          <h3 className="text-lg font-medium w-full text-left">Contests</h3>
+          <p className="text-sm text-muted-foreground text-left">
+            View active, past, and upcoming contests.
+          </p>
+        </div>
+        <Separator />
+        <ContestsPageView contests={contests} entries={entries} user={user} />
       </div>
-      <Separator />
-      <ContestsPageView contests={contests} entries={entries} user={user} />
     </div>
   );
 }

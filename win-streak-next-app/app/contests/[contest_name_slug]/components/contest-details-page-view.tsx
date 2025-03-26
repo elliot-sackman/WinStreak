@@ -74,10 +74,10 @@ export default function ContestDetailsPageView({
           case "home":
             return (
               <>
-                <div className="w-full flex flex-col h-full items-center max-w-[350px]">
+                <div className="w-full flex flex-col h-full items-center max-w-sm">
                   {activeEntry ? (
                     <>
-                      <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+                      <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
                         Current Streak
                       </div>
                       <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
@@ -111,7 +111,7 @@ export default function ContestDetailsPageView({
                     )
                   )}
 
-                  <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+                  <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
                     Contest Overview
                   </div>
                   <p className="my-6">{contest.contest_description}</p>
@@ -127,8 +127,8 @@ export default function ContestDetailsPageView({
             );
           case "rules":
             return (
-              <div className="w-full max-w-[350px]">
-                <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+              <div className="w-full max-w-sm">
+                <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
                   Rules
                 </div>
                 <p className="my-6 text-left">
@@ -181,7 +181,7 @@ export default function ContestDetailsPageView({
               <div className="w-full flex flex-col h-full items-center justify-center">
                 {activeEntry ? (
                   <>
-                    <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+                    <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
                       Current Streak
                     </div>
                     <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">

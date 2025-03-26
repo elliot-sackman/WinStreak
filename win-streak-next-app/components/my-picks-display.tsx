@@ -94,7 +94,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
 
   return (
     <Accordion type="multiple" className="w-full">
-      <div className="border border-input bg-neutral-500 text-white rounded-sm w-full h-12 content-center">
+      <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
         My Picks
       </div>
       {pendingPicks.length > 0 && (
