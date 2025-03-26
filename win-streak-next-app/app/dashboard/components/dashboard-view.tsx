@@ -27,31 +27,35 @@ export default function DashboardView({
   entries.forEach((entry: Entry) => (contestEntries[entry.contest_id] = entry));
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center">
       Your Active Contests
-      <Carousel className="w-full max-w-xs">
-        <CarouselContent>
-          {contests.map((contest: Contest) => {
-            if (contest.contest_id in contestEntries) {
-              return (
-                <CarouselItem key={"my-contests-" + contest.contest_id}>
-                  <ContestCarouselCard
-                    contest={contest}
-                    entry={contestEntries[contest.contest_id]}
-                    user={user}
-                  />
-                </CarouselItem>
-              );
-            }
-          })}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      {entries.length > 0 ? (
+        <Carousel className="w-3/4 max-w-sm">
+          <CarouselContent>
+            {contests.map((contest: Contest) => {
+              if (contest.contest_id in contestEntries) {
+                return (
+                  <CarouselItem key={"my-contests-" + contest.contest_id}>
+                    <ContestCarouselCard
+                      contest={contest}
+                      entry={contestEntries[contest.contest_id]}
+                      user={user}
+                    />
+                  </CarouselItem>
+                );
+              }
+            })}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      ) : (
+        <div>No active entries. Enter a contest!</div>
+      )}
       <Separator className="my-6" />
       Live Contests
       <Carousel
-        className="w-full max-w-xs"
+        className="w-3/4 max-w-sm"
         plugins={[Autoplay({ delay: 6000 })]}
       >
         <CarouselContent>

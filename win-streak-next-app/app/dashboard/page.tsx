@@ -26,16 +26,17 @@ export default async function Dashboard() {
         .eq("is_complete", false)
     ).data || [];
 
-  // Switch from using tabs to using buttons nav like contest details page.
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium w-full">Dashboard</h3>
-        <p className="text-sm text-muted-foreground">
-          Welcome back {user.user_metadata.username}!
-        </p>
+    <div className="flex min-h-screen bg-background px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-5xl space-y-6">
+        <div className="text-center">
+          <h3 className="text-lg text-left font-medium">Dashboard</h3>
+          <p className="text-sm text-left text-muted-foreground">
+            Welcome back {user.user_metadata.first_name}!
+          </p>
+        </div>
+        <DashboardView contests={contests} entries={entries} user={user} />
       </div>
-      <DashboardView contests={contests} entries={entries} user={user} />
     </div>
   );
 }

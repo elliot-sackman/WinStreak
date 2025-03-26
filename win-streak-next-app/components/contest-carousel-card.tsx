@@ -21,7 +21,7 @@ export default function ContestCarouselCard({
 }: ContestCarouselCardProps) {
   return (
     <Card>
-      <CardContent className="aspect-square content-center p-6 border-black border-2 rounded-lg">
+      <CardContent className="aspect-square content-center p-6 border-black border-1 rounded-lg">
         <h1 className="text-2xl font-semibold my-2">{contest.contest_name}</h1>
         {entry && (
           <h2 className="bg-gradient-to-r from-neutral-500 via-neutral-500 to-green-600 rounded-sm p-2 text-white text-center my-2">
@@ -29,19 +29,22 @@ export default function ContestCarouselCard({
           </h2>
         )}
         {contest.sponsor_id && (
-          <h2 className="text-center text-neutral-500 place-self-center my-2">
-            Sponsored By:
+          <div className="flex flex-col items-center my-2">
+            <h2 className="text-neutral-500 mb-2">Sponsored By:</h2>
             <Link href={contest.sponsor_site_url!}>
               <Image
                 src={contest.sponsor_logo_url!}
                 alt="Sponsor Logo"
                 width={200}
-                height={100}
+                height={50}
+                className="w-auto"
               />
             </Link>
-          </h2>
+          </div>
         )}
-        {!entry && <EnterContestButton contest={contest} userId={user.id} />}
+        {!entry && new Date() > new Date(contest.contest_start_datetime) && (
+          <EnterContestButton contest={contest} userId={user.id} />
+        )}
         <ViewContestDetailsButton contestNameSlug={contest.contest_name_slug} />
       </CardContent>
     </Card>
