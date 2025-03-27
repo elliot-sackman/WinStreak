@@ -246,9 +246,9 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
         );
       })}
       {!submitButtonDisabled && (
-        <div className="w-full sticky bottom-0 z-10 bg-primary-foreground">
+        <div className="w-full max-w-sm sticky bottom-0 bg-primary rounded-xl z-10">
           <Button
-            className="w-full h-12 text-xl my-6"
+            className="w-full h-12 text-xl my-0"
             variant="enter"
             onClick={() => {
               setShowDialog(true);
