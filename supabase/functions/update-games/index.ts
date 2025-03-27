@@ -10,6 +10,7 @@ import {
   getLeagueToExistingGameApiIdToGameIdMap,
   getSportToLeagueApiIdToLeagueIdMap,
 } from "../_shared/utils.ts";
+import { MIMEParams } from "node:util";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -72,7 +73,8 @@ const parseGameResults = async (results: {
       // By waiting to process the complete games in the background function, we ensure we don't drop any games in case of timeouts
       if (
         completed.includes(status.short) &&
-        existingGameId
+        existingGameId && scores.home.total !== null &&
+        scores.away.total !== null
       ) {
         completedGameIds.push(
           existingGameId,
