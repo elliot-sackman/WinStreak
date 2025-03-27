@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import MainMenu from "@/components/main-menu";
 import "./globals.css";
 import { createClient } from "@/utils/supabase/server";
+import { Analytics } from "@vercel/analytics/react";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -71,6 +72,7 @@ export default async function RootLayout({
               <div className="flex flex-col gap-5 container mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
                 <Toaster />
                 {children}
+                <Analytics />
               </div>
 
               <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">

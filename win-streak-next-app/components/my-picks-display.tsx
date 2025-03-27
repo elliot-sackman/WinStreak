@@ -121,7 +121,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
 
       {completedPicks.length > 0 && (
         <AccordionItem value="completed">
-          <AccordionTrigger className="relative flex items-center justify-end space-x-4 min-w-[350px] h-8 text-xl rounded-sm my-4">
+          <AccordionTrigger className="relative flex items-center justify-end space-x-4 w-full max-w-sm h-8 text-xl rounded-sm my-4">
             <span className="absolute left-1/2 transform -translate-x-1/2">
               Correct Picks
             </span>
