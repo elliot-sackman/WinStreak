@@ -203,7 +203,7 @@ const retrieveEntriesAndUpdateStreaks = async (
             : pick.home_team_id;
           first_incorrect_pick_losing_team_full_name = pick.home_team_win
             ? pick.away_team_location + " " + pick.away_team_nickname
-            : pick.home_team_location + " " + pick.away_team_nickname;
+            : pick.home_team_location + " " + pick.home_team_nickname;
           isComplete = true;
         }
       }
