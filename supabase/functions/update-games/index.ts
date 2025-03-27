@@ -10,7 +10,6 @@ import {
   getLeagueToExistingGameApiIdToGameIdMap,
   getSportToLeagueApiIdToLeagueIdMap,
 } from "../_shared/utils.ts";
-import { MIMEParams } from "node:util";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
