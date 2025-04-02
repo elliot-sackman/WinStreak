@@ -13,8 +13,6 @@ export type Contest = {
   contest_name: string;
   contest_description: string | null;
   contest_status: string;
-  contest_winner_user_id: string | null;
-  contest_winner_display_name: string | null;
   contest_name_slug: string;
   league_abbreviation: string;
   sponsor_id: number | null;
@@ -22,6 +20,7 @@ export type Contest = {
   sponsor_promo: string | null;
   sponsor_site_url: string | null;
   sponsor_logo_url: string | null;
+  contest_winning_entry_ids: number[] | null;
 };
 
 export type Entry = {
