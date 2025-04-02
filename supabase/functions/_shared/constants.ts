@@ -41,7 +41,7 @@ const GAME_STATUS_MAP: { [key: string]: { [key: string]: string[] } } = {
 };
 
 const ACTIVE_LEAGUES: { [key: string]: string[] } = {
-  "basketball": ["NBA"],
+  "basketball": [],
   "baseball": ["MLB"],
 };
 

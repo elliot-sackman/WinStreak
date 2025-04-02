@@ -185,6 +185,7 @@ const retrieveEntriesAndUpdateStreaks = async (
 
       // We assume the entry is active to start and create a variable to track the streak as it grows
       let isComplete = false;
+      let isWinner = null;
       let currentStreak = current_streak;
       let first_incorrect_pick_id: number | null = null;
       let first_incorrect_pick_losing_team_id: number | null = null;
@@ -205,6 +206,7 @@ const retrieveEntriesAndUpdateStreaks = async (
             ? pick.away_team_location + " " + pick.away_team_nickname
             : pick.home_team_location + " " + pick.home_team_nickname;
           isComplete = true;
+          isWinner = false;
         }
       }
 
@@ -222,6 +224,7 @@ const retrieveEntriesAndUpdateStreaks = async (
           first_incorrect_pick_losing_team_id,
           first_incorrect_pick_losing_team_full_name,
           entry_completion_datetime: currentTimestamp,
+          is_winner: isWinner,
         };
       }
     }

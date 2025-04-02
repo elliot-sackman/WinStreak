@@ -101,4 +101,21 @@ export type WinStreakUpdateEntryObject = {
   first_incorrect_pick_id?: number | null;
   first_incorrect_pick_losing_team_id?: number | null;
   first_incorrect_pick_losing_team_full_name?: string | null;
+  is_winner?: boolean | null;
+};
+
+export type potentialWinningEntryObject = {
+  entry_id: number;
+  contest_id: number;
+  user_id: string;
+  display_name: string;
+  current_streak: number;
+  contest_streak_length: number;
+};
+
+export type WinStreakUpdateContestObject = {
+  contest_id: number;
+  contest_status: "in_progress" | "ended";
+  contest_end_datetime: string;
+  contest_winning_entry_ids_array: number[];
 };
