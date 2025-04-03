@@ -22,33 +22,43 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
 
   const handleEnterContest = async () => {
     setLoading(true);
-    const currentTimestamp = new Date().toISOString();
-
-    const { error } = await supabase.from("entries").insert([
-      {
-        user_id: userId,
-        contest_id: contest.contest_id,
-        created_at: currentTimestamp,
-      },
-    ]);
+    const { data, error } = await supabase.rpc("enter_contest", {
+      curr_user_id: userId,
+      curr_contest_id: contest.contest_id,
+    });
 
     if (error) {
       console.error("Error entering contest:", error.message);
+      toast({
+        title: "Error",
+        description: error.message,
+      });
       setLoading(false);
       return;
-    } else {
-      var description = "You have successfully entered the contest!";
-
-      if (contest.sponsor_id && contest.sponsor_promo) {
-        description =
-          description +
-          `\nBy entering this contest, you've earned a special offer from ${contest.sponsor_name}.\n${contest.sponsor_promo}`;
-      }
-      toast({
-        title: "Success!",
-        description,
-      });
     }
+
+    if (data === "User already has an active entry in this contest.") {
+      toast({
+        title: "Error",
+        description: "You already have an active entry in this contest.",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (data === "Contest is not in progress.") {
+      toast({
+        title: "Error",
+        description: "This contest is not currently in progress.",
+      });
+      setLoading(false);
+      return;
+    }
+
+    toast({
+      title: "Success!",
+      description: "You have successfully entered the contest!",
+    });
 
     // Redirect to contests page after successful entry
     router.push(`/contests/${contest.contest_name_slug}`);

@@ -37,6 +37,7 @@ export type Entry = {
   first_incorrect_pick_team_id: number | null;
   first_incorrect_pick_losing_team_full_name: string | null;
   entry_completion_datetime: string | null;
+  is_winner: boolean | null;
 };
 
 export type Game = {

@@ -17,6 +17,9 @@ export default async function Dashboard() {
   const contests: Contest[] =
     (await supabase.from("contests").select()).data || [];
 
+  // Maybe instead of getting active entries, get the highest entry # for each contest?
+  // Where the contest is still active?
+  // So we can display failed streaks?
   const entries: Entry[] =
     (
       await supabase

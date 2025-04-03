@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import ContestDetailsPageView from "./components/contest-details-page-view";
+import CompletedContestView from "./components/completed-contest-view";
 
 interface ContestPageProps {
   params: Promise<{ contest_name_slug: string }>;
@@ -68,6 +69,8 @@ export default async function ContestPage(props: ContestPageProps) {
 
   const leaderboardEntries = rawLeaderboardEntries as Entry[];
 
+  console.log({ leaderboardEntries });
+
   const numDays: number =
     maximumDaysInAdvanceByLeagueMapping[contest.league_abbreviation];
   const { data: rawGames, error: gamesError } =
@@ -113,15 +116,25 @@ export default async function ContestPage(props: ContestPageProps) {
       <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full max-w-sm">
         Prize: ${contest.contest_prize}
       </Card>
-      <ContestDetailsPageView
-        contest={contest}
-        activeEntry={activeEntry}
-        allUserEntries={allUserEntries}
-        leaderboardEntries={leaderboardEntries}
-        games={games}
-        existingPicks={existingPicks || []}
-        user={user}
-      />
+      {contest.contest_status === "ended" ? (
+        <CompletedContestView
+          contest={contest}
+          allUserEntries={allUserEntries}
+          leaderboardEntries={leaderboardEntries}
+          existingPicks={existingPicks || []}
+          user={user}
+        />
+      ) : (
+        <ContestDetailsPageView
+          contest={contest}
+          activeEntry={activeEntry}
+          allUserEntries={allUserEntries}
+          leaderboardEntries={leaderboardEntries}
+          games={games}
+          existingPicks={existingPicks || []}
+          user={user}
+        />
+      )}
     </div>
   );
 }

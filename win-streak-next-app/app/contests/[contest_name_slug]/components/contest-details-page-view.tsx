@@ -34,15 +34,13 @@ export default function ContestDetailsPageView({
   const [currentView, setCurrentView] = useState<string>("home");
 
   const lastUnsuccessfulEntry: Entry | null =
-    allUserEntries.length > 0 && !activeEntry ? allUserEntries[0] : null;
+    allUserEntries.length > 0 && !activeEntry && allUserEntries[0].is_winner
+      ? allUserEntries[0]
+      : null;
 
   const failedEntries: Entry[] =
     allUserEntries.length > 0
-      ? allUserEntries.filter(
-          (entry) =>
-            entry.is_complete === true &&
-            entry.current_streak < entry.contest_streak_length
-        )
+      ? allUserEntries.filter((entry) => entry.is_complete && !entry.is_winner)
       : [];
 
   const contestDetailsFilters = [
@@ -61,6 +59,7 @@ export default function ContestDetailsPageView({
       pickId: pick.pick_id,
     };
   });
+
   return (
     <div className="w-full max-w-sm">
       <ButtonNav
@@ -163,15 +162,23 @@ export default function ContestDetailsPageView({
           case "make-picks":
             return (
               <div className="w-full max-w-sm">
-                {activeEntry ? (
+                {activeEntry &&
+                leaderboardEntries[0].current_streak !==
+                  contest.streak_length ? (
                   <PickMaker
                     games={games}
                     entry={activeEntry}
                     existingPicks={existingPicksObject || {}}
                   />
-                ) : (
+                ) : leaderboardEntries[0].current_streak !==
+                  contest.streak_length ? (
                   <div className="my-6">
                     Enter the contest to start making picks!
+                  </div>
+                ) : (
+                  <div className="my-6">
+                    There is at least one streak that's reached the target,
+                    making picks is disabled.
                   </div>
                 )}
               </div>
@@ -215,12 +222,11 @@ export default function ContestDetailsPageView({
         }
       }, [currentView, existingPicks])}
 
-      {!activeEntry &&
-        new Date() > new Date(contest.contest_start_datetime) && (
-          <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
-            <EnterContestButton contest={contest} userId={user.id} />
-          </div>
-        )}
+      {!activeEntry && contest.contest_status === "in_progress" && (
+        <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
+          <EnterContestButton contest={contest} userId={user.id} />
+        </div>
+      )}
     </div>
   );
 }

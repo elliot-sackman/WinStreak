@@ -85,10 +85,9 @@ const ContestDetailsCard = function ({
             <strong>Reentries Allowed:</strong>{" "}
             {contest.reentries_allowed ? "Yes" : "No"}
           </p>
-          {!userHasEntered &&
-            new Date() > new Date(contest.contest_start_datetime) && (
-              <EnterContestButton contest={contest} userId={user.id} />
-            )}
+          {!userHasEntered && contest.contest_status === "in_progress" && (
+            <EnterContestButton contest={contest} userId={user.id} />
+          )}
           <ViewContestDetailsButton
             contestNameSlug={contest.contest_name_slug}
           />

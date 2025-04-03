@@ -25,14 +25,17 @@ export default function DashboardView({
   // Get all of the active contest entries
   const contestEntries: { [contestId: number]: Entry | null } = {};
   entries.forEach((entry: Entry) => (contestEntries[entry.contest_id] = entry));
-
+  const activeContests = contests.filter(
+    (contest) => contest.contest_status === "in_progress"
+  );
+  console.log({ activeContests });
   return (
     <div className="flex flex-col justify-center items-center">
       Your Active Contests
-      {entries.length > 0 ? (
+      {entries.length > 0 && activeContests.length > 0 ? (
         <Carousel className="w-full max-w-sm">
           <CarouselContent>
-            {contests.map((contest: Contest) => {
+            {activeContests.map((contest: Contest) => {
               if (contest.contest_id in contestEntries) {
                 return (
                   <CarouselItem key={"my-contests-" + contest.contest_id}>
@@ -59,10 +62,10 @@ export default function DashboardView({
         plugins={[Autoplay({ delay: 6000 })]}
       >
         <CarouselContent>
-          {contests.map((contest: Contest) => {
+          {activeContests.map((contest: Contest) => {
             if (contest.contest_id in contestEntries) {
               return (
-                <CarouselItem key={"my-contests-" + contest.contest_id}>
+                <CarouselItem key={"active-contests-" + contest.contest_id}>
                   <ContestCarouselCard
                     contest={contest}
                     entry={contestEntries[contest.contest_id]}
@@ -72,7 +75,7 @@ export default function DashboardView({
               );
             } else {
               return (
-                <CarouselItem key={"my-contests-" + contest.contest_id}>
+                <CarouselItem key={"active-contests-" + contest.contest_id}>
                   <ContestCarouselCard contest={contest} user={user} />
                 </CarouselItem>
               );
