@@ -35,7 +35,7 @@ const validateEntryStreak = async (
   entry: potentialWinningEntryObject,
   supabase: SupabaseClient,
 ) => {
-  const { data: picks, error } = await supabase.from("picks")
+  const { data: picks } = await supabase.from("picks")
     .select(
       "pick_id, game_start_time, pick_status",
     )
@@ -72,6 +72,50 @@ const validateEntryStreak = async (
     calculatedStreak,
     isComplete,
   };
+};
+
+const markRemainingLosingEntriesAsComplete = async (
+  winningEntries: potentialWinningEntryObject[],
+  supabase: SupabaseClient,
+  contestId: number,
+) => {
+  const losingEntries: WinStreakUpdateEntryObject[] = [];
+
+  const { data, error } = await supabase.from("entries").select(
+    "entry_id, current_streak",
+  ).eq(
+    "contest_id",
+    contestId,
+  ).eq("is_complete", false).not(
+    "entry_id",
+    "in",
+    `(${
+      winningEntries.map((entry) => {
+        return entry.entry_id;
+      })
+    })`,
+  );
+
+  if (error) {
+    console.error("Error fetching losing entries:", error);
+    return losingEntries;
+  }
+
+  if (data && data.length > 0) {
+    losingEntries.push(
+      ...data.map((entry) => ({
+        entry_id: entry.entry_id,
+        current_streak: entry.current_streak,
+        is_complete: true,
+        is_winner: false,
+        entry_completion_datetime: new Date().toISOString(),
+      })),
+    );
+  } else {
+    console.log("No losing entries found for contest_id: ", contestId);
+  }
+
+  return losingEntries;
 };
 
 const parseAndValidatePotentialWinningEntries = async (
@@ -163,6 +207,15 @@ const parseAndValidatePotentialWinningEntries = async (
           entry_completion_datetime: new Date().toISOString(),
         });
       });
+
+      const losingEntries = await markRemainingLosingEntriesAsComplete(
+        winningEntries,
+        supabase,
+        parseInt(contestId),
+      );
+      if (losingEntries.length > 0) {
+        updateEntries.push(...losingEntries);
+      }
     }
   }
 
