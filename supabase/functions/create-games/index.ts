@@ -40,7 +40,11 @@ const parseGameResults = async (results: {
     await getLeagueToExistingGameApiIdToGameIdMap(activeLeagueIds, supabase);
 
   const gamesToAdd: WinStreakInsertGameObject[] = [];
-  const gameIdsToDelete: number[] = [];
+  const potentialGamesToUpdate: {
+    game_id: number;
+    start_time: string;
+  }[] = [];
+  const gameIdsToDelete: { game_id: number }[] = [];
 
   for (const result of results) {
     const {
@@ -81,6 +85,15 @@ const parseGameResults = async (results: {
             status: "scheduled",
             game_api_id: apiGameId,
           });
+        } else {
+          // If the game already exists, we may need to update its start time
+          const existingGameId =
+            leagueToExistingGameApiIdToGameIdMap[supabaseLeagueId][apiGameId];
+
+          potentialGamesToUpdate.push({
+            game_id: existingGameId,
+            start_time: date,
+          });
         }
       } else if (for_deletion.includes(status.short)) {
         // If the game is postponed, canceled, etc, we need to delete this game and all related picks
@@ -88,61 +101,12 @@ const parseGameResults = async (results: {
           leagueToExistingGameApiIdToGameIdMap[supabaseLeagueId][apiGameId];
 
         if (existingGameId) {
-          gameIdsToDelete.push(existingGameId);
+          gameIdsToDelete.push({ game_id: existingGameId });
         }
       }
     }
   }
-  return { gamesToAdd, gameIdsToDelete };
-};
-
-const insertNewGamesToSupabase = async (
-  gamesToAdd: WinStreakInsertGameObject[],
-  supabase: SupabaseClient,
-) => {
-  if (gamesToAdd.length > 0) {
-    const { error } = await supabase.from("games").insert(gamesToAdd);
-
-    if (error) {
-      console.error("Error inserting games:", error.message);
-    } else {
-      console.log(`Inserted ${gamesToAdd.length} new games`);
-    }
-  } else {
-    console.log("No new games to insert.");
-  }
-};
-
-const deletePostponedAndCanceledGamesFromSupabase = async (
-  gameIdsToDelete: number[],
-  supabase: SupabaseClient,
-) => {
-  if (gameIdsToDelete.length > 0) {
-    // Step 1: Delete picks for the games
-    const { error: picksError } = await supabase
-      .from("picks")
-      .delete()
-      .in("game_id", gameIdsToDelete);
-
-    if (picksError) {
-      console.error("Error deleting picks:", picksError.message);
-    } else {
-      console.log(`Deleted picks for ${gameIdsToDelete.length} games`);
-      // Step 2: Delete the games themselves
-      const { error: gamesError } = await supabase
-        .from("games")
-        .delete()
-        .in("game_id", gameIdsToDelete);
-
-      if (gamesError) {
-        console.error("Error deleting games:", gamesError.message);
-      } else {
-        console.log(`Deleted ${gameIdsToDelete.length} games`);
-      }
-    }
-  } else {
-    console.log("No games to delete.");
-  }
+  return { gamesToAdd, potentialGamesToUpdate, gameIdsToDelete };
 };
 // END UTIL FUNCTIONS
 //-----------------------------------------------------------------
@@ -168,16 +132,33 @@ Deno.serve(async (_req: Request) => {
     return new Response(JSON.stringify({ errors }), { status: 500 });
   }
 
-  const { gamesToAdd, gameIdsToDelete } = await parseGameResults(
-    results,
-    supabase,
+  const { gamesToAdd, potentialGamesToUpdate, gameIdsToDelete } =
+    await parseGameResults(
+      results,
+      supabase,
+    );
+
+  const { error } = await supabase.rpc("handle_game_operations", {
+    games_to_add: gamesToAdd,
+    potential_games_to_update: potentialGamesToUpdate,
+    game_ids_to_delete: gameIdsToDelete,
+  });
+
+  if (error) {
+    console.error("Error in RPC:", error.message);
+    return new Response(JSON.stringify({ error }), { status: 500 });
+  }
+
+  console.log(
+    `Added ${gamesToAdd.length} new games, updated ${potentialGamesToUpdate.length} game times, and deleted ${gameIdsToDelete.length} games.`,
   );
 
-  await insertNewGamesToSupabase(gamesToAdd, supabase);
-  await deletePostponedAndCanceledGamesFromSupabase(gameIdsToDelete, supabase);
-
   return new Response(
-    JSON.stringify({ addedGames: gamesToAdd, deletedGames: gameIdsToDelete }),
+    JSON.stringify({
+      addedGames: gamesToAdd,
+      updatedGameTimes: potentialGamesToUpdate,
+      deletedGames: gameIdsToDelete,
+    }),
     {
       headers: { "Content-Type": "application/json" },
       status: 200,
