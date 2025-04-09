@@ -106,3 +106,16 @@ export type existingPicksObject = {
 export type newPicksObject = {
   [gameId: number]: number;
 };
+
+export type PicksDataByContestAndEntry = {
+  contest_id: number;
+  contest_name: string;
+  user_entries: {
+    entry_id: number;
+    entry_number: number;
+    current_streak: number;
+    is_complete: boolean;
+    is_winner: boolean;
+    entry_picks: Pick[];
+  }[];
+};

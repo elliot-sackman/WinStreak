@@ -15,7 +15,10 @@ interface MyPicksDisplayProps {
 
 export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
   const pendingPicks = picks.filter((pick) => pick.pick_status === "pending");
-  const completedPicks = picks.filter((pick) => pick.pick_status === "correct");
+  const correctPicks = picks.filter((pick) => pick.pick_status === "correct");
+  const incorrectPicks = picks.filter(
+    (pick) => pick.pick_status === "incorrect"
+  );
 
   const getPicksByGameDate = function (picks: Pick[]) {
     const options: Intl.DateTimeFormatOptions = {
@@ -65,7 +68,7 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
             {/* Pick Start Details */}
             <div
               className={
-                "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-white z-10"
+                "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-white text-center z-10"
               }
             >
               {new Date(pick.game_start_time).toLocaleTimeString([], {
@@ -90,13 +93,11 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
   };
 
   const pendingPicksByDate = getPicksByGameDate(pendingPicks);
-  const completedPicksByGameDate = getPicksByGameDate(completedPicks);
+  const correctPicksByGameDate = getPicksByGameDate(correctPicks);
+  const incorrectPicksByGameDate = getPicksByGameDate(incorrectPicks);
 
   return (
     <Accordion type="multiple" className="w-full">
-      <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-        My Picks
-      </div>
       {pendingPicks.length > 0 && (
         <AccordionItem value="pending">
           <AccordionTrigger className="relative flex items-center justify-end w-full max-w-sm h-8 text-xl rounded-sm my-4">
@@ -119,19 +120,41 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
         </AccordionItem>
       )}
 
-      {completedPicks.length > 0 && (
-        <AccordionItem value="completed">
+      {correctPicks.length > 0 && (
+        <AccordionItem value="correct">
           <AccordionTrigger className="relative flex items-center justify-end space-x-4 w-full max-w-sm h-8 text-xl rounded-sm my-4">
             <span className="absolute left-1/2 transform -translate-x-1/2">
               Correct Picks
             </span>
           </AccordionTrigger>
           <AccordionContent>
-            {Object.keys(completedPicksByGameDate).map((gameDate: string) => {
+            {Object.keys(correctPicksByGameDate).map((gameDate: string) => {
               return (
                 <div key={"completed" + gameDate}>
                   <h2 key={"completed" + gameDate}>{gameDate}</h2>
-                  {completedPicksByGameDate[gameDate].map((pick: Pick) => {
+                  {correctPicksByGameDate[gameDate].map((pick: Pick) => {
+                    return displayPick(pick);
+                  })}
+                </div>
+              );
+            })}
+          </AccordionContent>
+        </AccordionItem>
+      )}
+
+      {incorrectPicks.length > 0 && (
+        <AccordionItem value="incorrect">
+          <AccordionTrigger className="relative flex items-center justify-end space-x-4 w-full max-w-sm h-8 text-xl rounded-sm my-4">
+            <span className="absolute left-1/2 transform -translate-x-1/2">
+              Incorrect Picks
+            </span>
+          </AccordionTrigger>
+          <AccordionContent>
+            {Object.keys(incorrectPicksByGameDate).map((gameDate: string) => {
+              return (
+                <div key={"completed" + gameDate}>
+                  <h2 key={"completed" + gameDate}>{gameDate}</h2>
+                  {incorrectPicksByGameDate[gameDate].map((pick: Pick) => {
                     return displayPick(pick);
                   })}
                 </div>
