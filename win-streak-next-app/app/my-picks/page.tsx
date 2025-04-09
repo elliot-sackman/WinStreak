@@ -52,22 +52,18 @@ export default async function MyPicks() {
         {allUserPicksData && allUserPicksData.length > 0 ? (
           <>
             <div className="flex flex-row justify-between">
-              <div className="flex flex-col bg-primary-background border-[1px] border-green-600 rounded-sm p-2 sm:p-4 text-center">
-                <p className="text-2xl sm:text-3xl">
-                  ✅ {analytics.total_correct_picks}
-                </p>
+              <div className="flex flex-col bg-primary-background border-[1px] border-green-600 rounded-sm p-4 text-center">
+                <p className="text-3xl">✅ {analytics.total_correct_picks}</p>
                 <p className="text-xs text-muted-foreground">Correct Picks</p>
               </div>
-              <div className="flex flex-col bg-primary-background border-[1px] border-green-600 rounded-sm p-2 sm:p-4 text-center">
-                <p className="text-2xl sm:text-3xl">
+              <div className="flex flex-col bg-primary-background border-[1px] border-green-600 rounded-sm p-4 text-center">
+                <p className="text-3xl">
                   {analytics.correct_percentage.toFixed(0)}%
                 </p>
                 <p className="text-xs text-muted-foreground">Pick Win Rate</p>
               </div>
-              <div className="flex flex-col bg-primary-background border-[1px] border-green-600 rounded-sm p-2 sm:p-4 text-center">
-                <p className="text-2xl sm:text-3xl">
-                  🔥{analytics.longest_streak}
-                </p>
+              <div className="flex flex-col bg-primary-background border-[1px] border-green-600 rounded-sm p-4 text-center">
+                <p className="text-3xl">🔥{analytics.longest_streak}</p>
                 <p className="text-xs text-muted-foreground">Best Streak</p>
               </div>
             </div>

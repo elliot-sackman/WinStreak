@@ -89,24 +89,55 @@ export default function MyPicksPageView({
         </Accordion>
       )}
       {currentView === "past" && (
-        <div>
+        <Accordion type="multiple">
           {picksFromInactiveEntries.map((contest) => (
-            <div key={contest.contest_id} className="my-4">
-              <h2 className="text-lg font-semibold">{contest.contest_name}</h2>
-              {contest.user_entries.map((entry) => {
-                return (
-                  <div key={"entry-" + entry.entry_id}>
-                    Entry #{entry.entry_number + 1} - 🔥{entry.current_streak}
-                    <MyPicksDisplay
-                      key={entry.entry_id}
-                      picks={entry.entry_picks || []}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            <AccordionItem
+              value={"contest_id-" + contest.contest_id}
+              key={contest.contest_id}
+              className="my-4"
+            >
+              <AccordionTrigger className="relative flex items-center justify-between w-full max-w-sm h-8 text-xl rounded-sm my-4">
+                <span className="text-2xl">{contest.contest_name}</span>
+              </AccordionTrigger>
+              <AccordionContent>
+                {contest.user_entries.map((entry) => {
+                  return (
+                    <Accordion type="multiple" key={"entry-" + entry.entry_id}>
+                      {entry.entry_picks ? (
+                        <AccordionItem
+                          value={"entry-" + entry.entry_id}
+                          key={entry.entry_id}
+                        >
+                          <AccordionTrigger>
+                            <div className="flex flex-row justify-between items-center w-3/4">
+                              <span className="text-5xl">
+                                {entry.is_winner ? "👑 " : "💩 "}
+                              </span>
+                              <span className="text-xl">
+                                Entry #{entry.entry_number + 1}
+                              </span>
+                              <span className="text-xl">
+                                🔥{entry.current_streak}{" "}
+                              </span>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <MyPicksDisplay
+                              key={entry.entry_id}
+                              picks={entry.entry_picks || []}
+                            />
+                          </AccordionContent>
+                        </AccordionItem>
+                      ) : (
+                        <div>Make some picks!</div>
+                      )}
+                    </Accordion>
+                  );
+                })}
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       )}
     </div>
   );
