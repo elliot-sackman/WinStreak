@@ -73,7 +73,7 @@ const parseGameResults = async (results: {
       if (
         completed.includes(status.short) &&
         existingGameId && scores.home.total !== null &&
-        scores.away.total !== null
+        scores.away.total !== null && scores.home.total !== scores.away.total
       ) {
         completedGameIds.push(
           existingGameId,
