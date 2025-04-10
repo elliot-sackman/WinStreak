@@ -9,6 +9,7 @@ import Image from "next/image";
 
 import ContestDetailsPageView from "./components/contest-details-page-view";
 import CompletedContestView from "./components/completed-contest-view";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 interface ContestPageProps {
   params: Promise<{ contest_name_slug: string }>;
@@ -112,10 +113,17 @@ export default async function ContestPage(props: ContestPageProps) {
           </Link>
         </div>
       )}
-
-      <Card className="bg-green-600 text-white text-xl font-semibold h-20 content-center my-2 w-full max-w-sm">
-        Prize: ${contest.contest_prize}
-      </Card>
+      {activeEntry ? (
+        <div className="flex flex-row items-center my-4 justify-between w-[90%] max-w-sm">
+          <span className="text-2xl">Your Streak</span>
+          <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800 mx-4"></div>
+          <div className="text-2xl">
+            🔥<span className="italic">{activeEntry.current_streak}</span>
+          </div>
+        </div>
+      ) : (
+        <div>Enter the contest to start your streak 🔥</div>
+      )}
       {contest.contest_status === "ended" ? (
         <CompletedContestView
           contest={contest}

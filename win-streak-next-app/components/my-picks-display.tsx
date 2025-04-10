@@ -44,18 +44,51 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
 
   const displayPick = (pick: Pick) => {
     if (pick.home_team_id === pick.value) {
-      var gradient = `linear-gradient(to right, #737373, #737373, ${pick.home_team_primary_hex_color || "green"}`;
+      var gradient = `linear-gradient(to right, #000000, #000000, ${pick.home_team_primary_hex_color || "green"}`;
     } else {
-      gradient = `linear-gradient(to right, ${pick.away_team_primary_hex_color || "green"}, #737373, #737373`;
+      gradient = `linear-gradient(to right, ${pick.away_team_primary_hex_color || "green"}, #000000, #000000`;
+    }
+
+    if (pick.pick_status === "correct") {
+      var borderColor = "border-green-600";
+      var overlayColor = "bg-green-600";
+      var overlayIcon = "✔";
+    } else if (pick.pick_status === "incorrect") {
+      borderColor = "border-red-600";
+      overlayColor = "bg-red-600";
+      overlayIcon = "✘";
+    } else {
+      borderColor = "border-yellow-500";
+      overlayColor = "bg-yellow-500";
+      overlayIcon = "?";
     }
 
     return (
       <Card
         key={pick.pick_id}
-        className="my-2"
+        className={`my-2 relative border-4 ${borderColor}`}
         style={{ backgroundImage: gradient }}
       >
-        <div className="flex items-center justify-center space-x-4 w-full max-w-sm rounded-sm">
+        {/* Overlay */}
+        <div
+          className={`absolute top-0 ${
+            pick.home_team_id === pick.value
+              ? "-right-[1px] clip-path-rightTriangle rounded-tr-sm"
+              : "left-0 clip-path-leftTriangle rounded-tl-sm"
+          } w-12 h-8 ${overlayColor}  flex items-top justify-center`}
+        >
+          <span
+            className={`text-white text-sm font-semibold ${
+              pick.home_team_id === pick.value
+                ? "translate-x-3"
+                : "-translate-x-3"
+            }`}
+          >
+            {overlayIcon}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-center space-x-4 w-full max-w-sm">
           <div className="relative w-full h-16 cursor-pointer">
             {/* Away Team Label */}
             <div
@@ -101,15 +134,15 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
       {pendingPicks.length > 0 && (
         <AccordionItem value="pending">
           <AccordionTrigger className="relative flex items-center justify-end w-full max-w-sm h-8 text-xl rounded-sm my-4">
-            <span className="absolute left-1/2 transform -translate-x-1/2">
-              Pending Picks
-            </span>
+            <span className="absolute left-0">🔄 PENDING</span>
           </AccordionTrigger>
           <AccordionContent>
             {Object.keys(pendingPicksByDate).map((gameDate: string) => {
               return (
                 <div key={"pending" + gameDate}>
-                  <h2 key={"pending" + gameDate}>{gameDate}</h2>
+                  <h2 key={"pending" + gameDate} className="text-left">
+                    {gameDate}
+                  </h2>
                   {pendingPicksByDate[gameDate].map((pick: Pick) => {
                     return displayPick(pick);
                   })}
@@ -123,15 +156,15 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
       {correctPicks.length > 0 && (
         <AccordionItem value="correct">
           <AccordionTrigger className="relative flex items-center justify-end space-x-4 w-full max-w-sm h-8 text-xl rounded-sm my-4">
-            <span className="absolute left-1/2 transform -translate-x-1/2">
-              Correct Picks
-            </span>
+            <span className="absolute left-0 transform">📈 WINS</span>
           </AccordionTrigger>
           <AccordionContent>
             {Object.keys(correctPicksByGameDate).map((gameDate: string) => {
               return (
                 <div key={"completed" + gameDate}>
-                  <h2 key={"completed" + gameDate}>{gameDate}</h2>
+                  <h2 key={"completed" + gameDate} className="text-left">
+                    {gameDate}
+                  </h2>
                   {correctPicksByGameDate[gameDate].map((pick: Pick) => {
                     return displayPick(pick);
                   })}
@@ -145,15 +178,15 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
       {incorrectPicks.length > 0 && (
         <AccordionItem value="incorrect">
           <AccordionTrigger className="relative flex items-center justify-end space-x-4 w-full max-w-sm h-8 text-xl rounded-sm my-4">
-            <span className="absolute left-1/2 transform -translate-x-1/2">
-              Incorrect Picks
-            </span>
+            <span className="absolute left-0">❌ LOSSES</span>
           </AccordionTrigger>
           <AccordionContent>
             {Object.keys(incorrectPicksByGameDate).map((gameDate: string) => {
               return (
                 <div key={"completed" + gameDate}>
-                  <h2 key={"completed" + gameDate}>{gameDate}</h2>
+                  <h2 key={"completed" + gameDate} className="text-left">
+                    {gameDate}
+                  </h2>
                   {incorrectPicksByGameDate[gameDate].map((pick: Pick) => {
                     return displayPick(pick);
                   })}

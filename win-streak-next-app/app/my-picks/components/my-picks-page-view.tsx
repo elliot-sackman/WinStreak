@@ -62,8 +62,8 @@ export default function MyPicksPageView({
               className="my-4"
             >
               <AccordionTrigger className="relative flex items-center justify-between w-full max-w-sm h-8 text-xl rounded-sm my-4">
-                <span className="text-2xl">{contest.contest_name}</span>
-                <span className="text-2xl">
+                <span className="text-xl">{contest.contest_name}</span>
+                <span className="text-xl">
                   🔥
                   {contest.user_entries[0].current_streak}
                 </span>
@@ -97,7 +97,7 @@ export default function MyPicksPageView({
               className="my-4"
             >
               <AccordionTrigger className="relative flex items-center justify-between w-full max-w-sm h-8 text-xl rounded-sm my-4">
-                <span className="text-2xl">{contest.contest_name}</span>
+                <span className="text-xl">{contest.contest_name}</span>
               </AccordionTrigger>
               <AccordionContent>
                 {contest.user_entries.map((entry) => {

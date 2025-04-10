@@ -74,46 +74,32 @@ export default function ContestDetailsPageView({
             return (
               <>
                 <div className="w-full flex flex-col h-full items-center max-w-sm">
-                  {activeEntry ? (
+                  {lastUnsuccessfulEntry && (
                     <>
-                      <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-                        Current Streak
+                      <div className="relative mt-2 mb-4 flex items-center justify-center">
+                        {/* Tombstone Image */}
+                        <Image
+                          src={streakTombstone}
+                          alt="streak tombstone"
+                          className="w-[250px]"
+                        />
+                        {/* Overlayed Text */}
+                        <p className="absolute text-center text-black text-lg font-bold drop-shadow-md max-w-[125px] mb-10">
+                          RIP <br></br>Here Lies Your Streak of{" "}
+                          {lastUnsuccessfulEntry.current_streak} Games.
+                        </p>
                       </div>
-                      <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
-                        {activeEntry.current_streak}
+                      <div className="my-2">
+                        Looks like your streak was tragically ended by the{" "}
+                        {
+                          lastUnsuccessfulEntry.first_incorrect_pick_losing_team_full_name
+                        }
+                        . Re-enter now to start a new streak!
                       </div>
                     </>
-                  ) : (
-                    lastUnsuccessfulEntry && (
-                      <>
-                        <div className="relative mt-2 mb-4 flex items-center justify-center">
-                          {/* Tombstone Image */}
-                          <Image
-                            src={streakTombstone}
-                            alt="streak tombstone"
-                            className="w-[250px]"
-                          />
-                          {/* Overlayed Text */}
-                          <p className="absolute text-center text-black text-lg font-bold drop-shadow-md max-w-[125px] mb-10">
-                            RIP <br></br>Here Lies Your Streak of{" "}
-                            {lastUnsuccessfulEntry.current_streak} Games.
-                          </p>
-                        </div>
-                        <div className="my-2">
-                          Looks like your streak was tragically ended by the{" "}
-                          {
-                            lastUnsuccessfulEntry.first_incorrect_pick_losing_team_full_name
-                          }
-                          . Re-enter now to start a new streak!
-                        </div>
-                      </>
-                    )
                   )}
 
-                  <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-                    Contest Overview
-                  </div>
-                  <p className="my-6">{contest.contest_description}</p>
+                  <p className="mb-4">{contest.contest_description}</p>
                 </div>
                 <div className="items-left">
                   <Leaderboard
@@ -127,9 +113,6 @@ export default function ContestDetailsPageView({
           case "rules":
             return (
               <div className="w-full max-w-sm">
-                <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-                  Rules
-                </div>
                 <p className="my-6 text-left">
                   <strong>General:</strong> Pick {contest.league_abbreviation}{" "}
                   teams to win their games. If a team loses you're eliminated!
@@ -187,16 +170,7 @@ export default function ContestDetailsPageView({
             return (
               <div className="w-full flex flex-col h-full items-center justify-center">
                 {activeEntry ? (
-                  <>
-                    <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-                      Current Streak
-                    </div>
-                    <div className="w-24 h-24 my-4 rounded-full bg-gray-200 border-2 border-gray-300 shadow-lg flex items-center justify-center text-5xl text-black">
-                      {activeEntry?.current_streak}
-                    </div>
-
-                    <MyPicksDisplay picks={existingPicks || []} />
-                  </>
+                  <MyPicksDisplay picks={existingPicks || []} />
                 ) : (
                   <div className="my-6">
                     Enter the contest and make some picks!

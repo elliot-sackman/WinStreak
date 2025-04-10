@@ -35,7 +35,7 @@ const PickSlider = ({
     if (teamId === game.home_team_id) {
       // Set home gradient
       setGradient(
-        `linear-gradient(to right, #737373, #737373, ${game.home_team_primary_hex_color || "green"})`
+        `linear-gradient(to right, #000000, #000000, ${game.home_team_primary_hex_color || "green"})`
       );
 
       // If there was no existing pick OR the new pick is a new value, we animate and outline
@@ -45,7 +45,7 @@ const PickSlider = ({
     } else if (teamId === game.away_team_id) {
       // Set away team gradient
       setGradient(
-        `linear-gradient(to right, ${game.away_team_primary_hex_color || "green"}, #737373, #737373)`
+        `linear-gradient(to right, ${game.away_team_primary_hex_color || "green"}, #000000, #000000)`
       );
 
       // If there was no existing pick OR the new pick is a new value, we animate and outline
@@ -54,7 +54,7 @@ const PickSlider = ({
         : handleCardAnimationChange("away");
     } else {
       // Remove gradient for null pick
-      setGradient("linear-gradient(to right, #737373, #737373)");
+      setGradient("linear-gradient(to right, #000000, #000000)");
 
       handleCardAnimationChange("none");
     }
@@ -111,7 +111,10 @@ const PickSlider = ({
   };
 
   return (
-    <Card className="my-2" style={{ backgroundImage: gradient }}>
+    <Card
+      className="my-2 border-[1px] border-neutral-500"
+      style={{ backgroundImage: gradient }}
+    >
       <div
         className={`flex items-center justify-center space-x-4 w-full max-w-sm`}
         onClick={handleSliderClick}

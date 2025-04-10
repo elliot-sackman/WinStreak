@@ -16,9 +16,10 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   return (
     <>
-      <div className="border border-input bg-neutral-500 text-white rounded-xl w-full max-w-sm h-12 content-center">
+      <div className="text-3xl text-left text-white rounded-xl w-full max-w-sm h-12 content-center">
         Leaderboard
       </div>
+      <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800"></div>
       {entries.length > 0 ? (
         entries?.map((entry: Entry, index: number) => {
           if (numEntries && index >= numEntries) {
@@ -26,17 +27,22 @@ export default function Leaderboard({
           }
 
           return (
-            <div
-              className={`my-2 flex text-left gap-x-4 items-center p-2 rounded-xl w-full max-w-sm ${userId === entry.user_id ? "bg-green-500" : ""}`}
-              key={index}
-            >
-              <div className="text-2xl sm:text-3xl w-10">{index + 1 + "."}</div>
-              <div className="text-2xl sm:text-3xl flex-1">
-                {entry.display_name}
+            <div key={index}>
+              <div
+                className={`flex text-left gap-x-4 items-center p-2 w-full max-w-sm ${userId === entry.user_id ? "bg-green-600" : ""}`}
+                key={index}
+              >
+                <div className="text-2xl sm:text-3xl w-10">
+                  {index + 1 + "."}
+                </div>
+                <div className="text-2xl sm:text-3xl flex-1">
+                  {entry.display_name}
+                </div>
+                <Card className="text-2xl sm:text-3xl flex rounded-full bg-gray-200 w-8 h-8 items-center justify-center text-black">
+                  {entry.current_streak}
+                </Card>
               </div>
-              <Card className="text-2xl sm:text-3xl flex rounded-full bg-gray-200 w-12 h-12 items-center justify-center text-black">
-                {entry.current_streak}
-              </Card>
+              <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800"></div>
             </div>
           );
         })

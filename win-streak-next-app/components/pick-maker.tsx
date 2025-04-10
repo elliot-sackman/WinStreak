@@ -222,16 +222,10 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
 
   return (
     <div className="w-full">
-      <Card className="bg-neutral-500">
-        <h2 className="flex items-center justify-center space-x-4 w-full max-w-sm h-12 text-xl text-white">
-          Upcoming Games
-        </h2>
-      </Card>
-
       {Object.keys(gamesByDate).map((dateString) => {
         return (
           <div key={dateString} className="my-2">
-            <h2>{dateString}</h2>
+            <h2 className="text-left mt-5">{dateString}</h2>
             {gamesByDate[dateString].map((game: Game) => {
               return (
                 <PickSlider
