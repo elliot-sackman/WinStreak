@@ -59,6 +59,7 @@ const parseGameResults = async (results: {
         status,
         league,
         scores,
+        date,
       } = game;
 
       const leagueApiId = league.id;
@@ -73,7 +74,8 @@ const parseGameResults = async (results: {
       if (
         completed.includes(status.short) &&
         existingGameId && scores.home.total !== null &&
-        scores.away.total !== null && scores.home.total !== scores.away.total
+        scores.away.total !== null && scores.home.total !== scores.away.total &&
+        new Date().getTime() - new Date(date).getTime() > 1000 * 60 * 60 * 6
       ) {
         completedGameIds.push(
           existingGameId,

@@ -50,43 +50,45 @@ export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
     }
 
     if (pick.pick_status === "correct") {
-      var borderColor = "border-green-600";
+      var borderColor = "border-4 border-green-600";
       var overlayColor = "bg-green-600";
       var overlayIcon = "✔";
     } else if (pick.pick_status === "incorrect") {
-      borderColor = "border-red-600";
+      borderColor = "border-4 border-red-600";
       overlayColor = "bg-red-600";
       overlayIcon = "✘";
     } else {
-      borderColor = "border-yellow-500";
-      overlayColor = "bg-yellow-500";
-      overlayIcon = "?";
+      borderColor = "";
+      overlayColor = "";
+      overlayIcon = "";
     }
 
     return (
       <Card
         key={pick.pick_id}
-        className={`my-2 relative border-4 ${borderColor}`}
+        className={`my-2 relative ${borderColor}`}
         style={{ backgroundImage: gradient }}
       >
         {/* Overlay */}
-        <div
-          className={`absolute top-0 ${
-            pick.home_team_id === pick.value
-              ? "-right-[1px] clip-path-rightTriangle rounded-tr-sm"
-              : "left-0 clip-path-leftTriangle rounded-tl-sm"
-          } w-12 h-8 ${overlayColor}  flex items-top justify-center`}
-        >
-          <span
-            className={`text-white text-sm font-semibold ${
+        {pick.pick_status !== "pending" && (
+          <div
+            className={`absolute top-0 ${
               pick.home_team_id === pick.value
-                ? "translate-x-3"
-                : "-translate-x-3"
-            }`}
+                ? "-right-[1px] clip-path-rightTriangle rounded-tr-sm"
+                : "left-0 clip-path-leftTriangle rounded-tl-sm"
+            } w-12 h-8 ${overlayColor}  flex items-top justify-center`}
           >
-            {overlayIcon}
-          </span>
-        </div>
+            <span
+              className={`text-white text-sm font-semibold ${
+                pick.home_team_id === pick.value
+                  ? "translate-x-3"
+                  : "-translate-x-3"
+              }`}
+            >
+              {overlayIcon}
+            </span>
+          </div>
+        )}
 
         <div className="flex items-center justify-center space-x-4 w-full max-w-sm">
           <div className="relative w-full h-16 cursor-pointer">
