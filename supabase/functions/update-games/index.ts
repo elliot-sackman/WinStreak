@@ -75,7 +75,7 @@ const parseGameResults = async (results: {
         completed.includes(status.short) &&
         existingGameId && scores.home.total !== null &&
         scores.away.total !== null && scores.home.total !== scores.away.total &&
-        new Date().getTime() - new Date(date).getTime() > 1000 * 60 * 60 * 6
+        (new Date().getTime() - new Date(date).getTime()) / 1000 > 21600
       ) {
         completedGameIds.push(
           existingGameId,
