@@ -89,13 +89,14 @@ const PickSlider = ({
     // Calculate the click position as a percentage of the width
     const clickPercentage = (clickPosition / sliderWidth) * 100;
 
-    if (clickPercentage < 33) {
+    // A second click on a already selected team removes the pick
+    if (clickPercentage < 33 && pick !== game.away_team_id) {
       // Styling
       handlePick(game.away_team_id);
 
       // Pick Maker Parent
       handlePickChange(game.game_id, game.away_team_id);
-    } else if (clickPercentage > 66) {
+    } else if (clickPercentage > 66 && pick !== game.home_team_id) {
       // Styling
       handlePick(game.home_team_id);
 
