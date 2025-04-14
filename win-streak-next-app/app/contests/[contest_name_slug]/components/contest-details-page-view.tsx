@@ -7,7 +7,14 @@ import { Separator } from "@/components/ui/separator";
 import ButtonNav from "@/components/button-nav";
 import Leaderboard from "./leaderboard";
 import MyPicksDisplay from "@/components/my-picks-display";
-import { Contest, Entry, Game, Pick, existingPicksObject } from "@/lib/types";
+import {
+  AllContestGamesPicksEntries,
+  existingPicksObject,
+  Entry,
+  Pick,
+  Contest,
+  Game,
+} from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { useMemo } from "react";
 import streakTombstone from "@/app/static-images/streak-tombstone.png";
@@ -15,42 +22,42 @@ import Image from "next/image";
 import StreakGraveyard from "./streak-graveyard";
 
 export default function ContestDetailsPageView({
-  contest,
-  activeEntry,
-  allUserEntries,
-  leaderboardEntries,
-  games,
-  existingPicks,
+  contestData,
   user,
 }: {
-  contest: Contest;
-  activeEntry: Entry | null;
-  allUserEntries: Entry[];
-  leaderboardEntries: Entry[];
-  games: Game[];
-  existingPicks: Pick[] | [];
+  contestData: AllContestGamesPicksEntries;
   user: User;
 }) {
   const [currentView, setCurrentView] = useState<string>("home");
 
-  const lastUnsuccessfulEntry: Entry | null =
-    allUserEntries.length > 0 && !activeEntry && allUserEntries[0].is_winner
-      ? allUserEntries[0]
+  // destructure contestData object and assing to vars
+  // Update streak graveyard to show my-picks-display in card
+  const contest: Contest = contestData.contest_details!;
+
+  const games: Game[] = contestData.games || [];
+
+  const allUserEntries = contestData.user_entries || [];
+
+  const activeEntry: Entry | null =
+    allUserEntries.length > 0 &&
+    allUserEntries[0].entry_details.is_complete === false
+      ? allUserEntries[0].entry_details
       : null;
 
-  const failedEntries: Entry[] =
-    allUserEntries.length > 0
-      ? allUserEntries.filter((entry) => entry.is_complete && !entry.is_winner)
-      : [];
+  const lastUnsuccessfulEntry: Entry | null =
+    allUserEntries.length > 0 &&
+    !activeEntry &&
+    !allUserEntries[0].entry_details.is_winner
+      ? allUserEntries[0].entry_details
+      : null;
 
-  const contestDetailsFilters = [
-    { filter: "home", title: "Home" },
-    { filter: "rules", title: "Rules" },
-    { filter: "leaderboard", title: "Leaderboard" },
-    { filter: "make-picks", title: "Make Picks" },
-    { filter: "my-picks", title: "My Picks" },
-    { filter: "past-entries", title: "🪦 Streak Graveyard 🪦" },
-  ];
+  const failedEntries = allUserEntries.filter(
+    (entry) => entry.entry_details.is_winner === false
+  );
+
+  const existingPicks: Pick[] | null = activeEntry
+    ? allUserEntries[0].entry_picks || []
+    : null;
   const existingPicksObject: existingPicksObject = {};
 
   existingPicks?.forEach((pick: Pick) => {
@@ -60,6 +67,16 @@ export default function ContestDetailsPageView({
     };
   });
 
+  const leaderboardEntries = contestData.leaderboard_entries || [];
+
+  const contestDetailsFilters = [
+    { filter: "home", title: "Home" },
+    { filter: "make-picks", title: "Make Picks" },
+    { filter: "my-picks", title: "My Picks" },
+    { filter: "past-entries", title: "🪦 Streak Graveyard 🪦" },
+    { filter: "leaderboard", title: "Leaderboard" },
+    { filter: "rules", title: "Rules" },
+  ];
   return (
     <div className="w-full max-w-sm">
       <ButtonNav
@@ -183,7 +200,7 @@ export default function ContestDetailsPageView({
               <>
                 {failedEntries.length > 0 ? (
                   <StreakGraveyard
-                    previousEntries={failedEntries}
+                    failedEntries={failedEntries}
                     contest={contest}
                   />
                 ) : (

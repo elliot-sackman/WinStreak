@@ -22,7 +22,9 @@ export default function ContestCarouselCard({
   return (
     <Card>
       <CardContent className="aspect-square content-center p-6 border-black border-1 rounded-lg">
-        <h1 className="text-2xl font-semibold my-2">{contest.contest_name}</h1>
+        <h1 className="text-2xl font-semibold my-2 text-center">
+          {contest.contest_name}
+        </h1>
         {entry && (
           <h2 className="bg-gradient-to-r from-neutral-500 via-neutral-500 to-green-600 rounded-sm p-2 text-white text-center my-2">
             Current Streak: {entry.current_streak}

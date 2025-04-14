@@ -119,3 +119,13 @@ export type PicksDataByContestAndEntry = {
     entry_picks: Pick[];
   }[];
 };
+
+export type AllContestGamesPicksEntries = {
+  contest_details: Contest | null;
+  user_entries: {
+    entry_details: Entry;
+    entry_picks: Pick[] | null;
+  }[] | null;
+  leaderboard_entries: Entry[] | null;
+  games: Game[] | null;
+};

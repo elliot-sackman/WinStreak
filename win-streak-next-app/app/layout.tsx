@@ -9,6 +9,7 @@ import MainMenu from "@/components/main-menu";
 import "./globals.css";
 import { createClient } from "@/utils/supabase/server";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -73,6 +74,7 @@ export default async function RootLayout({
                 <Toaster />
                 {children}
                 <Analytics />
+                <SpeedInsights />
               </div>
 
               <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">

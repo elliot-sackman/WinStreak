@@ -1,27 +1,15 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
-import { Contest, Entry, Game, Pick, existingPicksObject } from "@/lib/types";
+import { AllContestGamesPicksEntries } from "@/lib/types";
 
-import { Card } from "@/components/ui/card";
-import Link from "next/link";
-import Image from "next/image";
-
+import ContestDetailsHeader from "./components/contest-details-header";
 import ContestDetailsPageView from "./components/contest-details-page-view";
 import CompletedContestView from "./components/completed-contest-view";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 
 interface ContestPageProps {
   params: Promise<{ contest_name_slug: string }>;
 }
-
-const maximumDaysInAdvanceByLeagueMapping: {
-  [leagueAbbreviation: string]: number;
-} = {
-  MLB: 3,
-  NFL: 6,
-  NBA: 3,
-};
 
 export default async function ContestPage(props: ContestPageProps) {
   const params = await props.params;
@@ -36,112 +24,42 @@ export default async function ContestPage(props: ContestPageProps) {
     return redirect("/sign-in");
   }
 
-  const { data: contest, error: contestError } = await supabase
+  const { data: contestId, error: contestError } = await supabase
     .from("contests")
-    .select("*")
+    .select("contest_id")
     .eq("contest_name_slug", contest_name_slug)
-    .single<Contest>();
+    .single();
 
-  if (!contest || contestError) {
+  if (!contestId || contestError) {
     return notFound(); // Show 404 if contest doesn't exist
   }
 
-  const { data: rawUserEntries, error: entryError } = await supabase
-    .from("entries")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("contest_id", contest.contest_id)
-    .order("entry_number", { ascending: false }); // Match the current contest ID
+  const { data: rawContestData, error: contestDataError } = await supabase.rpc(
+    "get_user_all_picks_data_by_contest",
+    {
+      uid: user.id,
+      cid: contestId.contest_id,
+    }
+  );
 
-  const allUserEntries = rawUserEntries as Entry[];
+  if (!rawContestData || contestDataError) {
+    console.error("Error fetching contest data:", contestDataError);
+    return notFound(); // Show 404 if no data found
+  }
 
-  const activeEntry = allUserEntries.filter(
-    (entry) => entry.is_complete === false
-  )
-    ? allUserEntries.filter((entry) => entry.is_complete === false)[0]
-    : null;
+  const contestData = rawContestData as AllContestGamesPicksEntries;
 
-  const { data: rawLeaderboardEntries, error } = await supabase
-    .from("entries")
-    .select("*")
-    .eq("contest_id", contest.contest_id)
-    .eq("is_complete", contest.contest_status === "ended")
-    .order("current_streak", { ascending: false });
-
-  const leaderboardEntries = rawLeaderboardEntries as Entry[];
-
-  console.log({ leaderboardEntries });
-
-  const numDays: number =
-    maximumDaysInAdvanceByLeagueMapping[contest.league_abbreviation];
-  const { data: rawGames, error: gamesError } =
-    (await supabase
-      .from("games")
-      .select("*")
-      .eq("league_id", contest.league_id)
-      .gte("start_time", new Date().toISOString())
-      .lt(
-        "start_time",
-        new Date(Date.now() + numDays * 24 * 60 * 60 * 1000).toISOString()
-      )
-      .order("start_time", { ascending: true })) || [];
-
-  const games: Game[] = rawGames as Game[];
-
-  const { data: rawExistingPicks, error: picksError } = await supabase
-    .from("picks")
-    .select("*")
-    .eq("entry_id", activeEntry?.entry_id)
-    .order("game_start_time", { ascending: true });
-
-  const existingPicks = rawExistingPicks as Pick[];
+  if (!contestData.contest_details) {
+    return notFound(); // Show 404 if no data found
+  }
 
   return (
     <div className="container mx-auto p-6 text-center place-items-center">
-      <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
-      {contest.sponsor_id && (
-        <div className="flex flex-col items-center my-4">
-          <span className="text-neutral-500 mb-2">Sponsored By:</span>
-          <Link href={contest.sponsor_site_url!}>
-            <Image
-              src={contest.sponsor_logo_url!}
-              alt="Sponsor Logo"
-              width={200}
-              height={100}
-              style={{ width: "auto" }}
-            />
-          </Link>
-        </div>
-      )}
-      {activeEntry ? (
-        <div className="flex flex-row items-center my-4 justify-between w-[90%] max-w-sm">
-          <span className="text-2xl">Your Streak</span>
-          <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800 mx-4"></div>
-          <div className="text-2xl">
-            🔥<span className="italic">{activeEntry.current_streak}</span>
-          </div>
-        </div>
+      <ContestDetailsHeader contestData={contestData} />
+      {contestData.contest_details.contest_status === "ended" ? (
+        <CompletedContestView contestData={contestData} user={user} />
       ) : (
-        <div>Enter the contest to start your streak 🔥</div>
-      )}
-      {contest.contest_status === "ended" ? (
-        <CompletedContestView
-          contest={contest}
-          allUserEntries={allUserEntries}
-          leaderboardEntries={leaderboardEntries}
-          existingPicks={existingPicks || []}
-          user={user}
-        />
-      ) : (
-        <ContestDetailsPageView
-          contest={contest}
-          activeEntry={activeEntry}
-          allUserEntries={allUserEntries}
-          leaderboardEntries={leaderboardEntries}
-          games={games}
-          existingPicks={existingPicks || []}
-          user={user}
-        />
+        <ContestDetailsPageView contestData={contestData} user={user} />
       )}
     </div>
   );
