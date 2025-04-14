@@ -1,8 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function BirthdayInput() {
+export default function BirthdayInput({
+  onValidChange,
+}: {
+  onValidChange: (isValid: boolean) => void;
+}) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
@@ -32,6 +36,7 @@ export default function BirthdayInput() {
 
     if (!dateRegex.test(value)) {
       setError("Invalid date format. Please use MM/DD/YYYY.");
+      onValidChange(false); // Notify parent that the input is invalid
       return false;
     }
 
@@ -46,12 +51,23 @@ export default function BirthdayInput() {
 
     if (enteredDate > eighteenYearsAgo) {
       setError("You must be at least 18 years old.");
+      onValidChange(false); // Notify parent that the input is invalid
       return false;
     }
 
     setError("");
+    onValidChange(true); // Notify parent that the input is valid
     return true;
   };
+
+  // Validate the date whenever the value changes
+  useEffect(() => {
+    if (value.length === 10) {
+      validateDate();
+    } else {
+      onValidChange(false); // Notify parent that the input is invalid if incomplete
+    }
+  }, [value]);
 
   return (
     <div className="w-full">
