@@ -47,7 +47,7 @@ export default async function RootLayout({
       <body className="bg-background text-foreground overflow-x-hidden">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
