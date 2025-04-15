@@ -54,7 +54,7 @@ export default async function ContestPage(props: ContestPageProps) {
   }
 
   return (
-    <div className="container mx-auto p-6 text-center place-items-center">
+    <div className="container mx-auto p-6 text-center place-items-center justify-center">
       <ContestDetailsHeader contestData={contestData} />
       {contestData.contest_details.contest_status === "ended" ? (
         <CompletedContestView contestData={contestData} user={user} />

@@ -38,7 +38,7 @@ export default function ContestDetailsHeader({
       {activeEntry ? (
         <div className="flex flex-row items-center my-4 justify-between w-[90%] max-w-sm">
           <span className="text-2xl italic">Your Streak</span>
-          <div className="flex-grow h-[3px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800 mx-4"></div>
+          <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800 mx-4"></div>
           <div className="text-2xl">
             🔥<span className="italic">{activeEntry.current_streak}</span>
           </div>

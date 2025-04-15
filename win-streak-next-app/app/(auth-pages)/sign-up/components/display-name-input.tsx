@@ -13,8 +13,8 @@ export default function DisplayNameInput({
   const [error, setError] = useState("");
 
   const validateDisplayName = (displayName: string) => {
-    if (displayName.length < 8) {
-      setError("Display name must be at least 8 characters.");
+    if (displayName.length < 8 || displayName.length > 20) {
+      setError("Display name must be between 8 and 20 characters.");
       onValidChange(false);
       return false;
     }

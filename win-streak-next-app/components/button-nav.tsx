@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { startTransition, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function ButtonNav({

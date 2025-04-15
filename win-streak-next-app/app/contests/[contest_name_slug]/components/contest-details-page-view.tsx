@@ -78,7 +78,7 @@ export default function ContestDetailsPageView({
     { filter: "rules", title: "Rules" },
   ];
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-sm justify-center">
       <ButtonNav
         filters={contestDetailsFilters}
         currentView={currentView}
@@ -122,6 +122,7 @@ export default function ContestDetailsPageView({
                   <Leaderboard
                     numEntries={10}
                     entries={leaderboardEntries}
+                    setCurrentView={setCurrentView}
                     userId={user.id}
                   />
                 </div>
