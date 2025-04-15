@@ -34,7 +34,7 @@ export default function SignupForm({
     isLastNameValid;
 
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.(com|org|net|edu|gov|io|co|us)$/i;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.(com|org|net|edu|gov|io|co|us|uk)$/i;
     return emailRegex.test(email);
   };
 
