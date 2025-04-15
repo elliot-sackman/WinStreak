@@ -291,11 +291,12 @@ const PickMaker = function ({ games, entry, existingPicks }: PickMakerProps) {
               {Object.keys(modifiedPicks).map((gameId: string) => {
                 const { home_team_id, home_team_nickname, away_team_nickname } =
                   gameDetailsObject[parseInt(gameId)];
-                const pickedTeamId = newPicks[parseInt(gameId)];
+                const pickedTeamId = modifiedPicks[parseInt(gameId)].teamId;
                 const pickedTeamName =
                   home_team_id === pickedTeamId
                     ? home_team_nickname
                     : away_team_nickname;
+
                 return (
                   <div key={gameId}>
                     {away_team_nickname +
