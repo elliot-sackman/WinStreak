@@ -5,6 +5,7 @@ import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import EmailInput from "./email-input";
 import BirthdayInput from "./birthday-input";
 import PasswordInput from "./password-input";
 import DisplayNameInput from "./display-name-input";
@@ -33,11 +34,6 @@ export default function SignupForm({
     isFirstNameValid &&
     isLastNameValid;
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.(com|org|net|edu|gov|io|co|us|uk)$/i;
-    return emailRegex.test(email);
-  };
-
   const validateNonNullString = (value: string) => {
     return value.trim().length > 0;
   };
@@ -46,12 +42,7 @@ export default function SignupForm({
     <form className="flex flex-col min-w-64 max-w-64 mx-auto">
       <div className="flex flex-col gap-2 [&>input]:mb-3">
         <Label htmlFor="email">Email</Label>
-        <Input
-          name="email"
-          placeholder="you@example.com"
-          required
-          onChange={(e) => setIsEmailValid(validateEmail(e.target.value))}
-        />
+        <EmailInput onValidChange={setIsEmailValid} />
         <Label htmlFor="display name">Display Name</Label>
         <DisplayNameInput
           existingUsernames={existingUsernames}

@@ -2,25 +2,18 @@
 
 import React, { useState } from "react";
 
-export default function DisplayNameInput({
-  existingUsernames,
+export default function EmailInput({
   onValidChange,
 }: {
-  existingUsernames: string[];
   onValidChange: (isValid: boolean) => void;
 }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
-  const validateDisplayName = (displayName: string) => {
-    if (displayName.length < 8) {
-      setError("Display name must be at least 8 characters.");
-      onValidChange(false);
-      return false;
-    }
-
-    if (existingUsernames.includes(displayName)) {
-      setError("Display name is already taken.");
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.(com|org|net|edu|gov|io|co|us|uk)$/i;
+    if (!emailRegex.test(email.toLowerCase())) {
+      setError("Invalid email format. Please use a valid email address.");
       onValidChange(false);
       return false;
     }
@@ -33,17 +26,17 @@ export default function DisplayNameInput({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setValue(input);
-    validateDisplayName(input);
+    validateEmail(input);
   };
 
   return (
     <div className="w-full">
       <input
         type="text"
-        name="display name"
+        name="email"
         value={value}
         onChange={handleChange}
-        placeholder="Enter your display name"
+        placeholder="Enter your email"
         className="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring mb-4"
         required
       />

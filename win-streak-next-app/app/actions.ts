@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const signUpAction = async (formData: FormData) => {
-  const email = formData.get("email")?.toString();
+  const email = formData.get("email")?.toString().toLowerCase();
   const password = formData.get("password")?.toString();
   const username = formData.get("display name")?.toString();
   const first_name = formData.get("first")?.toString();
