@@ -12,12 +12,35 @@ interface LeaderboardProps {
   userId: string;
 }
 
+interface RankedEntry extends Entry {
+  rank: number;
+}
+
 export default function Leaderboard({
   numEntries,
   entries,
   setCurrentView,
   userId,
 }: LeaderboardProps) {
+  // Calculate ranks, accounting for ties
+  const rankedEntries: RankedEntry[] = [];
+
+  // Calculate ranks manually using a for loop
+  for (let i = 0; i < entries.length; i++) {
+    const currentEntry = entries[i];
+    const previousEntry = i > 0 ? rankedEntries[i - 1] : null;
+
+    // Determine the rank
+    const rank =
+      previousEntry &&
+      previousEntry.current_streak === currentEntry.current_streak
+        ? previousEntry.rank // Use the previous entry's rank if streaks are equal
+        : i + 1; // Otherwise, assign the current index + 1 as the rank
+
+    // Push the ranked entry into the array
+    rankedEntries.push({ ...currentEntry, rank });
+  }
+
   return (
     <>
       {numEntries && setCurrentView ? (
@@ -42,8 +65,8 @@ export default function Leaderboard({
       )}
 
       <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800"></div>
-      {entries.length > 0 ? (
-        entries?.map((entry: Entry, index: number) => {
+      {rankedEntries.length > 0 ? (
+        rankedEntries.map((entry, index) => {
           if (numEntries && index >= numEntries) {
             return;
           }
@@ -55,7 +78,7 @@ export default function Leaderboard({
                 key={index}
               >
                 <div className="text-xl sm:text-3xl w-10">
-                  {index + 1 + "."}
+                  {entry.rank + "."}
                 </div>
                 <div className="text-xl sm:text-3xl flex-1">
                   {entry.display_name}
