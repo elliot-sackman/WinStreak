@@ -110,6 +110,7 @@ export type newPicksObject = {
 export type PicksDataByContestAndEntry = {
   contest_id: number;
   contest_name: string;
+  contest_name_slug: string;
   user_entries: {
     entry_id: number;
     entry_number: number;

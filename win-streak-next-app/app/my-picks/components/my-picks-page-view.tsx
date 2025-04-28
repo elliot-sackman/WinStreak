@@ -10,6 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ViewContestDetailsButton } from "@/components/view-contest-details-button";
+import { fail } from "assert";
 
 export default function MyPicksPageView({
   allUserPicksData,
@@ -24,6 +26,19 @@ export default function MyPicksPageView({
 
   const picksFromActiveEntries: PicksDataByContestAndEntry[] = [];
   const picksFromInactiveEntries: PicksDataByContestAndEntry[] = [];
+
+  const failedEntryEmojis = [
+    "😞",
+    "😮‍💨",
+    "📉",
+    "😭",
+    "🤬",
+    "🫣",
+    "🤮",
+    "💀",
+    "🤡",
+    "☠️",
+  ];
 
   allUserPicksData.forEach((contest) => {
     const activeEntries = contest.user_entries.filter(
@@ -83,6 +98,9 @@ export default function MyPicksPageView({
                     </div>
                   );
                 })}
+                <ViewContestDetailsButton
+                  contestNameSlug={contest.contest_name_slug}
+                />
               </AccordionContent>
             </AccordionItem>
           ))}
@@ -111,7 +129,9 @@ export default function MyPicksPageView({
                           <AccordionTrigger>
                             <div className="flex flex-row justify-between items-center w-3/4">
                               <span className="text-5xl">
-                                {entry.is_winner ? "👑 " : "💩 "}
+                                {entry.is_winner
+                                  ? "👑 "
+                                  : `${failedEntryEmojis[entry.entry_number % failedEntryEmojis.length]} `}
                               </span>
                               <span className="text-xl">
                                 Entry #{entry.entry_number + 1}
@@ -134,6 +154,9 @@ export default function MyPicksPageView({
                     </Accordion>
                   );
                 })}
+                <ViewContestDetailsButton
+                  contestNameSlug={contest.contest_name_slug}
+                />
               </AccordionContent>
             </AccordionItem>
           ))}

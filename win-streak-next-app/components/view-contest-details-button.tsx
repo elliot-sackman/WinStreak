@@ -22,7 +22,7 @@ const ViewContestDetailsButton: React.FC<ViewContestDetailsButtonProps> =
         variant="outline"
         onClick={handleViewContestDetails}
       >
-        View Contest Details
+        View Contest
       </Button>
     );
   };
