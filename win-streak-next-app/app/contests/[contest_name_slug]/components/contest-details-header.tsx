@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AllContestGamesPicksEntries } from "@/lib/types";
 import mlbContestBackground from "@/app/static-images/mlb-contest-background.jpg";
+import { RulesDialog } from "./rules-dialog";
 
 interface ContestDetailsHeaderProps {
   contestData: AllContestGamesPicksEntries;
@@ -32,7 +33,10 @@ export default function ContestDetailsHeader({
 
       {/* Content */}
       <div className="relative p-8">
-        <h1 className="text-2xl font-bold">{contest.contest_name}</h1>
+        <div className="flex flex-row justify-center items-center">
+          <h1 className="text-2xl font-bold mx-4">{contest.contest_name}</h1>
+          <RulesDialog contest={contest} />
+        </div>
         {contest.sponsor_id && (
           <div className="flex flex-col items-center my-4">
             <span className="text-white mb-2">Sponsored By:</span>

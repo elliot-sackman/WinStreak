@@ -15,20 +15,16 @@ export default function ContestsPageView({
   entries: Entry[];
   user: User;
 }) {
-  const [currentView, setCurrentView] = useState<string>("all");
+  const [currentView, setCurrentView] = useState<string>("active");
 
   const contestFilters = [
     {
-      filter: "all",
-      title: "All",
+      filter: "active",
+      title: "Active",
     },
     {
       filter: "my",
       title: "My Entries",
-    },
-    {
-      filter: "active",
-      title: "Active",
     },
     {
       filter: "upcoming",
@@ -37,6 +33,10 @@ export default function ContestsPageView({
     {
       filter: "previous",
       title: "Previous",
+    },
+    {
+      filter: "all",
+      title: "All",
     },
   ];
 

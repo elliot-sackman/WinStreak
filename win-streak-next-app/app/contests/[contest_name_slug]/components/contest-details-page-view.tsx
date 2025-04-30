@@ -71,11 +71,11 @@ export default function ContestDetailsPageView({
 
   const contestDetailsFilters = [
     { filter: "home", title: "Home" },
+    { filter: "rules", title: "Rules" },
     { filter: "make-picks", title: "Make Picks" },
     { filter: "my-picks", title: "My Picks" },
     { filter: "past-entries", title: "🪦 Streak Graveyard 🪦" },
     { filter: "leaderboard", title: "Leaderboard" },
-    { filter: "rules", title: "Rules" },
   ];
   return (
     <div className="w-full max-w-sm justify-center">
@@ -132,26 +132,34 @@ export default function ContestDetailsPageView({
             return (
               <div className="w-full max-w-sm">
                 <p className="my-6 text-left">
-                  <strong>General:</strong> Pick {contest.league_abbreviation}{" "}
-                  teams to win their games. If a team loses you're eliminated!
+                  <strong>
+                    The rules are simple: pick teams to win their games!
+                  </strong>
                 </p>
-                <p className="my-6 text-left">
-                  <strong>Race To:</strong> {contest.streak_length} wins.
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Prize:</strong> ${contest.contest_prize}.
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Reentries Allowed:</strong>{" "}
-                  {contest.reentries_allowed ? "Yes" : "No"}.
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Contest Length:</strong>{" "}
-                  {contest.contest_end_datetime
-                    ? "Ends on: " +
-                      new Date(contest.contest_end_datetime).toLocaleString()
-                    : "Until someone wins."}
-                </p>
+                <ul className="mx-2 text-left text-sm">
+                  <li className="my-4">
+                    • You can make as many (or as few) picks as you want each
+                    day
+                  </li>
+                  <li className="my-4">
+                    • Each correct pick increases your WinStreak by +1
+                  </li>
+                  <li className="my-4">
+                    • An incorrect pick eliminates you from the contest, and all
+                    pending picks will be cancelled
+                  </li>
+                  <li className="my-4">
+                    • If you are eliminated, you can re-enter the contest at any
+                    time
+                  </li>
+                  <li className="my-4">
+                    • The first person to reach the target WinStreak wins the
+                    prize
+                  </li>
+                  <li className="my-4">
+                    • Tiebreaker will be the start time of the winning pick
+                  </li>
+                </ul>
               </div>
             );
           case "leaderboard":

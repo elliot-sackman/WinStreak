@@ -55,7 +55,11 @@ export default function MainMenu({ user }: { user: User | null }) {
               <Link href={"/dashboard"}>Dashboard</Link>
             </SheetClose>
           </div>
-
+          <div className="my-2">
+            <SheetClose asChild>
+              <Link href={"/my-picks"}>My Stats</Link>
+            </SheetClose>
+          </div>
           <div className="my-2">
             <SheetClose asChild>
               <Link href={"/contests"}>Contests</Link>
@@ -64,11 +68,6 @@ export default function MainMenu({ user }: { user: User | null }) {
           <div className="my-2">
             <SheetClose asChild>
               <Link href={"/my-account"}>My Account</Link>
-            </SheetClose>
-          </div>
-          <div className="my-2">
-            <SheetClose asChild>
-              <Link href={"/my-picks"}>My Picks</Link>
             </SheetClose>
           </div>
           {user ? (
