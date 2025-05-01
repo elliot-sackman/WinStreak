@@ -179,8 +179,10 @@ export default function ContestDetailsPageView({
                     entry={activeEntry}
                     existingPicks={existingPicksObject || {}}
                   />
-                ) : leaderboardEntries[0].current_streak !==
-                  contest.streak_length ? (
+                ) : !leaderboardEntries ||
+                  leaderboardEntries.length === 0 ||
+                  leaderboardEntries[0].current_streak !==
+                    contest.streak_length ? (
                   <div className="my-6">
                     Enter the contest to start making picks!
                   </div>
