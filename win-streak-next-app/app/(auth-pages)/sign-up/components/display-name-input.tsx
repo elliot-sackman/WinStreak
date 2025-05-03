@@ -14,13 +14,13 @@ export default function DisplayNameInput({
 
   const validateDisplayName = (displayName: string) => {
     if (displayName.length < 8 || displayName.length > 20) {
-      setError("Display name must be between 8 and 20 characters.");
+      setError("Username must be between 8 and 20 characters.");
       onValidChange(false);
       return false;
     }
 
     if (existingUsernames.includes(displayName)) {
-      setError("Display name is already taken.");
+      setError("Username is already taken.");
       onValidChange(false);
       return false;
     }
@@ -43,7 +43,7 @@ export default function DisplayNameInput({
         name="display name"
         value={value}
         onChange={handleChange}
-        placeholder="Enter your display name"
+        placeholder="Enter your username"
         className="w-full border border-input bg-background rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring mb-4"
         required
       />

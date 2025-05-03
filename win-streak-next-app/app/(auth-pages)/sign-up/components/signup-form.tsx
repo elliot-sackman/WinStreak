@@ -43,7 +43,7 @@ export default function SignupForm({
       <div className="flex flex-col gap-2 [&>input]:mb-3">
         <Label htmlFor="email">Email</Label>
         <EmailInput onValidChange={setIsEmailValid} />
-        <Label htmlFor="display name">Display Name</Label>
+        <Label htmlFor="display name">Username</Label>
         <DisplayNameInput
           existingUsernames={existingUsernames}
           onValidChange={setIsUsernameValid}
