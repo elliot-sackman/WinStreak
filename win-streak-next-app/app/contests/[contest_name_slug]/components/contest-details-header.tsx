@@ -34,7 +34,7 @@ export default function ContestDetailsHeader({
       {/* Content */}
       <div className="relative p-8">
         <div className="flex flex-row justify-center items-center">
-          <h1 className="text-2xl font-bold mx-4">{contest.contest_name}</h1>
+          <h1 className="text-2xl font-bold mx-1">{contest.contest_name}</h1>
           <RulesDialog contest={contest} />
         </div>
         {contest.sponsor_id && (
