@@ -14,6 +14,13 @@ interface MyPicksDisplayProps {
 }
 
 export default function MyPicksDisplay({ picks }: MyPicksDisplayProps) {
+  if (picks.length === 0) {
+    return (
+      <div className="text-center text-lg">
+        No picks yet. Make your picks to start your winning streak!
+      </div>
+    );
+  }
   const pendingPicks = picks.filter((pick) => pick.pick_status === "pending");
   const correctPicks = picks.filter((pick) => pick.pick_status === "correct");
   const incorrectPicks = picks.filter(
