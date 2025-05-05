@@ -4,18 +4,13 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import ButtonNav from "@/components/button-nav";
 import Leaderboard from "./leaderboard";
-import {
-  AllContestGamesPicksEntries,
-  Contest,
-  Entry,
-  Game,
-  Pick,
-  existingPicksObject,
-} from "@/lib/types";
+import { AllContestGamesPicksEntries, Contest, Entry, Pick } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { useMemo } from "react";
 import StreakGraveyard from "./streak-graveyard";
 import MyPicksDisplay from "@/components/my-picks-display";
+import Rules from "./rules";
+import WinnerDisplay from "./winner-display";
 
 export default function CompletedContestView({
   contestData,
@@ -30,6 +25,8 @@ export default function CompletedContestView({
   // Option 1: User had an active entry when the contest ended, not the winner
   // Option 2: User's last entry had an incorrect pick and ended
   // Option 3: User's entry was the winner
+  // Option 4: There was no winning entry.
+  // Option 5: User never entered the contest
   const contest: Contest = contestData.contest_details!;
 
   const allUserEntries = contestData.user_entries || [];
@@ -43,10 +40,6 @@ export default function CompletedContestView({
   const winningEntries: Entry[] = leaderboardEntries.filter(
     (entry) => entry.is_winner
   );
-
-  const winningDisplayNames = winningEntries
-    .map((entry) => entry.display_name)
-    .join(", ");
 
   const failedEntries = allUserEntries.filter(
     (entry) => entry.entry_details.is_winner === false
@@ -71,17 +64,13 @@ export default function CompletedContestView({
         setCurrentView={setCurrentView}
       />
       <Separator className="my-4" />
-      <div>{winningDisplayNames} won this contest.</div>
       {useMemo(() => {
         switch (currentView) {
           case "home":
             return (
               <>
                 <div className="w-full flex flex-col h-full items-center max-w-sm">
-                  <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-                    Contest Overview
-                  </div>
-                  <p className="my-6">{contest.contest_description}</p>
+                  <WinnerDisplay winningEntries={winningEntries} user={user} />
                 </div>
                 <div className="items-left">
                   <Leaderboard
@@ -89,40 +78,14 @@ export default function CompletedContestView({
                     entries={leaderboardEntries.filter(
                       (entry) => !entry.first_incorrect_pick_id
                     )}
+                    setCurrentView={setCurrentView}
                     userId={user.id}
                   />
                 </div>
               </>
             );
           case "rules":
-            return (
-              <div className="w-full max-w-sm">
-                <div className="border border-input bg-neutral-500 text-white rounded-xl w-full h-12 content-center">
-                  Rules
-                </div>
-                <p className="my-6 text-left">
-                  <strong>General:</strong> Pick {contest.league_abbreviation}{" "}
-                  teams to win their games. If a team loses you're eliminated!
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Race To:</strong> {contest.streak_length} wins.
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Prize:</strong> ${contest.contest_prize}.
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Reentries Allowed:</strong>{" "}
-                  {contest.reentries_allowed ? "Yes" : "No"}.
-                </p>
-                <p className="my-6 text-left">
-                  <strong>Contest Length:</strong>{" "}
-                  {contest.contest_end_datetime
-                    ? "Ends on: " +
-                      new Date(contest.contest_end_datetime).toLocaleString()
-                    : "Until someone wins."}
-                </p>
-              </div>
-            );
+            return <Rules />;
           case "leaderboard":
             return (
               <div className="w-full">
