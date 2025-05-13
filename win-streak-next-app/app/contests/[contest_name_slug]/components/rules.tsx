@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function Rules() {
   return (
     <div className="w-full max-w-sm">
@@ -25,6 +26,13 @@ export default function Rules() {
           • Tiebreaker will be the start time of the winning pick
         </li>
       </ul>
+      <p className="my-6 text-left">
+        View detailed contest rules{" "}
+        <Link href="/contest-rules" className="text-green-600">
+          here
+        </Link>
+        .
+      </p>
     </div>
   );
 }

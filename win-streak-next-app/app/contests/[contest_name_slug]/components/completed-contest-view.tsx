@@ -57,7 +57,7 @@ export default function CompletedContestView({
     { filter: "past-entries", title: "🪦 Streak Graveyard 🪦" },
   ];
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-sm mx-auto">
       <ButtonNav
         filters={contestDetailsFilters}
         currentView={currentView}

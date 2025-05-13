@@ -21,7 +21,7 @@ export default function ContestDetailsHeader({
       : null;
 
   return (
-    <div className="relative w-full max-w-sm text-white">
+    <div className="relative w-full max-w-sm text-white mx-auto">
       {contest.sport === "Baseball" && (
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"

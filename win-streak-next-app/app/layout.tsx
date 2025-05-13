@@ -70,7 +70,7 @@ export default async function RootLayout({
                   <MainMenu user={user} />
                 </div>
               </nav>
-              <div className="flex flex-col gap-5 container mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
+              <div className="flex flex-col gap-5 container mx-auto px-2 sm:px-4 md:px-10 lg:px-20">
                 <Toaster />
                 {children}
                 <Analytics />

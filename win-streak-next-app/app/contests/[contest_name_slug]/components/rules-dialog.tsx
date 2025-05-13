@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -44,8 +44,16 @@ export function RulesDialog({ contest }: { contest: Contest }) {
                   new Date(contest.contest_end_datetime).toLocaleString()
                 : "Until someone wins."}
             </p>
+            <p className="my-6 text-left">
+              View detailed contest rules{" "}
+              <Link href="/contest-rules" className="text-green-600">
+                here
+              </Link>
+              .
+            </p>
           </div>
         </div>
+        <DialogFooter></DialogFooter>
       </DialogContent>
     </Dialog>
   );

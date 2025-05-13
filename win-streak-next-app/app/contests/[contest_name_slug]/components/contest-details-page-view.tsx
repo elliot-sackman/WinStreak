@@ -79,7 +79,7 @@ export default function ContestDetailsPageView({
     { filter: "leaderboard", title: "Leaderboard" },
   ];
   return (
-    <div className="w-full max-w-sm justify-center">
+    <div className="w-full max-w-sm justify-center mx-auto">
       <ButtonNav
         filters={contestDetailsFilters}
         currentView={currentView}
