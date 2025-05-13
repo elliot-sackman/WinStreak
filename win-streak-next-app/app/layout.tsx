@@ -77,8 +77,41 @@ export default async function RootLayout({
                 <SpeedInsights />
               </div>
 
-              <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-                FOOTER
+              <footer className="w-full flex flex-col items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16 max-w-md px-4">
+                <div>
+                  <span className="font-semibold">
+                    NO PURCHASE NECESSARY TO ENTER OR WIN.
+                  </span>{" "}
+                  Open to legal residents of the United States who are
+                  registered users of WinStreakSports.com and age 18+. Must be
+                  21+ to win prizes. Each contest ends upon a user winning (by
+                  building a WinStreak of the specified length), or upon
+                  conclusion of the final game of the league’s regular season.
+                  Each contest’s prize is subject to applicable taxes of the
+                  user’s jurisdiction. If no eligible participant builds a
+                  WinStreak of the specified length, the prize will not be
+                  awarded. In no event will more than one (1) prize be awarded.
+                  One (1) prize to be awarded. If there are multiple winners of
+                  a contest, the prize will be split evenly among the winners of
+                  the contest. Online entry only. Limit one (1) registration per
+                  person. Void where prohibited. Restrictions apply. See Terms
+                  of Use, which govern, for complete details.
+                </div>
+                <div className="flex gap-4 mt-2">
+                  <Link
+                    href="/terms"
+                    className="underline hover:text-primary transition-colors"
+                  >
+                    terms of use
+                  </Link>
+                  <span>|</span>
+                  <Link
+                    href="/privacy-policy"
+                    className="underline hover:text-primary transition-colors"
+                  >
+                    privacy policy
+                  </Link>
+                </div>
                 <ThemeSwitcher />
               </footer>
             </div>

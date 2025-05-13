@@ -30,7 +30,7 @@ export default async function Dashboard() {
     ).data || [];
 
   return (
-    <div className="flex min-h-screen bg-background px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen bg-background mx-auto px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-5xl space-y-6">
         <div className="text-center">
           <h3 className="text-lg text-left font-medium">Dashboard</h3>
