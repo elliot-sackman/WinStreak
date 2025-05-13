@@ -84,18 +84,7 @@ export default async function RootLayout({
                   </span>{" "}
                   Open to legal residents of the United States who are
                   registered users of WinStreakSports.com and age 18+. Must be
-                  21+ to win prizes. Each contest ends upon a user winning (by
-                  building a WinStreak of the specified length), or upon
-                  conclusion of the final game of the league’s regular season.
-                  Each contest’s prize is subject to applicable taxes of the
-                  user’s jurisdiction. If no eligible participant builds a
-                  WinStreak of the specified length, the prize will not be
-                  awarded. In no event will more than one (1) prize be awarded.
-                  One (1) prize to be awarded. If there are multiple winners of
-                  a contest, the prize will be split evenly among the winners of
-                  the contest. Online entry only. Limit one (1) registration per
-                  person. Void where prohibited. Restrictions apply. See Terms
-                  of Use, which govern, for complete details.
+                  21+ to win prizes.
                 </div>
                 <div className="flex gap-4 mt-2">
                   <Link
