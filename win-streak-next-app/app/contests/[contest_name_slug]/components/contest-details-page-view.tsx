@@ -21,6 +21,9 @@ import streakTombstone from "@/app/static-images/streak-tombstone.png";
 import Image from "next/image";
 import StreakGraveyard from "./streak-graveyard";
 import Rules from "./rules";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 export default function ContestDetailsPageView({
   contestData,
@@ -38,6 +41,14 @@ export default function ContestDetailsPageView({
   const games: Game[] = contestData.games || [];
 
   const allUserEntries = contestData.user_entries || [];
+
+  // These next two state variables are used for password protected contests
+  // They determine if the user can enter (either they've already entered or they need to provide the code.)
+  const [userCanEnter, setUserCanEnter] = useState<boolean>(
+    !contest.contest_code || allUserEntries.length > 0
+  );
+
+  const [codeInput, setCodeInput] = useState<string>("");
 
   const activeEntry: Entry | null =
     allUserEntries.length > 0 &&
@@ -195,7 +206,41 @@ export default function ContestDetailsPageView({
 
       {!activeEntry && contest.contest_status === "in_progress" && (
         <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
-          <EnterContestButton contest={contest} userId={user.id} />
+          {contest.contest_code && !userCanEnter && (
+            <div className="flex flex-row items-center mb-4 w-full">
+              <Input
+                type="text"
+                placeholder="Enter contest entry code"
+                value={codeInput}
+                onChange={(e) => setCodeInput(e.target.value)}
+                className="mr-2"
+              />
+              <Button
+                className="bg-blue-500 text-white px-4 py-1 rounded "
+                onClick={() => {
+                  if (codeInput === contest.contest_code) {
+                    setUserCanEnter(true);
+                    toast({
+                      title: "Success!",
+                      description: "You can now enter the contest.",
+                    });
+                  } else {
+                    toast({
+                      title: "Error.",
+                      description: "Provided entry code is incorrect.",
+                    });
+                  }
+                }}
+              >
+                Submit Code
+              </Button>
+            </div>
+          )}
+          <EnterContestButton
+            contest={contest}
+            userId={user.id}
+            disabled={!userCanEnter}
+          />
         </div>
       )}
     </div>

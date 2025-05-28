@@ -21,6 +21,7 @@ export type Contest = {
   sponsor_site_url: string | null;
   sponsor_logo_url: string | null;
   contest_winning_entry_ids: number[] | null;
+  contest_code: string | null;
 };
 
 export type Entry = {

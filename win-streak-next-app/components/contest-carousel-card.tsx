@@ -44,9 +44,11 @@ export default function ContestCarouselCard({
             </Link>
           </div>
         )}
-        {!entry && new Date() > new Date(contest.contest_start_datetime) && (
-          <EnterContestButton contest={contest} userId={user.id} />
-        )}
+        {!entry &&
+          new Date() > new Date(contest.contest_start_datetime) &&
+          !contest.contest_code && (
+            <EnterContestButton contest={contest} userId={user.id} />
+          )}
         <ViewContestDetailsButton contestNameSlug={contest.contest_name_slug} />
       </CardContent>
     </Card>

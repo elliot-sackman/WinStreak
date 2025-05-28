@@ -10,11 +10,13 @@ import { Contest } from "@/lib/types";
 interface EnterContestButtonProps {
   contest: Contest;
   userId: string;
+  disabled?: boolean;
 }
 
 const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
   contest,
   userId,
+  disabled = false,
 }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -69,7 +71,7 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
       className="w-full my-1"
       variant="enter"
       onClick={handleEnterContest}
-      disabled={loading}
+      disabled={disabled || loading}
     >
       {loading ? "Entering..." : "Enter Contest"}
     </Button>
