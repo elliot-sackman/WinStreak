@@ -96,6 +96,41 @@ export default function ContestDetailsPageView({
         currentView={currentView}
         setCurrentView={setCurrentView}
       />
+      {!activeEntry &&
+        contest.contest_status === "in_progress" &&
+        contest.contest_code &&
+        !userCanEnter && (
+          <div>
+            <div className="flex flex-row items-center mb-4 w-full">
+              <Input
+                type="text"
+                placeholder="Enter contest entry code"
+                value={codeInput}
+                onChange={(e) => setCodeInput(e.target.value)}
+                className="mr-2"
+              />
+              <Button
+                className="bg-blue-500 text-white px-4 py-1 rounded "
+                onClick={() => {
+                  if (codeInput === contest.contest_code) {
+                    setUserCanEnter(true);
+                    toast({
+                      title: "Success!",
+                      description: "You can now enter the contest.",
+                    });
+                  } else {
+                    toast({
+                      title: "Error.",
+                      description: "Provided entry code is incorrect.",
+                    });
+                  }
+                }}
+              >
+                Submit Code
+              </Button>
+            </div>
+          </div>
+        )}
       <Separator className="my-4" />
       {useMemo(() => {
         switch (currentView) {
@@ -206,36 +241,6 @@ export default function ContestDetailsPageView({
 
       {!activeEntry && contest.contest_status === "in_progress" && (
         <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
-          {contest.contest_code && !userCanEnter && (
-            <div className="flex flex-row items-center mb-4 w-full">
-              <Input
-                type="text"
-                placeholder="Enter contest entry code"
-                value={codeInput}
-                onChange={(e) => setCodeInput(e.target.value)}
-                className="mr-2"
-              />
-              <Button
-                className="bg-blue-500 text-white px-4 py-1 rounded "
-                onClick={() => {
-                  if (codeInput === contest.contest_code) {
-                    setUserCanEnter(true);
-                    toast({
-                      title: "Success!",
-                      description: "You can now enter the contest.",
-                    });
-                  } else {
-                    toast({
-                      title: "Error.",
-                      description: "Provided entry code is incorrect.",
-                    });
-                  }
-                }}
-              >
-                Submit Code
-              </Button>
-            </div>
-          )}
           <EnterContestButton
             contest={contest}
             userId={user.id}
