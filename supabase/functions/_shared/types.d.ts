@@ -51,11 +51,21 @@ export type ApiSportsGame = {
   };
   scores: {
     home: {
-      [key: string]: number | null;
+      [key: string]:
+        | number
+        | null
+        | { [key: string]: number | null }
+        | undefined;
+      innings?: { [key: string]: number | null };
       total: number;
     };
     away: {
-      [key: string]: number | null;
+      [key: string]:
+        | number
+        | null
+        | { [key: string]: number | null }
+        | undefined;
+      innings?: { [key: string]: number | null };
       total: number;
     };
   };

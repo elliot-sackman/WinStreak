@@ -88,27 +88,13 @@ const getLeagueToExistingGameApiIdToGameIdMap = async (
   supabase: SupabaseClient,
   incompleteOnly?: boolean | undefined,
 ) => {
-  let dateString: string;
-
-  // If we only want the incomplete games to update their status, we look from yesterday onwards
-  if (incompleteOnly) {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    dateString = yesterday.toISOString().split("T")[0];
-  } else {
-    dateString = new Date().toISOString().split("T")[0];
-  }
-
   const { data: games, error } = await supabase.from("games")
     .select("game_id,game_api_id,league_id,status")
     .in(
       "league_id",
       activeLeagueIds,
     )
-    .gte(
-      "start_time",
-      dateString,
-    );
+    .or("status.eq.scheduled,status.eq.in_progress");
 
   if (error) {
     console.error(
@@ -156,7 +142,16 @@ const buildRequestUrls = (
   // If we're looking for completed games, we'll want to check
   //  yesterday's and today's games UTC and get the final scores
   if (checkCompleted) {
-    currentDate.setDate(currentDate.getDate() - 1);
+    currentDate.setDate(currentDate.getDate() - 2);
+    // Push the url for yesterday
+    urls.push(
+      `${baseApiUrl}/games?date=${
+        currentDate.toISOString().split("T")[0]
+      }&league=${leagueApiId}&season=${season}`,
+    );
+
+    // Update the date to yesterday
+    currentDate.setDate(currentDate.getDate() + 1);
     // Push the url for yesterday
     urls.push(
       `${baseApiUrl}/games?date=${
@@ -229,6 +224,11 @@ const fetchGames = async (headers: Headers, checkCompleted: boolean) => {
       }
     }
   }
+
+  // Log the results for debugging purposes
+  results.forEach((result) => {
+    result.data.response.forEach((game) => console.log(game));
+  });
 
   return { results, errors };
 };

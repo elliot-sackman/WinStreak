@@ -74,12 +74,24 @@ const parseGameResults = async (results: {
       if (
         completed.includes(status.short) &&
         existingGameId && scores.home.total !== null &&
-        scores.away.total !== null && scores.home.total !== scores.away.total &&
-        (new Date().getTime() - new Date(date).getTime()) / 1000 > 21600
+        scores.away.total !== null && scores.home.total !== scores.away.total
       ) {
-        completedGameIds.push(
-          existingGameId,
-        );
+        // The API erroneously marks extra innings games as finished
+        // So we check if there are scores in the extra innings property for home or away
+        // And if there are, we check to make sure it's been at least 6 hours since game start
+        const isExtraInningsBaseballGameAndIsToSoonToConsiderCompleted =
+          sport === "baseball" &&
+          ((scores.home.innings && scores.home.innings["extra"] !== null) ||
+            (scores.away.innings && scores.away.innings["extra"] !== null)) &&
+          (new Date().getTime() - new Date(date).getTime()) / 1000 < 21600;
+
+        if (
+          !isExtraInningsBaseballGameAndIsToSoonToConsiderCompleted
+        ) {
+          completedGameIds.push(
+            existingGameId,
+          );
+        }
       }
 
       if (
