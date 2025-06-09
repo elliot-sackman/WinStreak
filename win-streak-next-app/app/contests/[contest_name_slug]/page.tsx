@@ -20,10 +20,6 @@ export default async function ContestPage(props: ContestPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
   const { data: contestId, error: contestError } = await supabase
     .from("contests")
     .select("contest_id")
@@ -37,7 +33,7 @@ export default async function ContestPage(props: ContestPageProps) {
   const { data: rawContestData, error: contestDataError } = await supabase.rpc(
     "get_user_all_picks_data_by_contest",
     {
-      uid: user.id,
+      uid: user!.id,
       cid: contestId.contest_id,
     }
   );
@@ -57,9 +53,9 @@ export default async function ContestPage(props: ContestPageProps) {
     <div className="container mx-auto p-6 text-center place-items-center justify-center">
       <ContestDetailsHeader contestData={contestData} />
       {contestData.contest_details.contest_status === "ended" ? (
-        <CompletedContestView contestData={contestData} user={user} />
+        <CompletedContestView contestData={contestData} user={user!} />
       ) : (
-        <ContestDetailsPageView contestData={contestData} user={user} />
+        <ContestDetailsPageView contestData={contestData} user={user!} />
       )}
     </div>
   );

@@ -11,14 +11,11 @@ export default async function Contests() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return redirect("/sign-in");
-  }
   const contests: Contest[] =
     (await supabase.from("contests").select()).data || [];
 
   const entries: Entry[] =
-    (await supabase.from("entries").select("*").eq("user_id", user.id)).data ||
+    (await supabase.from("entries").select("*").eq("user_id", user!.id)).data ||
     [];
 
   return (
@@ -31,7 +28,7 @@ export default async function Contests() {
           </p>
         </div>
         <Separator />
-        <ContestsPageView contests={contests} entries={entries} user={user} />
+        <ContestsPageView contests={contests} entries={entries} user={user!} />
       </div>
     </div>
   );

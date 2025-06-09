@@ -11,15 +11,11 @@ export default async function MyPicks() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
   // Call the Postgres function to get analytics
   const { data: analytics, error: analyticsError } = await supabase.rpc(
     "get_user_pick_analytics",
     {
-      uid: user.id,
+      uid: user!.id,
     }
   );
 
@@ -30,7 +26,7 @@ export default async function MyPicks() {
   const { data: rawUserPicksData, error: picksError } = await supabase.rpc(
     "get_user_all_picks_data",
     {
-      uid: user.id,
+      uid: user!.id,
     }
   );
 

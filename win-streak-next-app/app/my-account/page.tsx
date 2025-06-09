@@ -10,10 +10,6 @@ export default async function SettingsProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
   return (
     <div className="space-y-6">
       <div>

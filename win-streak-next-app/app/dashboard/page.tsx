@@ -10,10 +10,6 @@ export default async function Dashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
   const contests: Contest[] =
     (await supabase.from("contests").select()).data || [];
 
@@ -25,7 +21,7 @@ export default async function Dashboard() {
       await supabase
         .from("entries")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", user!.id)
         .eq("is_complete", false)
     ).data || [];
 
@@ -35,10 +31,10 @@ export default async function Dashboard() {
         <div className="text-center">
           <h3 className="text-lg text-left font-medium">Dashboard</h3>
           <p className="text-sm text-left text-muted-foreground">
-            Welcome back {user.user_metadata.first_name}!
+            Welcome back {user!.user_metadata.first_name}!
           </p>
         </div>
-        <DashboardView contests={contests} entries={entries} user={user} />
+        <DashboardView contests={contests} entries={entries} user={user!} />
       </div>
     </div>
   );
