@@ -10,20 +10,11 @@ export default async function Dashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const contests: Contest[] =
-    (await supabase.from("contests").select()).data || [];
-
-  // Maybe instead of getting active entries, get the highest entry # for each contest?
-  // Where the contest is still active?
-  // So we can display failed streaks?
-  const entries: Entry[] =
-    (
-      await supabase
-        .from("entries")
-        .select("*")
-        .eq("user_id", user!.id)
-        .eq("is_complete", false)
-    ).data || [];
+  const { contests, entries }: { contests: Contest[]; entries: Entry[] } = (
+    await supabase.rpc("get_live_contests_and_user_entries_for_dashboard", {
+      uid: user!.id,
+    })
+  ).data || { contests: [], entries: [] };
 
   return (
     <div className="flex min-h-screen bg-background mx-auto px-4 sm:px-6 lg:px-8">
