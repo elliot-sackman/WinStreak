@@ -144,6 +144,7 @@ const Carousel = React.forwardRef<
           {...props}
         >
           {children}
+          <CarouselDots />
         </div>
       </CarouselContext.Provider>
     );
@@ -252,6 +253,44 @@ const CarouselNext = React.forwardRef<
   );
 });
 CarouselNext.displayName = "CarouselNext";
+
+const CarouselDots = () => {
+  const { api } = useCarousel();
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
+
+  React.useEffect(() => {
+    if (!api) return;
+
+    setScrollSnaps(api.scrollSnapList());
+    setSelectedIndex(api.selectedScrollSnap());
+
+    const onSelect = () => setSelectedIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
+
+  if (!api) return null;
+
+  return (
+    <div className="flex justify-center gap-2 mt-4">
+      {scrollSnaps.map((_, idx) => (
+        <button
+          key={idx}
+          className={cn(
+            "h-2 w-2 rounded-full bg-gray-600 transition-colors",
+            idx === selectedIndex ? "bg-gray-300" : ""
+          )}
+          onClick={() => api.scrollTo(idx)}
+          aria-label={`Go to slide ${idx + 1}`}
+        />
+      ))}
+    </div>
+  );
+};
 
 export {
   type CarouselApi,

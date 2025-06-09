@@ -31,7 +31,7 @@ export default function DashboardView({
   console.log({ activeContests });
   return (
     <div className="flex flex-col justify-center items-center">
-      Your Active Contests
+      <div className="text-xl mb-4">Your Contest Entries</div>
       {entries.length > 0 && activeContests.length > 0 ? (
         <Carousel className="w-full max-w-sm">
           <CarouselContent>
@@ -49,14 +49,12 @@ export default function DashboardView({
               }
             })}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
         </Carousel>
       ) : (
         <div>No active entries. Enter a contest!</div>
       )}
       <Separator className="my-6" />
-      Live Contests
+      <div className="text-xl mb-4">All Live Contests</div>
       <Carousel
         className="w-full max-w-sm"
         plugins={[Autoplay({ delay: 6000 })]}
@@ -82,8 +80,6 @@ export default function DashboardView({
             }
           })}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
       </Carousel>
     </div>
   );
