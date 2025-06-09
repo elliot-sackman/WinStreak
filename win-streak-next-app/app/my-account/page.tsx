@@ -10,6 +10,17 @@ export default async function SettingsProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Fetch profile data
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, birthday, email, favorite_sport")
+    .eq("id", user.id)
+    .single();
+
   return (
     <div className="space-y-6">
       <div>
@@ -19,7 +30,7 @@ export default async function SettingsProfilePage() {
         </p>
       </div>
       <Separator />
-      <ProfileForm />
+      <ProfileForm profile={profile} />
     </div>
   );
 }
