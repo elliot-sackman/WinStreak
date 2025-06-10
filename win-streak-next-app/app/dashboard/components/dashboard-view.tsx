@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Carousel,
+  CarouselWithDots as Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
