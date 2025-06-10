@@ -4,8 +4,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import ContestCarouselCard from "@/components/contest-carousel-card";
@@ -25,28 +23,30 @@ export default function DashboardView({
   // Get all of the active contest entries
   const contestEntries: { [contestId: number]: Entry | null } = {};
   entries.forEach((entry: Entry) => (contestEntries[entry.contest_id] = entry));
-
+  console.log({ contests, entries, contestEntries });
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="text-xl mb-4">Your Contest Entries</div>
-      {entries.length > 0 && contests.length > 0 ? (
-        <Carousel className="w-full max-w-sm">
-          <CarouselContent>
-            {contests.map((contest: Contest) => {
-              if (contest.contest_id in contestEntries) {
-                return (
-                  <CarouselItem key={"my-contests-" + contest.contest_id}>
-                    <ContestCarouselCard
-                      contest={contest}
-                      entry={contestEntries[contest.contest_id]}
-                      user={user}
-                    />
-                  </CarouselItem>
-                );
-              }
-            })}
-          </CarouselContent>
-        </Carousel>
+      {Object.keys(contestEntries).length > 0 ? (
+        <>
+          <div className="text-xl mb-4">Your Contest Entries</div>
+          <Carousel className="w-full max-w-sm">
+            <CarouselContent>
+              {contests.map((contest: Contest) => {
+                if (contest.contest_id in contestEntries) {
+                  return (
+                    <CarouselItem key={"my-contests-" + contest.contest_id}>
+                      <ContestCarouselCard
+                        contest={contest}
+                        entry={contestEntries[contest.contest_id]}
+                        user={user}
+                      />
+                    </CarouselItem>
+                  );
+                }
+              })}
+            </CarouselContent>
+          </Carousel>
+        </>
       ) : (
         <div>No active entries. Enter a contest!</div>
       )}

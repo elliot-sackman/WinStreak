@@ -25,7 +25,11 @@ export default async function Dashboard() {
             Welcome back {user!.user_metadata.first_name}!
           </p>
         </div>
-        <DashboardView contests={contests} entries={entries} user={user!} />
+        <DashboardView
+          contests={contests || []}
+          entries={entries || []}
+          user={user!}
+        />
       </div>
     </div>
   );
