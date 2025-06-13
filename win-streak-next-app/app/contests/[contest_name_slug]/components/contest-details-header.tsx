@@ -44,9 +44,9 @@ export default function ContestDetailsHeader({
               <Image
                 src={contest.sponsor_logo_url!}
                 alt="Sponsor Logo"
-                width={200}
+                width={275}
                 height={100}
-                style={{ width: "auto" }}
+                className="h-auto"
               />
             </Link>
           </div>

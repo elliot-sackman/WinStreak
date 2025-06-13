@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -21,7 +19,7 @@ export default function ContestCarouselCard({
 }: ContestCarouselCardProps) {
   return (
     <Card>
-      <CardContent className="aspect-square content-center  border-black border-1 rounded-lg">
+      <CardContent className="content-center  border-black border-1 rounded-lg">
         <CardHeader>
           <h1 className="text-2xl font-semibold my-2 text-center">
             {contest.contest_name}
@@ -34,8 +32,8 @@ export default function ContestCarouselCard({
                 <Image
                   src={contest.sponsor_logo_url!}
                   alt="Sponsor Logo"
-                  width={200}
-                  height={100}
+                  width={350}
+                  height={200}
                   className="h-auto"
                 />
               </Link>
@@ -52,11 +50,6 @@ export default function ContestCarouselCard({
             </div>
           </div>
         )}
-        {!entry &&
-          new Date() > new Date(contest.contest_start_datetime) &&
-          !contest.contest_code && (
-            <EnterContestButton contest={contest} userId={user.id} />
-          )}
         <ViewContestDetailsButton contestNameSlug={contest.contest_name_slug} />
       </CardContent>
     </Card>
