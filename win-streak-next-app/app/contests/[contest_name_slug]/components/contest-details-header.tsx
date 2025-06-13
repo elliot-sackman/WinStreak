@@ -21,10 +21,10 @@ export default function ContestDetailsHeader({
       : null;
 
   return (
-    <div className="relative w-full max-w-sm text-white mx-auto">
+    <div className="relative w-full max-w-sm text-white mx-auto rounded-lg">
       {contest.sport === "Baseball" && (
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-30"
+          className="absolute inset-0 bg-cover bg-center opacity-30 rounded-lg"
           style={{
             backgroundImage: `url(${mlbContestBackground.src})`,
           }}
@@ -46,17 +46,17 @@ export default function ContestDetailsHeader({
                 alt="Sponsor Logo"
                 width={275}
                 height={100}
-                className="h-auto"
+                className="h-auto rounded-lg"
               />
             </Link>
           </div>
         )}
         {activeEntry ? (
-          <div className="flex flex-row items-center my-4 justify-between w-[90%] max-w-sm">
-            <span className="text-2xl italic">Your Streak</span>
+          <div className="flex flex-row items-center my-4 justify-between w-[80%] mx-auto max-w-sm">
+            <span className="text-2xl ">Your Streak</span>
             <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800 mx-4"></div>
             <div className="text-2xl">
-              🔥<span className="italic">{activeEntry.current_streak}</span>
+              🔥<span className="">{activeEntry.current_streak}</span>
             </div>
           </div>
         ) : (

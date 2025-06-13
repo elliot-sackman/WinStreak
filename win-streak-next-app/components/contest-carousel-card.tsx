@@ -34,7 +34,7 @@ export default function ContestCarouselCard({
                   alt="Sponsor Logo"
                   width={350}
                   height={200}
-                  className="h-auto"
+                  className="h-auto rounded-lg"
                 />
               </Link>
             </div>
