@@ -33,9 +33,9 @@ export default function ContestEntryDashboardCard({
       <div className="flex flex-col justify-between w-full">
         <h1 className="text-md text-left w-full">{contest.contest_name}</h1>
         <div className="flex flex-row items-center justify-start w-full max-w-[70%]">
-          <span className="text-sm">Current Streak</span>
-          <div className="w-4 h-[1px] rounded-r-full bg-white mx-2"></div>
-          <div className="text-sm">
+          <span className="text-xs">Current Streak</span>
+          <div className="w-2 h-[1px] rounded-r-full bg-white mx-2"></div>
+          <div className="text-xs">
             <span>{entry.current_streak}</span>
           </div>
         </div>
