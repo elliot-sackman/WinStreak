@@ -3,8 +3,10 @@ import { Contest, Entry } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import baseball from "@/app/static-images/baseball.png";
+import basketball from "@/app/static-images/basketball.png";
+import football from "@/app/static-images/football.png";
 
 interface ContestEntryDashboardCard {
   contest: Contest;
@@ -21,13 +23,22 @@ export default function ContestEntryDashboardCard({
     // Redirect to contests page after successful entry
     router.push(`/contests/${contest.contest_name_slug}`);
   };
+
+  const sportLogos: { [key: string]: StaticImageData } = {
+    Baseball: baseball,
+    Basketball: basketball,
+    Football: football,
+    // Add more sports and their corresponding logos here
+  };
+
+  const sportLogo = sportLogos[contest.sport] || baseball; // Default to baseball if sport not found
   return (
-    <Card className="flex flex-row justify-between rounded-lg px-4 py-4 w-full items-center">
+    <Card className="flex flex-row justify-between rounded-lg px-4 py-4 my-2 w-full items-center">
       <Image
-        src={baseball}
+        src={sportLogo}
         height={50}
         width={50}
-        className="w-auto mr-4"
+        className="h-auto mr-4"
         alt="sports logo"
       />
       <div className="flex flex-col justify-between w-full">

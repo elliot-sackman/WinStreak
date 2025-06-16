@@ -24,7 +24,7 @@ export default function DashboardView({
   // Get all of the active contest entries
   const contestEntries: { [contestId: number]: Entry | null } = {};
   entries.forEach((entry: Entry) => (contestEntries[entry.contest_id] = entry));
-  console.log({ contests, entries, contestEntries });
+
   return (
     <div className="flex flex-col justify-center items-start">
       {Object.keys(contestEntries).length > 0 ? (
