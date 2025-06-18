@@ -91,11 +91,18 @@ export default function ContestDetailsPageView({
   ];
   return (
     <div className="w-full max-w-sm justify-center mx-auto">
+      <p
+        className="mb-4 text-left"
+        dangerouslySetInnerHTML={{
+          __html: contest.contest_description || "",
+        }}
+      />
       <ButtonNav
         filters={contestDetailsFilters}
         currentView={currentView}
         setCurrentView={setCurrentView}
       />
+
       {!activeEntry &&
         contest.contest_status === "in_progress" &&
         contest.contest_code &&
@@ -162,8 +169,6 @@ export default function ContestDetailsPageView({
                       </div>
                     </>
                   )}
-
-                  <p className="mb-4">{contest.contest_description}</p>
                 </div>
                 <div className="items-left">
                   <Leaderboard
@@ -238,7 +243,6 @@ export default function ContestDetailsPageView({
             return null;
         }
       }, [currentView, existingPicks])}
-
       {!activeEntry && contest.contest_status === "in_progress" && (
         <div className="sticky inset-x-0 bottom-0 bg-transparent w-full z-10">
           <EnterContestButton

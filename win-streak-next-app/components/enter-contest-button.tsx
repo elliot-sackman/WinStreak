@@ -59,7 +59,8 @@ const EnterContestButton: React.FC<EnterContestButtonProps> = function ({
 
     toast({
       title: "Success!",
-      description: "You have successfully entered the contest!",
+      description:
+        contest.sponsor_promo || "You have successfully entered the contest!",
     });
 
     // Redirect to contests page after successful entry
