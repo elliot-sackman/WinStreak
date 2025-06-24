@@ -1,9 +1,17 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Entry } from "@/lib/types";
+import { Entry, Pick } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { SetStateAction, Dispatch } from "react";
+import { SetStateAction, Dispatch, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import MyPicksDisplay from "@/components/my-picks-display";
+import { createClient } from "@/utils/supabase/client";
 
 interface LeaderboardProps {
   numEntries?: number;
@@ -41,6 +49,29 @@ export default function Leaderboard({
     rankedEntries.push({ ...currentEntry, rank });
   }
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [dialogPicks, setDialogPicks] = useState<Pick[]>([]);
+  const [dialogEntry, setDialogEntry] = useState<RankedEntry | null>(null);
+
+  async function handleStreakClick(entry: RankedEntry) {
+    setDialogEntry(entry);
+    setDialogOpen(true);
+    setLoading(true);
+    setDialogPicks([]);
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("picks")
+      .select("*")
+      .eq("entry_id", entry.entry_id)
+      .in("pick_status", ["correct", "incorrect"])
+      .order("game_start_time", { ascending: false });
+    if (!error && data) {
+      setDialogPicks(data);
+    }
+    setLoading(false);
+  }
+
   return (
     <>
       {numEntries && setCurrentView ? (
@@ -65,6 +96,31 @@ export default function Leaderboard({
       )}
 
       <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800"></div>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent
+          className="max-w-sm"
+          aria-describedby="streak-summary-dialog"
+        >
+          <DialogHeader>
+            <DialogTitle>
+              {dialogEntry
+                ? `${dialogEntry.display_name}'s WinStreak: 🔥${dialogEntry.current_streak}`
+                : "Completed Picks"}
+            </DialogTitle>
+          </DialogHeader>
+          {loading ? (
+            <div className="flex justify-center items-center h-32">
+              Loading...
+            </div>
+          ) : dialogPicks.length > 0 ? (
+            <MyPicksDisplay picks={dialogPicks} />
+          ) : (
+            <div className="flex justify-center items-center h-32">
+              This user has not completed any picks yet.
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       {rankedEntries.length > 0 ? (
         rankedEntries.map((entry, index) => {
           if (numEntries && index >= numEntries) {
@@ -83,7 +139,11 @@ export default function Leaderboard({
                 <div className="text-xl sm:text-3xl flex-1">
                   {entry.display_name}
                 </div>
-                <Card className="text-xl sm:text-3xl flex rounded-full bg-gray-200 w-8 h-8 items-center justify-center text-black">
+                <Card
+                  className="text-xl sm:text-3xl flex rounded-full bg-gray-200 w-8 h-8 items-center justify-center text-black cursor-pointer"
+                  onClick={() => handleStreakClick(entry)}
+                  title="View completed picks"
+                >
                   {entry.current_streak}
                 </Card>
               </div>
