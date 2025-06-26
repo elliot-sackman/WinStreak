@@ -98,7 +98,7 @@ export default function Leaderboard({
       <div className="flex-grow h-[1px] rounded-r-full bg-gradient-to-r from-neutral-800 to-green-800"></div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent
-          className="max-w-sm"
+          className="max-w-sm max-h-[75%] overflow-y-auto"
           aria-describedby="streak-summary-dialog"
         >
           <DialogHeader>
